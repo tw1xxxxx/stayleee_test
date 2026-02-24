@@ -26,46 +26,51 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
     if (!video) return;
     let isCleanedUp = false;
 
-    const attemptPlay = () => {
+    // Сразу устанавливаем атрибуты для мобильных устройств
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute("webkit-playsinline", "true");
+    video.setAttribute("playsinline", "true");
+
+    const attemptPlay = async () => {
       if (isCleanedUp) return;
-      video.muted = true;
-      video.defaultMuted = true;
-      video.setAttribute("muted", "");
-      video.playsInline = true;
-      video.setAttribute("playsinline", "true");
-      video.setAttribute("webkit-playsinline", "true");
-      video.setAttribute("autoplay", "");
-      const playPromise = video.play();
-      if (playPromise && typeof playPromise.then === "function") {
-        playPromise.then(() => {
+      try {
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          await playPromise;
           if (!isCleanedUp) setIsReady(true);
-        }).catch(() => {});
-      } else {
-        setIsReady(true);
+        }
+      } catch (err) {
+        console.log("Autoplay blocked, waiting for interaction");
       }
     };
 
-    const onLoadedData = () => attemptPlay();
-    video.addEventListener("loadeddata", onLoadedData);
-    video.addEventListener("canplay", onLoadedData);
+    const handleInteraction = () => {
+      if (!isCleanedUp && video.paused) {
+        attemptPlay();
+      }
+      // Удаляем слушатели после первой успешной попытки или взаимодействия
+      window.removeEventListener("touchstart", handleInteraction);
+      window.removeEventListener("click", handleInteraction);
+    };
+
+    video.addEventListener("loadeddata", attemptPlay);
+    video.addEventListener("canplaythrough", attemptPlay);
     video.addEventListener("playing", () => setIsReady(true));
+    
+    window.addEventListener("touchstart", handleInteraction, { passive: true });
+    window.addEventListener("click", handleInteraction, { passive: true });
 
-    const onUserGesture = () => attemptPlay();
-    window.addEventListener("touchstart", onUserGesture);
-    window.addEventListener("click", onUserGesture);
-    window.addEventListener("keydown", onUserGesture);
-
-    if (video.readyState >= 3) {
-      attemptPlay();
-    }
+    // Начальная попытка
+    attemptPlay();
 
     return () => {
       isCleanedUp = true;
-      video.removeEventListener("loadeddata", onLoadedData);
-      video.removeEventListener("canplay", onLoadedData);
-      window.removeEventListener("touchstart", onUserGesture);
-      window.removeEventListener("click", onUserGesture);
-      window.removeEventListener("keydown", onUserGesture);
+      video.removeEventListener("loadeddata", attemptPlay);
+      video.removeEventListener("canplaythrough", attemptPlay);
+      window.removeEventListener("touchstart", handleInteraction);
+      window.removeEventListener("click", handleInteraction);
     };
   }, []);
 

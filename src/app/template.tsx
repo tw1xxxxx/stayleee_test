@@ -31,17 +31,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
         animate={{ opacity: 0, transitionEnd: { display: "none" } }}
         transition={{ duration: 0.4, delay: 0.6, ease: "easeInOut" }} // Увеличили задержку до 0.6с для загрузки видео
       >
-        {/* Скрытая загрузка видео для кэширования браузером */}
-        {isHome && (
-          <video 
-            src="/videos/hero-inline.mp4" 
-            preload="auto" 
-            muted 
-            playsInline 
-            className="hidden" 
-          />
-        )}
-        
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
