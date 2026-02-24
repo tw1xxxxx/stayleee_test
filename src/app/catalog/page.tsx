@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import ProductSkeleton from "../components/ProductSkeleton";
 import FadeIn from "../components/FadeIn";
@@ -35,6 +35,8 @@ function CatalogContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const filterSectionRef = useRef<HTMLDivElement>(null);
 
   const activeFilters = searchParams.get("filters")?.split(",") || ["all"];
   
@@ -68,6 +70,22 @@ function CatalogContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState<ApiProduct[]>([]);
   const [filters, setFilters] = useState<ApiFilter[]>([]);
+
+  // Function to scroll and focus search
+  const handleSearchClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 400);
+  };
+
+  // Function to scroll and open filters
+  const handleFilterClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      setIsFilterOpen(true);
+    }, 400);
+  };
 
   // Sync search query to URL with debounce
   useEffect(() => {
@@ -230,7 +248,7 @@ function CatalogContent() {
           </button>
 
           {/* Search */}
-          <div className="relative flex-1">
+          <div className="relative flex-1" onClick={handleSearchClick}>
             <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -242,13 +260,13 @@ function CatalogContent() {
               placeholder="Поиск..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/10 text-brand-beige placeholder-brand-beige/30 pl-10 pr-4 py-2 rounded-full focus:outline-none focus:bg-white/20 focus:ring-1 focus:ring-brand-beige/20 transition-all text-sm border border-white/5"
+              className="w-full bg-white/10 text-brand-beige placeholder-brand-beige/30 pl-10 pr-4 py-2 rounded-full focus:outline-none focus:bg-white/20 focus:ring-1 focus:ring-brand-beige/20 transition-all text-sm border border-white/5 cursor-pointer"
             />
           </div>
 
           {/* Filters */}
           <button 
-            onClick={() => setIsFilterOpen(true)}
+            onClick={handleFilterClick}
             className="p-1 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center shrink-0"
             aria-label="Фильтры"
           >
@@ -340,7 +358,7 @@ function CatalogContent() {
       </header>
 
       {/* Search & Filters Button */}
-      <div className="px-4 py-4 max-w-[1400px] mx-auto">
+      <div className="px-4 py-4 max-w-[1400px] mx-auto" ref={filterSectionRef}>
         <div className="flex gap-3">
           {/* Search Bar */}
           <div className="relative flex-1 text-brand-brown">
@@ -351,6 +369,7 @@ function CatalogContent() {
               </svg>
             </div>
             <input
+              ref={searchInputRef}
               type="text"
               placeholder="Поиск по названию, артикулу или тегу"
               value={searchQuery}
@@ -449,30 +468,37 @@ function CatalogContent() {
       {/* Filter Modal (Bottom Sheet) */}
       <AnimatePresence>
         {isFilterOpen && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+          <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center">
             {/* Backdrop */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-brand-brown/20 backdrop-blur-sm"
               onClick={() => setIsFilterOpen(false)}
-            ></motion.div>
+              className="absolute inset-0 bg-brand-brown/40 backdrop-blur-md"
+            />
             
-            {/* Content */}
-            <motion.div 
-              initial={{ y: "100%", opacity: 0 }}
+            {/* Modal Content */}
+            <motion.div
+              initial={{ y: "100%", opacity: 0.5 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: "100%", opacity: 0 }}
-              transition={{ type: "tween", duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-md bg-brand-beige rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl text-brand-brown will-change-transform"
-              style={{ transform: "translate3d(0,0,0)" }}
+              exit={{ y: "100%", opacity: 0.5 }}
+              transition={{ 
+                type: "spring", 
+                damping: 25, 
+                stiffness: 200,
+                mass: 0.8
+              }}
+              className="relative w-full max-w-lg bg-brand-beige rounded-t-[2rem] sm:rounded-2xl p-6 shadow-2xl overflow-hidden"
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold">Фильтры</h2>
+              {/* Pull indicator for mobile */}
+              <div className="w-12 h-1.5 bg-brand-brown/10 rounded-full mx-auto mb-6 sm:hidden" />
+              
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-2xl font-bold uppercase tracking-widest text-brand-brown">Фильтры</h2>
                 <button 
                   onClick={() => setIsFilterOpen(false)}
-                  className="p-2 hover:bg-brand-brown/10 rounded-full transition-colors"
+                  className="p-2 hover:bg-brand-brown/5 rounded-full transition-colors"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -481,32 +507,46 @@ function CatalogContent() {
                 </button>
               </div>
 
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <h3 className="font-medium text-brand-brown/80">Фильтры</h3>
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-brand-brown/40 mb-4 ml-1">Категории</h3>
                   <div className="flex flex-wrap gap-2">
-                    {filterOptions.map((filter) => (
-                      <button
-                        key={filter.id}
-                        onClick={() => toggleFilter(filter.slug)}
-                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
-                          activeFilters.includes(filter.slug)
-                            ? "bg-brand-brown text-white border-brand-brown"
-                            : "bg-white text-gray-600 border-gray-200 hover:border-brand-brown hover:text-brand-brown"
-                        }`}
-                      >
-                        {filter.name}
-                      </button>
-                    ))}
+                    {filterOptions.map((filter) => {
+                      const isActive = activeFilters.includes(filter.slug);
+                      return ( 
+                        <button
+                          key={filter.id}
+                          onClick={() => toggleFilter(filter.slug)}
+                          className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                            isActive 
+                              ? "bg-brand-brown text-white shadow-lg shadow-brand-brown/20 scale-105" 
+                              : "bg-white text-brand-brown hover:bg-brand-brown/5 border border-brand-brown/5"
+                          }`}
+                        >
+                          {filter.name}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-                
-                <button 
-                  onClick={() => setIsFilterOpen(false)}
-                  className="w-full bg-brand-brown text-white font-bold py-4 rounded-2xl hover:bg-[#3E2822] transition-colors"
-                >
-                  Показать результаты
-                </button>
+
+                <div className="pt-4 border-t border-brand-brown/5 flex gap-3">
+                  <button
+                    onClick={() => {
+                      updateFilters(["all"]);
+                      setIsFilterOpen(false);
+                    }}
+                    className="flex-1 py-4 px-6 rounded-xl text-sm font-bold uppercase tracking-widest text-brand-brown/60 hover:text-brand-brown transition-colors"
+                  >
+                    Сбросить
+                  </button>
+                  <button
+                    onClick={() => setIsFilterOpen(false)}
+                    className="flex-[2] py-4 px-6 bg-brand-brown text-white rounded-xl text-sm font-bold uppercase tracking-widest hover:bg-brand-brown/90 transition-all shadow-xl shadow-brand-brown/20 active:scale-[0.98]"
+                  >
+                    Применить
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>
