@@ -28,10 +28,16 @@
 
 /* Remove dark mode for now as we have a specific palette */
 
+*, ::before, ::after {
+  font-family: var(--font-sans) !important;
+}
+
 body {
   background: var(--brand-beige);
   color: var(--brand-brown);
-  font-family: var(--font-sans);
+  font-family: var(--font-sans) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

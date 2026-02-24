@@ -30,6 +30,7 @@ const ptRootUI = localFont({
   variable: "--font-pt-root-ui",
   display: 'swap',
   preload: true,
+  adjustFontFallback: false,
 });
 
 export const viewport: Viewport = {
