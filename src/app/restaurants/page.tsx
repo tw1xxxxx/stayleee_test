@@ -20,24 +20,28 @@ interface Project {
 const STAGES = [
   {
     id: 'concept',
+    number: '01',
     title: 'Концепция',
     icon: '/images/icons8-концепция-64.png',
     text: 'Мы обсуждаем Ваши идеи и создаём образ будущего изделия — его стиль, характер и настроение.'
   },
   {
     id: 'construction',
+    number: '02',
     title: 'Конструкция',
     icon: '/images/icons8-телевышка-50.png',
     text: 'Разрабатываем индивидуальную конструкцию с учётом особенностей фигуры для идеальной посадки.'
   },
   {
     id: 'fabric',
+    number: '03',
     title: 'Ткань',
     icon: '/images/icons8-cloth-64.png',
     text: 'Подбираем материалы, которые подчеркнут концепцию и будут комфортны в носке.'
   },
   {
     id: 'fitting',
+    number: '04',
     title: 'Примерки\nи финал',
     icon: '/images/icons8-победитель-гонки-53.png',
     text: 'На примерках оттачиваем детали и доводим изделие до совершенства. В результате Вы получаете уникальную вещь, созданную специально для Вас.'
@@ -47,7 +51,6 @@ const STAGES = [
 export default function RestaurantsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedStage, setExpandedStage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
 
@@ -119,93 +122,42 @@ export default function RestaurantsPage() {
         <FadeIn delay={0.1}>
           <section className="pt-8">
             <h2 className="text-xl md:text-2xl font-medium mb-6 uppercase tracking-wider">Этапы работы</h2>
-            <div className="flex flex-col md:flex-row gap-4 h-auto md:h-64 lg:h-72 w-full select-none">
-              {STAGES.map((stage) => {
-                const isExpanded = expandedStage === stage.id;
-                return (
-                  <motion.div
-                    key={stage.id}
-                    layout
-                    onClick={() => setExpandedStage(isExpanded ? null : stage.id)}
-                    className={`
-                      relative rounded-[2rem] cursor-pointer overflow-hidden
-                      flex flex-col min-h-[100px] md:min-h-0
-                      ${isExpanded ? 'bg-white shadow-2xl z-20' : 'bg-white/40 hover:bg-white/60 z-10'}
-                      transition-colors duration-300
-                    `}
-                    initial={false}
-                    animate={{
-                      flex: isExpanded ? (typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : 4) : 1,
-                    }}
-                    transition={{
-                      layout: { duration: 0.5, type: "spring", stiffness: 300, damping: 30 }
-                    }}
-                  >
-                    <motion.div 
-                      layout 
-                      className={`flex flex-col h-full ${isExpanded ? 'items-center justify-center px-6 py-4' : 'items-center justify-center px-2'}`}
-                    >
-                      {/* Icon */}
-                      <motion.div 
-                        layout
-                        transition={{ layout: { duration: 0.5, type: "spring", stiffness: 300, damping: 30 } }}
-                        className={`relative shrink-0 ${isExpanded ? 'w-10 h-10 md:w-12 md:h-12 mb-3' : 'w-8 h-8 mb-2'}`}
-                      >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+              {STAGES.map((stage) => (
+                <FadeIn key={stage.id} delay={0.1}>
+                  <div className="group relative bg-white rounded-3xl p-6 h-full border border-brand-brown/5 transition-all duration-300 hover:shadow-xl hover:border-brand-brown/10">
+                    {/* Number & Icon Header */}
+                    <div className="flex items-start justify-between mb-6">
+                      <span className="text-4xl font-bold text-brand-brown/10 font-mono tracking-tighter">
+                        {stage.number}
+                      </span>
+                      <div className="w-12 h-12 relative grayscale group-hover:grayscale-0 transition-all duration-500">
                         <Image 
                           src={stage.icon} 
                           alt={stage.title.replace('\n', ' ')}
                           fill 
                           className="object-contain"
                         />
-                      </motion.div>
-
-                      {/* Title & Content Container */}
-                      <div className="relative flex flex-col items-center w-full">
-                        <motion.h3 
-                          layout
-                          transition={{ layout: { duration: 0.5, type: "spring", stiffness: 300, damping: 30 } }}
-                          className={`
-                            font-bold uppercase text-brand-brown text-center leading-tight w-full transition-all duration-300
-                            ${isExpanded 
-                              ? 'text-xs md:text-base tracking-widest mb-2' 
-                              : 'text-[9px] md:text-xs tracking-wider break-words'
-                            }
-                          `}
-                        >
-                          {stage.title}
-                        </motion.h3>
-
-                        {/* Content (Expanded Only) */}
-                        <AnimatePresence mode="popLayout">
-                          {isExpanded && (
-                            <motion.div
-                              key="content"
-                              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                              animate={{ 
-                                opacity: 1,
-                                y: 0,
-                                scale: 1,
-                                transition: { duration: 0.4, delay: 0.1, ease: "easeOut" }
-                              }}
-                              exit={{ 
-                                opacity: 0,
-                                y: 10,
-                                scale: 0.95,
-                                transition: { duration: 0.2 }
-                              }}
-                              className="flex flex-col items-center w-full"
-                            >
-                              <p className="text-xs md:text-sm lg:text-base leading-relaxed text-brand-brown/80 font-medium text-center max-w-[400px]">
-                                {stage.text}
-                              </p>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
                       </div>
-                    </motion.div>
-                  </motion.div>
-                );
-              })}
+                    </div>
+
+                    {/* Content */}
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-bold uppercase tracking-widest text-brand-brown leading-tight">
+                        {stage.title}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-brand-brown/60 font-medium">
+                        {stage.text}
+                      </p>
+                    </div>
+
+                    {/* Bottom accent line */}
+                    <div className="absolute bottom-0 left-6 right-6 h-1 bg-brand-brown/5 rounded-full overflow-hidden">
+                      <div className="h-full w-0 bg-brand-brown group-hover:w-full transition-all duration-700 ease-out" />
+                    </div>
+                  </div>
+                </FadeIn>
+              ))}
             </div>
           </section>
         </FadeIn>
