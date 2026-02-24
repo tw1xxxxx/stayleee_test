@@ -49,3 +49,13 @@ next-env.d.ts
 !public/videos/IMG_1154.mp4
 /video
 *.webm
+
+# Parsing and temporary data
+/parse_2
+/parse_3
+/parse_4
+/parse_catalog
+/foto
+/font
+/logo
+/data

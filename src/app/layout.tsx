@@ -7,27 +7,29 @@ import React from "react";
 const ptRootUI = localFont({
   src: [
     {
-      path: "./fonts/PT_Root_UI_Light.ttf",
+      path: "../../public/fonts/PT_Root_UI_Light.ttf",
       weight: "300",
       style: "normal",
     },
     {
-      path: "./fonts/PT_Root_UI_Regular.ttf",
+      path: "../../public/fonts/PT_Root_UI_Regular.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "./fonts/PT_Root_UI_Medium.ttf",
+      path: "../../public/fonts/PT_Root_UI_Medium.ttf",
       weight: "500",
       style: "normal",
     },
     {
-      path: "./fonts/PT_Root_UI_Bold.ttf",
+      path: "../../public/fonts/PT_Root_UI_Bold.ttf",
       weight: "700",
       style: "normal",
     },
   ],
   variable: "--font-pt-root-ui",
+  display: 'swap',
+  preload: true,
 });
 
 export const viewport: Viewport = {
@@ -69,12 +71,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" suppressHydrationWarning>
+    <html lang="ru" suppressHydrationWarning className={ptRootUI.variable}>
       <head>
         <link rel="preload" href="/videos/hero-inline.mp4" as="video" type="video/mp4" />
       </head>
       <body
-        className={`${ptRootUI.variable} antialiased`}
+        className={`${ptRootUI.className} antialiased`}
       >
         <AuthProvider>
           <CartProvider>
