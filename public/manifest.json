@@ -1,0 +1,21 @@
+{
+  "name": "StaySee - Одежда для поваров",
+  "short_name": "StaySee",
+  "description": "Одежда для ресторанов и поваров. Продажа физическим и юридическим лицам.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#E1DDD6",
+  "theme_color": "#E1DDD6",
+  "icons": [
+    {
+      "src": "/images/logo/StaySee_Logo_chocolate_v1-0.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/logo/StaySee_Logo_chocolate_v1-0.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

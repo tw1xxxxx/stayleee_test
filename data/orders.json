@@ -1,0 +1,225 @@
+[
+  {
+    "id": "110795",
+    "userId": "fqj6udy86",
+    "items": [
+      {
+        "id": 1,
+        "name": "БРЮКИ (WOMAN)",
+        "price": 5200
+      },
+      {
+        "id": 1,
+        "name": "БРЮКИ (WOMAN)",
+        "price": 5200
+      },
+      {
+        "id": -1,
+        "name": "Подарок: Фирменный стикерпак",
+        "price": 0
+      },
+      {
+        "id": -2,
+        "name": "Подарок: Полотенце шефа",
+        "price": 0
+      },
+      {
+        "id": -3,
+        "name": "Подарок: Фартук шефа (Lite)",
+        "price": 0
+      }
+    ],
+    "total": 10400,
+    "address": "пепе, пепепе",
+    "status": "В обработке",
+    "createdAt": "2026-02-17T11:31:35.258Z"
+  },
+  {
+    "id": "278739",
+    "userId": "fqj6udy86",
+    "items": [
+      {
+        "id": 103,
+        "name": "Брюки Seamaster",
+        "price": 3800,
+        "quantity": 2
+      },
+      {
+        "id": 101,
+        "name": "Китель Seamaster Pro",
+        "price": 5500,
+        "quantity": 1
+      },
+      {
+        "id": 101,
+        "name": "Китель Seamaster Pro",
+        "price": 5500,
+        "quantity": 1
+      },
+      {
+        "id": -1,
+        "name": "Подарок: Фирменный стикерпак",
+        "price": 0,
+        "quantity": 1
+      },
+      {
+        "id": -2,
+        "name": "Подарок: Полотенце шефа",
+        "price": 0,
+        "quantity": 1
+      },
+      {
+        "id": -3,
+        "name": "Подарок: Фартук шефа (Lite)",
+        "price": 0,
+        "quantity": 1
+      }
+    ],
+    "total": 18600,
+    "address": "ывавыа, выавыавыавыаав",
+    "status": "В обработке",
+    "createdAt": "2026-02-19T17:14:52.480Z",
+    "customer": {
+      "name": "ваы",
+      "phone": "+7 (444) 444-44-44",
+      "email": "isip_r.r.kaziakhmedov@mpt.ru"
+    }
+  },
+  {
+    "id": "354481",
+    "userId": "fqj6udy86",
+    "items": [
+      {
+        "id": 101,
+        "name": "Китель Seamaster Pro",
+        "price": 5500,
+        "quantity": 1
+      },
+      {
+        "id": -1,
+        "name": "Подарок: Фирменный стикерпак",
+        "price": 0,
+        "quantity": 1
+      },
+      {
+        "id": -2,
+        "name": "Подарок: Полотенце шефа",
+        "price": 0,
+        "quantity": 1
+      }
+    ],
+    "total": 5500,
+    "address": "ыавыа, ывавы",
+    "status": "В обработке",
+    "createdAt": "2026-02-19T17:16:04.463Z",
+    "customer": {
+      "name": "уцкуыаыа",
+      "phone": "+7 (444) 444-44-44",
+      "email": "isip_r.r.kaziakhmedov@mpt.ru"
+    }
+  },
+  {
+    "id": "594474",
+    "userId": "fqj6udy86",
+    "items": [
+      {
+        "id": 103,
+        "name": "Брюки Seamaster",
+        "price": 3800,
+        "quantity": 1
+      },
+      {
+        "id": 103,
+        "name": "Брюки Seamaster",
+        "price": 3900,
+        "quantity": 1
+      },
+      {
+        "id": -1,
+        "name": "Подарок: Фирменный стикерпак",
+        "price": 0,
+        "quantity": 1
+      },
+      {
+        "id": -2,
+        "name": "Подарок: Полотенце шефа",
+        "price": 0,
+        "quantity": 1
+      }
+    ],
+    "total": 7700,
+    "address": "вывыфвыфвыфвыф, вфвфывы",
+    "status": "В обработке",
+    "createdAt": "2026-02-19T17:25:55.546Z",
+    "customer": {
+      "name": "ыфвы",
+      "phone": "+7 (444) 444-44-44",
+      "email": "isip_r.r.kaziakhmedov@mpt.ru"
+    }
+  },
+  {
+    "id": "171160",
+    "userId": "fqj6udy86",
+    "items": [],
+    "total": 0,
+    "address": "вывыфвыфвыфвыф, вфвфывы",
+    "status": "В обработке",
+    "createdAt": "2026-02-19T17:26:07.956Z",
+    "customer": {
+      "name": "ыфвы",
+      "phone": "+7 (444) 444-44-44",
+      "email": "isip_r.r.kaziakhmedov@mpt.ru"
+    }
+  },
+  {
+    "id": "591039",
+    "userId": "fqj6udy86",
+    "items": [
+      {
+        "id": 101,
+        "name": "Китель Seamaster Pro",
+        "price": 5500,
+        "quantity": 1
+      },
+      {
+        "id": 101,
+        "name": "Китель Seamaster Pro",
+        "price": 5500,
+        "quantity": 1
+      },
+      {
+        "id": 101,
+        "name": "Китель Seamaster Pro",
+        "price": 5500,
+        "quantity": 1
+      },
+      {
+        "id": -1,
+        "name": "Подарок: Фирменный стикерпак",
+        "price": 0,
+        "quantity": 1
+      },
+      {
+        "id": -2,
+        "name": "Подарок: Полотенце шефа",
+        "price": 0,
+        "quantity": 1
+      },
+      {
+        "id": -3,
+        "name": "Подарок: Фартук шефа (Lite)",
+        "price": 0,
+        "quantity": 1
+      }
+    ],
+    "total": 16500,
+    "address": "выфавы, фывафывввввввввввввввввввв",
+    "status": "В обработке",
+    "createdAt": "2026-02-19T17:35:34.112Z",
+    "customer": {
+      "name": "ыыфваываваыфвыфаавыф",
+      "phone": "+7 (555) 555-55-55",
+      "email": "isip_r.r.kaziakhmedov@mpt.ru"
+    }
+  }
+]

@@ -1,0 +1,41 @@
+[
+  {
+    "id": "portfolio-2",
+    "type": "portfolio",
+    "title": "Название",
+    "image": "/images/470750.jpg",
+    "order": 0
+  },
+  {
+    "id": "promo-2",
+    "type": "promo",
+    "text": "Плюшки",
+    "order": 1
+  },
+  {
+    "id": "portfolio-1",
+    "type": "portfolio",
+    "title": "Клод моне",
+    "image": "/images/470750.jpg",
+    "order": 2
+  },
+  {
+    "id": "promo-1",
+    "type": "promo",
+    "text": "Закажите от 300к и вам в подарок брендирование",
+    "order": 3
+  },
+  {
+    "id": "1",
+    "type": "portfolio",
+    "title": "Кибер Спорт",
+    "image": "/images/uploads/upload-1771511389590-427013386.png",
+    "order": 4
+  },
+  {
+    "id": "2",
+    "type": "promo",
+    "text": "За 1м мы вам подарим автомобиль",
+    "order": 5
+  }
+]

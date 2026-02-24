@@ -1,0 +1,40 @@
+{
+  "name": "clothing-for-restaurants",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "@vercel/blob": "^2.3.0",
+    "framer-motion": "^12.34.0",
+    "hls.js": "^1.6.15",
+    "lucide-react": "^0.574.0",
+    "next": "16.1.6",
+    "nodemailer": "^8.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-player": "^3.4.0",
+    "react-zoom-pan-pinch": "^3.7.0",
+    "redis": "^4.7.1",
+    "splitting": "^1.1.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/nodemailer": "^7.0.10",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/splitting": "^1.0.6",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

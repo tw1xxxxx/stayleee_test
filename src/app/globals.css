@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --background: #E1DDD6; /* brand-beige as background default? Or white? User said "colors we use". Let's stick to beige/white but define variables first. */
+  --foreground: #2B1A15; /* brand-brown as text */
+  
+  /* Brand Palette */
+  --brand-brown: #2B1A15;
+  --brand-beige: #E1DDD6;
+  --brand-red: #AE3135;
+}
+
+/* 
+  Note: The @theme directive is valid Tailwind CSS v4 syntax. 
+  If your editor flags this as an "Unknown at rule", it is a false positive.
+*/
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-brand-brown: var(--brand-brown);
+  --color-brand-beige: var(--brand-beige);
+  --color-brand-red: var(--brand-red);
+  
+  --font-sans: var(--font-pt-root-ui), sans-serif;
+}
+
+/* Remove dark mode for now as we have a specific palette */
+
+body {
+  background: var(--brand-beige);
+  color: var(--brand-brown);
+  font-family: var(--font-sans);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html, body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  scroll-behavior: smooth; /* Smooth scrolling for app-like feel */
+  /* iOS/Safari specific fixes */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent; /* Remove grey tap highlight on iOS */
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+  width: 100%;
+  /* Prevent double-tap zoom and pinch-zoom */
+  touch-action: manipulation; /* Improved touch handling */
+  /* overscroll-behavior-y: none; - REMOVED: Causing scroll lock issues */
+}
+
+/* Utility to hide scrollbar in specific elements */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Fix for 100vh on mobile browsers (Safari/Chrome on iOS) */
+@supports (height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh;
+  }
+  .h-screen {
+    height: 100dvh;
+  }
+}
+
+/* Fallback for older Safari */
+@supports (-webkit-touch-callout: none) and (not (height: 100dvh)) {
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
+  .h-screen {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Safe Area Utilities */
+.pb-safe {
+  padding-bottom: constant(safe-area-inset-bottom); /* iOS 11.0 */
+  padding-bottom: env(safe-area-inset-bottom); /* iOS 11.2+ */
+}
+
+.pt-safe {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.mb-safe {
+  margin-bottom: constant(safe-area-inset-bottom);
+  margin-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-safe {
+  bottom: constant(safe-area-inset-bottom);
+  bottom: env(safe-area-inset-bottom);
+}
+
+/* Custom Scrollbar for internal elements */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #E5E7EB;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #D1D5DB;
+}
