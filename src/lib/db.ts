@@ -208,50 +208,7 @@ export interface Gift {
   price: number;
 }
 
-// Ensure data directory exists
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
 
-// Ensure users file exists
-if (!fs.existsSync(USERS_FILE)) {
-  fs.writeFileSync(USERS_FILE, JSON.stringify([], null, 2));
-}
-
-// Ensure orders file exists
-if (!fs.existsSync(ORDERS_FILE)) {
-  fs.writeFileSync(ORDERS_FILE, JSON.stringify([], null, 2));
-}
-
-// Ensure collections file exists
-if (!fs.existsSync(COLLECTIONS_FILE)) {
-  fs.writeFileSync(COLLECTIONS_FILE, JSON.stringify([], null, 2));
-}
-
-// Ensure products file exists
-if (!fs.existsSync(PRODUCTS_FILE)) {
-  fs.writeFileSync(PRODUCTS_FILE, JSON.stringify([], null, 2));
-}
-
-// Ensure filters file exists
-if (!fs.existsSync(FILTERS_FILE)) {
-  fs.writeFileSync(FILTERS_FILE, JSON.stringify([], null, 2));
-}
-
-// Ensure projects file exists
-if (!fs.existsSync(PROJECTS_FILE)) {
-  fs.writeFileSync(PROJECTS_FILE, JSON.stringify([], null, 2));
-}
-
-// Ensure gifts file exists
-if (!fs.existsSync(GIFTS_FILE)) {
-  fs.writeFileSync(GIFTS_FILE, JSON.stringify([], null, 2));
-}
-
-// Ensure transactions file exists
-if (!fs.existsSync(TRANSACTIONS_FILE)) {
-  fs.writeFileSync(TRANSACTIONS_FILE, JSON.stringify([], null, 2));
-}
 
 export const db = {
   getUsers: async (): Promise<User[]> => {

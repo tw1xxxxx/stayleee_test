@@ -202,10 +202,17 @@ export async function GET() {
         }
       ];
 
-      for (const p of dummyProducts) {
-        await db.saveProduct(p);
+      // Try to save, but ignore failures on read-only environments
+      try {
+        for (const p of dummyProducts) {
+          await db.saveProduct(p);
+        }
+      } catch (error) {
+        console.error('Failed to save seeded products:', error);
       }
-      products = await db.getProducts();
+      
+      const savedProducts = await db.getProducts();
+      products = savedProducts.length > 0 ? savedProducts : dummyProducts;
     }
 
     return NextResponse.json(products.map(product => normalizeProduct(product)));

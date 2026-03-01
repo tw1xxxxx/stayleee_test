@@ -155,30 +155,21 @@ function CatalogContent() {
   const filterById = new Map(filters.map(filter => [filter.id, filter]));
 
   const filteredProducts = products.filter((product) => {
-    // Debug logging
-    console.log('Product:', product.name, 'FilterIds:', product.filterIds);
-    console.log('Active Filters:', activeFilters);
-    
     const isAll = activeFilters.includes("all") || activeFilters.length === 0;
     
     // Check if filters are loaded, if not - show all
     if (filters.length === 0 && isAll) {
-      console.log('Filters empty, showing all');
       return true;
     }
 
     const productFilterSlugs = (product.filterIds || [])
       .map(filterId => {
         const filter = filterById.get(filterId);
-        console.log(`Mapping filterId ${filterId} to slug: ${filter?.slug}`);
         return filter?.slug;
       })
       .filter((slug): slug is string => Boolean(slug));
     
-    console.log('Product Slugs:', productFilterSlugs);
-    
     const matchesFilter = isAll || productFilterSlugs.some(slug => activeFilters.includes(slug));
-    console.log('Matches Filter:', matchesFilter);
     
     const searchLower = searchQuery.toLowerCase();
     const matchesName = product.name.toLowerCase().includes(searchLower);

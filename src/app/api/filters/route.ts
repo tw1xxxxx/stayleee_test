@@ -38,10 +38,17 @@ export async function GET() {
         return { id: `filter-${slug}`, name, slug };
       });
 
-      for (const filter of seeded) {
-        await db.saveFilter(filter);
+      // Try to save, but ignore failures on read-only environments
+      try {
+        for (const filter of seeded) {
+          await db.saveFilter(filter);
+        }
+      } catch (error) {
+        console.error('Failed to save seeded filters:', error);
       }
-      filters = await db.getFilters();
+      
+      const savedFilters = await db.getFilters();
+      filters = savedFilters.length > 0 ? savedFilters : seeded;
     }
 
     return NextResponse.json(filters);
