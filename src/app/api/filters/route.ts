@@ -29,7 +29,7 @@ export async function GET() {
     let filters = await db.getFilters();
 
     if (filters.length === 0) {
-      const defaults = ['Кители', 'Брюки', 'Фартуки', 'Рубашки'];
+      const defaults = ['Кители', 'Брюки', 'Фартуки'];
       const slugs = new Set<string>();
       const seeded: Filter[] = defaults.map((name) => {
         const base = slugify(name);

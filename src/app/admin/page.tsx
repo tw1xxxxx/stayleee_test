@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import SafeImage from "@/app/components/SafeImage";
+import { formatPrice } from "@/lib/utils";
 
 export default function AdminPage() {
   const isAuthenticated = useSyncExternalStore(
@@ -108,6 +109,7 @@ export default function AdminPage() {
     { id: "catalog", label: "Каталог" },
     { id: "collections", label: "Коллекции" },
     { id: "restaurants", label: "Для ресторанов" },
+    { id: "gifts", label: "Подарки" },
   ];
 
   return (
@@ -167,9 +169,256 @@ export default function AdminPage() {
             {activeTab === "catalog" && <CatalogTab />}
             {activeTab === "collections" && <CollectionsTab />}
             {activeTab === "restaurants" && <ProjectsTab />}
+            {activeTab === "gifts" && <GiftsTab />}
           </motion.div>
         </AnimatePresence>
       </main>
+    </div>
+  );
+}
+
+interface AdminGift {
+  id: string;
+  threshold: number;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+}
+
+function GiftsTab() {
+  const [gifts, setGifts] = useState<AdminGift[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentGift, setCurrentGift] = useState<Partial<AdminGift>>({});
+
+  useEffect(() => {
+    fetchGifts();
+  }, []);
+
+  const fetchGifts = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/gifts", { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setGifts(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch gifts", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!currentGift.title || currentGift.threshold === undefined) return;
+
+    const newGifts = [...gifts];
+    if (currentGift.id) {
+      const index = newGifts.findIndex(g => g.id === currentGift.id);
+      if (index >= 0) {
+        newGifts[index] = currentGift as AdminGift;
+      }
+    } else {
+      newGifts.push({
+        ...currentGift,
+        id: `gift-${Date.now()}`
+      } as AdminGift);
+    }
+
+    try {
+      const res = await fetch("/api/gifts", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newGifts)
+      });
+      if (res.ok) {
+        setGifts(newGifts);
+        setIsEditing(false);
+        setCurrentGift({});
+      }
+    } catch (error) {
+      console.error("Failed to save gifts", error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Удалить этот подарок?")) return;
+    const newGifts = gifts.filter(g => g.id !== id);
+    try {
+      const res = await fetch("/api/gifts", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newGifts)
+      });
+      if (res.ok) {
+        setGifts(newGifts);
+      }
+    } catch (error) {
+      console.error("Failed to delete gift", error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <Loader2 className="w-10 h-10 text-brand-brown animate-spin mb-4" />
+        <p className="text-brand-brown/60 font-medium">Загрузка подарков...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold text-brand-brown">Управление подарками</h2>
+        <button
+          onClick={() => {
+            setCurrentGift({ threshold: 0, title: "", description: "", image: "", price: 0 });
+            setIsEditing(true);
+          }}
+          className="flex items-center gap-2 bg-brand-brown text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors"
+        >
+          <Plus size={20} />
+          Добавить подарок
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {gifts.map((gift) => (
+          <motion.div
+            key={gift.id}
+            layout
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-white p-6 rounded-2xl shadow-sm border border-brand-brown/5 space-y-4"
+          >
+            <div className="aspect-square relative rounded-xl overflow-hidden bg-brand-beige/30">
+              <SafeImage src={gift.image} alt={gift.title} fill className="object-cover" />
+            </div>
+            <div>
+              <h3 className="font-bold text-brand-brown text-lg">{gift.title}</h3>
+              <p className="text-sm text-gray-500 line-clamp-2 min-h-[2.5rem]">{gift.description}</p>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-400">Порог: <span className="text-brand-brown font-bold">{formatPrice(gift.threshold)} ₽</span></span>
+              <span className="text-gray-400">Цена: <span className="text-brand-brown font-bold">{formatPrice(gift.price)} ₽</span></span>
+            </div>
+            <div className="flex gap-2 pt-2">
+              <button
+                onClick={() => {
+                  setCurrentGift(gift);
+                  setIsEditing(true);
+                }}
+                className="flex-1 flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
+              >
+                <Edit size={18} />
+                Изменить
+              </button>
+              <button
+                onClick={() => handleDelete(gift.id)}
+                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <AnimatePresence>
+        {isEditing && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsEditing(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden"
+            >
+              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h3 className="text-xl font-bold text-brand-brown">
+                  {currentGift.id ? "Редактировать подарок" : "Новый подарок"}
+                </h3>
+                <button onClick={() => setIsEditing(false)} className="p-2 hover:bg-white rounded-full transition-colors shadow-sm">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-gray-700 ml-1">Название</label>
+                  <input
+                    type="text"
+                    value={currentGift.title || ""}
+                    onChange={(e) => setCurrentGift({ ...currentGift, title: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-brown/20 outline-none transition-all"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-gray-700 ml-1">Описание</label>
+                  <textarea
+                    value={currentGift.description || ""}
+                    onChange={(e) => setCurrentGift({ ...currentGift, description: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-brown/20 outline-none transition-all min-h-[100px]"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-sm font-bold text-gray-700 ml-1">Порог (₽)</label>
+                    <input
+                      type="number"
+                      value={currentGift.threshold || 0}
+                      onChange={(e) => setCurrentGift({ ...currentGift, threshold: parseInt(e.target.value) })}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-brown/20 outline-none transition-all"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-sm font-bold text-gray-700 ml-1">Цена (₽)</label>
+                    <input
+                      type="number"
+                      value={currentGift.price || 0}
+                      onChange={(e) => setCurrentGift({ ...currentGift, price: parseInt(e.target.value) })}
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-brown/20 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-sm font-bold text-gray-700 ml-1">Путь к фото</label>
+                  <input
+                    type="text"
+                    value={currentGift.image || ""}
+                    onChange={(e) => setCurrentGift({ ...currentGift, image: e.target.value })}
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-brand-brown/20 outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="p-6 bg-gray-50 border-t border-gray-100 flex gap-3">
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="flex-1 px-6 py-3 bg-white border border-gray-200 text-gray-600 rounded-2xl font-bold hover:bg-gray-50 transition-colors shadow-sm"
+                >
+                  Отмена
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="flex-1 px-6 py-3 bg-brand-brown text-white rounded-2xl font-bold hover:bg-opacity-90 transition-colors shadow-lg shadow-brand-brown/20"
+                >
+                  Сохранить
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -802,7 +1051,7 @@ function ClientsTab() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{client.name || "Не указано"}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.ordersCount || 0}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{(client.totalSpent || 0).toLocaleString()} ₽</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatPrice(client.totalSpent || 0)} ₽</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(client.createdAt).toLocaleDateString('ru-RU')}
                   </td>
@@ -963,7 +1212,7 @@ function OrdersTab() {
                         {new Date(order.createdAt).toLocaleString('ru-RU')}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                        {order.total.toLocaleString()} ₽
+                        {formatPrice(order.total)} ₽
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
@@ -999,7 +1248,7 @@ function OrdersTab() {
                               {order.items.slice(0, 4).map((item, idx) => (
                                 <div key={idx} className="flex justify-between border-b border-gray-200 pb-2">
                                   <span>{item.name} {item.quantity ? `x${item.quantity}` : ''}</span>
-                                  <span>{item.price.toLocaleString()} ₽</span>
+                                  <span>{formatPrice(item.price)} ₽</span>
                                 </div>
                               ))}
                               {order.items.length > 4 && (
@@ -1078,7 +1327,7 @@ function OrdersTab() {
                       )}
                     </div>
                     <div className="font-medium text-brand-brown">
-                      {item.price.toLocaleString()} ₽
+                      {formatPrice(item.price)} ₽
                     </div>
                   </div>
                 ))}
@@ -1086,7 +1335,7 @@ function OrdersTab() {
 
               <div className="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center">
                 <span className="font-bold text-lg">Итого:</span>
-                <span className="font-bold text-xl text-brand-brown">{selectedOrder.total.toLocaleString()} ₽</span>
+                <span className="font-bold text-xl text-brand-brown">{formatPrice(selectedOrder.total)} ₽</span>
               </div>
             </div>
             
@@ -1258,7 +1507,7 @@ function TransactionsTab() {
                     {new Date(t.createdAt).toLocaleString('ru-RU')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                    {t.amount.toLocaleString()} ₽
+                    {formatPrice(t.amount)} ₽
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(t.status)}`}>
@@ -2756,7 +3005,7 @@ function CatalogTab() {
                       
                       <div className="p-4 space-y-1">
                          <div className="font-medium text-gray-900 leading-tight">{currentProduct.name || "Название товара"}</div>
-                         <div className="pt-2 font-bold text-lg text-gray-900">{Number(currentProduct.price || 0).toLocaleString()} ₽</div>
+                         <div className="pt-2 font-bold text-lg text-gray-900">{formatPrice(currentProduct.price || 0)} ₽</div>
                          
                          {previewFilters.length > 0 && (
                             <div className="flex flex-wrap gap-1.5 pt-3 border-t border-gray-50 mt-3">
@@ -3080,7 +3329,7 @@ function CatalogTab() {
                     </div>
                     <div className="p-4 space-y-2">
                       <div className="font-medium text-brand-brown">{product.name}</div>
-                      <div className="font-bold text-brand-brown">{product.price.toLocaleString()} ₽</div>
+                      <div className="font-bold text-brand-brown">{formatPrice(product.price)} ₽</div>
                       <div className="flex flex-wrap gap-2">
                         {(product.tags || []).map(tag => (
                           <span key={tag} className="px-2 py-1 bg-gray-100 text-xs rounded-full text-gray-600">
@@ -3245,7 +3494,7 @@ function ProductPickerModal({ isOpen, onClose, products, onSelect, alreadySelect
                     </div>
                     <div className="p-3">
                       <div className="font-medium text-sm text-gray-900 line-clamp-2 h-10 leading-tight mb-1">{product.name}</div>
-                      <div className="text-brand-brown font-bold text-sm">{product.price.toLocaleString()} ₽</div>
+                      <div className="text-brand-brown font-bold text-sm">{formatPrice(product.price)} ₽</div>
                     </div>
                   </div>
                 );

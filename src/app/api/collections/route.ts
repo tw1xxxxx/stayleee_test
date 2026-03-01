@@ -37,11 +37,6 @@ export async function GET() {
               id: 's3',
               title: "Фартуки",
               productIds: ['201', '202']
-            },
-            {
-              id: 's4',
-              title: "Рубашки",
-              productIds: ['203', '204']
             }
           ]
         }

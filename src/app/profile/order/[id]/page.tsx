@@ -2,6 +2,7 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useCart } from "../../../context/CartContext";
+import { formatPrice } from "@/lib/utils";
 
 export default function OrderPage() {
   const router = useRouter();
@@ -9,11 +10,6 @@ export default function OrderPage() {
   const { orders, isInitialized } = useCart();
   
   const order = orders.find((o) => o.id.toString() === params.id);
-
-  // Helper for price formatting
-  const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-  };
 
   if (!isInitialized) {
     return (

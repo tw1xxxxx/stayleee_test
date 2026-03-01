@@ -25,6 +25,23 @@ export interface CreatePaymentParams {
   capture: boolean;
   description: string;
   metadata?: Record<string, string>;
+  receipt?: {
+    customer: {
+      email?: string;
+      phone?: string;
+    };
+    items: Array<{
+      description: string;
+      amount: {
+        value: string;
+        currency: string;
+      };
+      quantity: string;
+      vat_code: number;
+      payment_mode?: string;
+      payment_subject?: string;
+    }>;
+  };
 }
 
 export const createYooKassaPayment = async (params: CreatePaymentParams) => {

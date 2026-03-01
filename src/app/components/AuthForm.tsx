@@ -221,11 +221,11 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 setStep("email");
               } else {
                 if (backUrl) {
-                  router.push(backUrl);
+                  router.replace(backUrl);
                 } else if (window.history.length > 1) {
                   router.back();
                 } else {
-                  router.push('/');
+                  router.push("/");
                 }
               }
             }}

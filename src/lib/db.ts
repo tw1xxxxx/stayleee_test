@@ -10,6 +10,7 @@ const COLLECTIONS_FILE = path.join(DATA_DIR, 'collections.json');
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const FILTERS_FILE = path.join(DATA_DIR, 'filters.json');
 const PROJECTS_FILE = path.join(DATA_DIR, 'projects.json');
+const GIFTS_FILE = path.join(DATA_DIR, 'gifts.json');
 const TRANSACTIONS_FILE = path.join(DATA_DIR, 'transactions.json');
 const USERS_KEY = 'users';
 const ORDERS_KEY = 'orders';
@@ -17,6 +18,7 @@ const COLLECTIONS_KEY = 'collections';
 const PRODUCTS_KEY = 'products';
 const FILTERS_KEY = 'filters';
 const PROJECTS_KEY = 'projects';
+const GIFTS_KEY = 'gifts';
 const TRANSACTIONS_KEY = 'transactions';
 const kvBaseUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -197,6 +199,15 @@ export interface Project {
   order: number;
 }
 
+export interface Gift {
+  id: string;
+  threshold: number;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+}
+
 // Ensure data directory exists
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -230,6 +241,11 @@ if (!fs.existsSync(FILTERS_FILE)) {
 // Ensure projects file exists
 if (!fs.existsSync(PROJECTS_FILE)) {
   fs.writeFileSync(PROJECTS_FILE, JSON.stringify([], null, 2));
+}
+
+// Ensure gifts file exists
+if (!fs.existsSync(GIFTS_FILE)) {
+  fs.writeFileSync(GIFTS_FILE, JSON.stringify([], null, 2));
 }
 
 // Ensure transactions file exists
@@ -759,6 +775,52 @@ export const db = {
       await fs.promises.writeFile(PROJECTS_FILE, JSON.stringify(projects, null, 2));
     } catch (error) {
       console.error('Error saving projects:', error);
+    }
+  },
+
+  // Gifts
+  getGifts: async (): Promise<Gift[]> => {
+    if (useKv) {
+      const gifts = await kvGetJson<Gift[]>(GIFTS_KEY);
+      if (Array.isArray(gifts)) {
+        return gifts;
+      }
+    }
+    const redisClient = await getRedisClient();
+    if (redisClient) {
+      const data = await redisClient.get(GIFTS_KEY);
+      if (data) {
+        try {
+          const gifts = JSON.parse(data);
+          return Array.isArray(gifts) ? gifts : [];
+        } catch (error) {
+          console.error('Error parsing gifts from Redis:', error);
+        }
+      }
+    }
+    try {
+      const data = await fs.promises.readFile(GIFTS_FILE, 'utf-8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Error reading gifts file:', error);
+      return [];
+    }
+  },
+
+  saveGifts: async (gifts: Gift[]): Promise<void> => {
+    try {
+      if (useKv) {
+        const saved = await kvSetJson(GIFTS_KEY, gifts);
+        if (saved) return;
+      }
+      const redisClient = await getRedisClient();
+      if (redisClient) {
+        await redisClient.set(GIFTS_KEY, JSON.stringify(gifts));
+        return;
+      }
+      await fs.promises.writeFile(GIFTS_FILE, JSON.stringify(gifts, null, 2));
+    } catch (error) {
+      console.error('Error saving gifts:', error);
     }
   },
 

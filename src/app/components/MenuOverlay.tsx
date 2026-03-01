@@ -85,7 +85,7 @@ const MenuOverlay = memo(function MenuOverlay({ isOpen, onClose }: MenuOverlayPr
     { path: "/restaurants", label: "Для ресторанов" },
     { path: "/cooperation", label: "Сотрудничество" },
     { path: "/about", label: "О нас" },
-    { path: "/certificates", label: "Сертификаты" },
+    { path: "/gifts", label: "Подарки" },
   ];
 
   return (
@@ -173,7 +173,7 @@ const MenuOverlay = memo(function MenuOverlay({ isOpen, onClose }: MenuOverlayPr
           </Link>
 
           {/* Telegram Icon - Official Plane Only */}
-          <Link href="https://t.me/staysee_shop" target="_blank" className="w-14 h-14 flex items-center justify-center transition-opacity hover:opacity-80">
+          <Link href="https://t.me/stayseesh0p" target="_blank" className="w-14 h-14 flex items-center justify-center transition-opacity hover:opacity-80">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-14 h-14">
               <path d="M17.8 7.6L15.6 18.3C15.5 18.8 15.2 18.9 14.8 18.7L11.4 16.2L9.8 17.7C9.6 17.9 9.4 18.1 9 18.1L9.2 14.6L15.6 8.8C15.9 8.5 15.5 8.4 15.1 8.6L7.2 13.6L3.8 12.5C3 12.3 3 11.7 4 11.3L17.1 6.3C17.7 6.1 18.2 6.4 17.8 7.6Z" fill="#29B6F6"/>
             </svg>

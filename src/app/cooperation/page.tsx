@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import ContactsSection from "../components/ContactsSection";
 import FadeIn from "../components/FadeIn";
 import MenuOverlay from "../components/MenuOverlay";
+import BonusesSection from "../components/BonusesSection";
 
 export default function CooperationPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -202,7 +203,7 @@ export default function CooperationPage() {
                       {/* First Name */}
                     <div className="space-y-1.5">
                       <label htmlFor="firstName" className="text-xs font-bold uppercase tracking-wider text-brand-brown/60 ml-1">
-                        Имя <span className="text-brand-red">*</span>
+                        Ваше имя <span className="text-brand-red">*</span>
                       </label>
                       <input
                         type="text"

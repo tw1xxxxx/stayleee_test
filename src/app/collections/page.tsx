@@ -1,12 +1,13 @@
 "use client";
 
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import FadeIn from "../components/FadeIn";
-import { useState, useEffect } from "react";
 import MenuOverlay from "../components/MenuOverlay";
 import { useCart } from "../context/CartContext";
-import { AnimatePresence, motion } from "framer-motion";
+import { formatPrice } from "@/lib/utils";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import SafeImage from "@/app/components/SafeImage";
 
 
@@ -29,6 +30,7 @@ interface FormattedProduct {
   title: string;
   price: string;
   image: string;
+  description?: string;
 }
 
 interface FormattedSection {
@@ -50,6 +52,19 @@ export default function CollectionsPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [collections, setCollections] = useState<FormattedCollection[]>([]);
+
+  const [activeCollectionId, setActiveCollectionId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (collections.length > 0 && !activeCollectionId) {
+      setActiveCollectionId(collections[0].id);
+    }
+  }, [collections, activeCollectionId]);
+
+  const activeCollection = useMemo(() => 
+    collections.find(c => c.id === activeCollectionId) || collections[0],
+    [collections, activeCollectionId]
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,9 +92,10 @@ export default function CollectionsPage() {
                 return p ? {
                   id: p.id,
                   title: p.name,
-                  price: `${Number(p.price).toLocaleString()} ₽`,
-                  image
-                } : null;
+                  price: `${formatPrice(p.price)} ₽`,
+                  image,
+                  description: p.description
+                } as FormattedProduct : null;
               }).filter((item): item is FormattedProduct => Boolean(item))
             }))
           }));
@@ -113,8 +129,40 @@ export default function CollectionsPage() {
 
   return (
     <div className="min-h-screen bg-brand-beige font-sans pb-20 relative text-brand-brown">
+      {/* Global Fixed Background for Desktop */}
+      <div className="fixed inset-0 z-0 hidden md:block bg-brand-beige">
+        <AnimatePresence mode="popLayout">
+          {activeCollection?.image && (
+            <motion.div
+              key={activeCollectionId}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+              className="absolute inset-0 flex justify-end"
+            >
+              <div className="relative h-full w-full">
+                <SafeImage
+                  src={activeCollection.image}
+                  alt=""
+                  fill
+                  className="object-contain object-right"
+                  sizes="100vw"
+                  quality={100}
+                  priority
+                />
+                {/* Gradient transition from beige to image */}
+                <div className="absolute inset-0 bg-gradient-to-r from-brand-beige via-brand-beige/20 to-transparent pointer-events-none" />
+              </div>
+              {/* Dark Overlay for readability */}
+               <div className="absolute inset-0 bg-black/45" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       {/* Header */}
-      <header className="relative bg-brand-beige border-b border-brand-brown/10 px-4 py-4 flex items-center justify-between">
+      <header className="relative z-20 bg-brand-beige border-b border-brand-brown/10 px-4 py-4 flex items-center justify-between">
         <button 
           onClick={() => setIsMenuOpen(true)}
           className="p-2 -ml-2 hover:bg-white/50 rounded-full transition-colors"
@@ -151,13 +199,13 @@ export default function CollectionsPage() {
             </AnimatePresence>
           </Link>
           
-          <Link href="/profile" prefetch={false} className="p-2 -mr-2 hover:bg-white/50 rounded-full transition-colors">
-            <div className="w-8 h-8 relative flex items-center justify-center -translate-y-1">
+          <Link href="/profile" prefetch={false} className="p-0.5 -mr-1.5 hover:bg-white/50 rounded-full transition-colors">
+            <div className="w-12 h-12 relative flex items-center justify-center">
               <Image 
-                src="/images/profile-chef-happy-v2.png" 
+                src="/images/profile-icon.png" 
                 alt="Профиль" 
-                width={25}
-                height={25}
+                width={44}
+                height={44}
                 className="object-contain"
                 priority
               />
@@ -167,76 +215,18 @@ export default function CollectionsPage() {
       </header>
 
       {/* Collections Content */}
-      <div className="px-4 py-8 flex flex-col gap-12 md:gap-20 max-w-[1400px] mx-auto">
+      <div className="flex flex-col relative z-10">
         {isLoading ? (
-          <div className="flex justify-center py-20">
+          <div className="flex justify-center py-20 px-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-brown"></div>
           </div>
         ) : (
           collections.map((collection) => (
-            <div key={collection.id} className="flex flex-col gap-6 md:gap-10">
-              {/* Collection Header */}
-              <FadeIn direction="left" className="flex flex-col gap-3 md:gap-6">
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-light tracking-wide uppercase text-brand-brown">{collection.name}</h2>
-                {collection.image && (
-                  <div className="relative w-full aspect-[21/9] md:aspect-[4/1] rounded-2xl overflow-hidden shadow-sm">
-                    <SafeImage
-                      src={collection.image}
-                      alt={collection.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1400px"
-                      quality={90}
-                      priority
-                    />
-                  </div>
-                )}
-                <div className="pl-4 border-l-2 border-brand-red/60">
-                  <p className="text-sm md:text-base lg:text-lg text-brand-brown/80 leading-relaxed max-w-2xl italic font-light">
-                    {collection.description}
-                  </p>
-                </div>
-              </FadeIn>
-
-              {/* Collection Sections */}
-              <div className="flex flex-col gap-8 md:gap-12">
-                {collection.sections.map((section, idx) => (
-                  <div key={idx} className="flex flex-col gap-4">
-                    <FadeIn direction="up" delay={0.1} className="flex items-center gap-3">
-                      <h3 className="text-base md:text-lg lg:text-xl font-normal tracking-wide text-brand-brown/90">{section.title}</h3>
-                      <div className="h-px bg-brand-brown/10 flex-grow"></div>
-                    </FadeIn>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 md:gap-x-6 lg:gap-x-8 gap-y-8 md:gap-y-10">
-                      {section.products.map((product, pIdx) => (
-                        <FadeIn key={product.id} delay={pIdx * 0.05}>
-                          <Link href={`/product/${product.id}`} prefetch={false} className="flex flex-col gap-3 group cursor-pointer h-full">
-                            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm bg-gray-100 shadow-sm">
-                              <SafeImage
-                                src={product.image}
-                                alt={product.title}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
-                                quality={90}
-                              />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              <h3 className="text-[10px] md:text-xs lg:text-sm font-medium text-brand-brown uppercase tracking-wider leading-tight group-hover:text-brand-brown/70 transition-colors">
-                                {product.title}
-                              </h3>
-                              <p className="text-sm md:text-base lg:text-lg font-bold text-brand-brown mt-1">
-                                {product.price}
-                              </p>
-                            </div>
-                          </Link>
-                        </FadeIn>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <CollectionSection 
+              key={collection.id} 
+              collection={collection} 
+              onInView={() => setActiveCollectionId(collection.id)}
+            />
           ))
         )}
       </div>
@@ -245,3 +235,121 @@ export default function CollectionsPage() {
     </div>
   );
 }
+
+// Separate component for each collection section to track view state
+const CollectionSection = ({ 
+  collection, 
+  onInView 
+}: { 
+  collection: FormattedCollection; 
+  onInView: () => void;
+}) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { 
+    margin: "-50% 0px -50% 0px" // Trigger when section is in the middle of viewport
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      onInView();
+    }
+  }, [isInView, onInView]);
+
+  return (
+    <div ref={ref} className="relative min-h-screen">
+      {/* Background for Mobile Only (Sticky/Clip-path technique) - Now Hidden as requested */}
+      <div 
+        className="absolute inset-0 z-0 hidden"
+        style={{ clipPath: 'inset(0 0 0 0)' }}
+      >
+        {collection.image ? (
+          <div className="sticky top-0 h-screen w-full">
+            <div className="absolute inset-0 w-full h-full overflow-hidden">
+              <SafeImage
+                src={collection.image}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="100vw"
+                quality={100}
+                priority
+              />
+            </div>
+            <div className="absolute inset-0 bg-black/55" />
+          </div>
+        ) : (
+          <div className="absolute inset-0 bg-brand-beige" />
+        )}
+      </div>
+
+      {/* Collection Content - Scrolling over the background */}
+      <div className="relative z-10 px-4 py-12 md:py-32 max-w-[1400px] mx-auto w-full">
+        {/* Collection Header */}
+        <FadeIn direction="left" className="flex flex-col gap-4 md:gap-8 mb-12 md:mb-24">
+          <h2 className="text-3xl md:text-6xl lg:text-8xl font-light tracking-[0.2em] uppercase text-brand-brown md:text-white md:drop-shadow-xl">
+            {collection.name}
+          </h2>
+          <div className="pl-6 border-l-4 border-brand-red">
+            <p className="text-base md:text-xl lg:text-2xl text-brand-brown/80 md:text-white/90 leading-relaxed max-w-4xl italic font-medium md:drop-shadow-md">
+              {collection.description}
+            </p>
+          </div>
+        </FadeIn>
+
+        {/* Collection Sections */}
+        <div className="flex flex-col gap-16 md:gap-32">
+          {collection.sections.map((section, idx) => (
+            <div key={idx} className="flex flex-col gap-8 md:gap-16">
+              <FadeIn direction="up" delay={0.1} className="flex items-center gap-6">
+                <h3 className="text-lg md:text-3xl lg:text-4xl font-light tracking-[0.15em] text-brand-brown md:text-white uppercase md:bg-transparent bg-brand-beige/40 px-4 py-2 rounded-sm md:drop-shadow-md">
+                  {section.title}
+                </h3>
+                <div className="h-px bg-brand-brown/20 md:bg-white/30 flex-grow"></div>
+              </FadeIn>
+              
+              <div className="flex flex-col gap-12 md:gap-24">
+                {section.products.map((product, pIdx) => (
+                  <FadeIn key={product.id} delay={pIdx * 0.05}>
+                    <Link href={`/product/${product.id}`} prefetch={false} className="flex flex-col md:flex-row gap-8 md:gap-16 group cursor-pointer">
+                      {/* Image - Left on Desktop */}
+                      <div className="relative aspect-[3/4] md:aspect-[4/5] w-full md:w-[400px] flex-shrink-0 overflow-hidden rounded-sm shadow-lg group-hover:shadow-2xl transition-all duration-500 bg-white/20 backdrop-blur-[2px]">
+                        <SafeImage
+                          src={product.image}
+                          alt={product.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                          sizes="(max-width: 768px) 100vw, 400px"
+                          quality={90}
+                        />
+                        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      </div>
+
+                      {/* Content - Right on Desktop */}
+                      <div className="flex flex-col justify-center gap-4 md:gap-8 flex-grow">
+                        <h3 className="text-2xl md:text-5xl lg:text-6xl font-light text-brand-brown md:text-white uppercase tracking-widest leading-tight group-hover:text-brand-red transition-colors font-serif md:drop-shadow-md">
+                          {product.title}
+                        </h3>
+                        {product.description && (
+                          <p className="text-base md:text-xl lg:text-2xl text-brand-brown/70 md:text-white/80 font-light leading-relaxed max-w-2xl md:drop-shadow-sm">
+                            {product.description}
+                          </p>
+                        )}
+                        <div className="mt-4 md:mt-8">
+                          <span className="inline-block px-8 py-3 border border-brand-brown/30 text-brand-brown md:text-white/90 md:border-white/30 uppercase tracking-widest text-sm hover:bg-brand-brown hover:text-white transition-colors duration-300">
+                            Подробнее
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </FadeIn>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Spacer */}
+      <div className="h-24 md:h-48" />
+    </div>
+  );
+};

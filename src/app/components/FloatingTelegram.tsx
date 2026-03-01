@@ -36,7 +36,7 @@ export default function FloatingTelegram() {
           className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-6 z-50"
         >
           <Link
-            href="https://t.me/staysee_brand" 
+            href="https://t.me/STAYSEEshop" 
             prefetch={false}
             target="_blank"
             rel="noopener noreferrer"

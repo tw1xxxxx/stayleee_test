@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { useCart, Order } from "../context/CartContext";
+import { formatPrice } from "@/lib/utils";
 
 function ProfileContent() {
   const router = useRouter();
@@ -250,12 +251,9 @@ function ProfileContent() {
   const allOrders = localOrders;
 
   // Calculate total buyout amount
-  const totalBuyout = allOrders.reduce((sum, order) => sum + order.amount, 0);
-
-  // Format price helper
-  const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-  };
+  const totalBuyout = allOrders
+    .filter(o => o.paymentStatus === 'succeeded' || o.status === 'completed' || o.status === 'В обработке')
+    .reduce((sum, order) => sum + order.amount, 0);
 
   // Format date helper
   const formatDate = (dateString?: string) => {
@@ -325,9 +323,9 @@ function ProfileContent() {
                  className="object-contain drop-shadow-md"
                  priority
                />
-               <div className="relative w-9 h-9 z-10 mb-8 mr-0.5">
+               <div className="relative w-11 h-11 z-10 mb-8 mr-0.5">
                   <Image 
-                    src="/images/profile-chef-happy-v2.png"
+                    src="/images/profile-icon.png"
                     alt="Повар"
                     fill
                     className="object-contain filter brightness-0 invert drop-shadow-sm opacity-90"
@@ -486,7 +484,7 @@ function ProfileContent() {
                 <span className="text-xs opacity-90">Свяжитесь с менеджером</span>
             </div>
             <a 
-                href="https://t.me/manager_username" 
+                href="https://t.me/STAYSEEshop" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="bg-white text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold uppercase hover:bg-white/90"

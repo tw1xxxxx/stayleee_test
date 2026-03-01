@@ -10,6 +10,7 @@ import SafeImage from "@/app/components/SafeImage";
 import ProductGallery, { ProductGalleryHandle } from "../../components/ProductGallery";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "../../context/CartContext";
+import { formatPrice } from "@/lib/utils";
 
 const DEFAULT_PRODUCT = {
   id: 1,
@@ -91,14 +92,13 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
   });
   const [visibleRelatedCount, setVisibleRelatedCount] = useState(4);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+  const [addEmbroidery, setAddEmbroidery] = useState(false);
   const { addToCart, getItemQuantity, updateQuantity, removeFromCart } = useCart();
 
   // Read URL on mount
   useEffect(() => {
     // Moved to initial state
   }, []);
-
-  const formatPrice = (price: number) => price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
   const fallbackPrice = parseInt(DEFAULT_PRODUCT.price.replace(/\s/g, "").replace(/\D/g, ""), 10);
   const productPriceValue = currentProduct?.price ?? fallbackPrice;
@@ -114,7 +114,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
     : DEFAULT_PRODUCT.sizes;
   const productColors = currentProduct?.colors && currentProduct.colors.length > 0
     ? currentProduct.colors
-    : (DEFAULT_PRODUCT.colors as unknown as ApiProductColor[]);
+    : (currentProduct && currentProduct.colors ? [] : (DEFAULT_PRODUCT.colors as unknown as ApiProductColor[]));
 
   const selectedSize = selectedSizeOverride && productSizes.includes(selectedSizeOverride)
     ? selectedSizeOverride
@@ -153,9 +153,10 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
   };
 
   const currentColorName = selectedColorObj ? selectedColorObj.label : selectedColor;
+  const isKitel = PRODUCT.title.toLowerCase().includes("китель");
 
-  const quantity = getItemQuantity(PRODUCT.id, selectedSize, currentColorName);
-  const cartId = `${PRODUCT.id}-${selectedSize}-${currentColorName}`;
+  const quantity = getItemQuantity(PRODUCT.id, selectedSize, currentColorName, isKitel ? addEmbroidery : false);
+  const cartId = `${PRODUCT.id}-${selectedSize}-${currentColorName}${isKitel && addEmbroidery ? '-embroidery' : ''}`;
 
   const galleryRef = useRef<ProductGalleryHandle>(null);
 
@@ -206,7 +207,8 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
       price: selectedVariant?.price ?? productPriceValue,
       size: selectedSize,
       color: currentColorName, 
-      image: PRODUCT.images[0]
+      image: PRODUCT.images[0],
+      embroidery: isKitel ? addEmbroidery : false
     });
   };
 
@@ -370,34 +372,66 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
               </div>
 
               {/* Color Selector */}
-              <div className="space-y-3">
-                <p className="font-bold text-sm uppercase tracking-wider text-brand-brown/80">
-                  Цвет: <span className="text-brand-brown font-normal lowercase">{currentColorName}</span>
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  {PRODUCT.colors.map((color) => (
-                    <button
-                      key={color.name}
-                      onClick={() => setSelectedColorOverride(color.name)}
-                      className="group relative flex flex-col items-center gap-2"
-                    >
-                      <div className="w-12 h-12 rounded-full flex items-center justify-center relative p-1 transition-transform group-hover:scale-105">
-                        {selectedColor === color.name && (
-                          <motion.div
-                            layoutId="color-indicator"
-                            className="absolute inset-0 border-2 border-brand-brown rounded-full"
-                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              {PRODUCT.colors.length > 0 && (
+                <div className="space-y-3">
+                  <p className="font-bold text-sm uppercase tracking-wider text-brand-brown/80">
+                    Цвет: <span className="text-brand-brown font-normal lowercase">{currentColorName}</span>
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    {PRODUCT.colors.map((color) => (
+                      <button
+                        key={color.name}
+                        onClick={() => setSelectedColorOverride(color.name)}
+                        className="group relative flex flex-col items-center gap-2"
+                      >
+                        <div className="w-12 h-12 rounded-full flex items-center justify-center relative p-1 transition-transform group-hover:scale-105">
+                          {selectedColor === color.name && (
+                            <motion.div
+                              layoutId="color-indicator"
+                              className="absolute inset-0 border-2 border-brand-brown rounded-full"
+                              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            />
+                          )}
+                          <div 
+                            className={`w-full h-full rounded-full border border-black/5 shadow-inner`}
+                            style={{ backgroundColor: color.value }}
                           />
-                        )}
-                        <div 
-                          className={`w-full h-full rounded-full border border-black/5 shadow-inner`}
-                          style={{ backgroundColor: color.value }}
-                        />
-                      </div>
-                    </button>
-                  ))}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Embroidery Option for Kitel */}
+              {isKitel && (
+                <div className="bg-white/40 backdrop-blur-sm p-4 rounded-xl border border-brand-brown/10 space-y-3">
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <div className="relative flex items-center justify-center">
+                      <input 
+                        type="checkbox" 
+                        checked={addEmbroidery}
+                        onChange={(e) => setAddEmbroidery(e.target.checked)}
+                        className="peer sr-only"
+                      />
+                      <div className="w-6 h-6 border-2 border-brand-brown/30 rounded-md transition-all peer-checked:bg-brand-brown peer-checked:border-brand-brown group-hover:border-brand-brown/50"></div>
+                      <svg 
+                        className="absolute w-4 h-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor" 
+                        strokeWidth="3"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-sm font-bold uppercase tracking-wider text-brand-brown select-none">Добавить вышивку?</span>
+                  </label>
+                  <p className="text-[10px] md:text-xs text-brand-brown/60 leading-tight italic pl-9">
+                    * выполняется после 100% оплаты — 3-4 рабочих дня
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Add to Cart Button */}
@@ -554,7 +588,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
             <div className="w-full h-full p-4 md:p-10 flex items-center justify-center overflow-hidden">
                <div className="relative w-full h-full max-w-7xl max-h-[90vh]">
                  <ElasticImage
-                   src="/foto/2024-11-25-12.11.04.jpg"
+                   src="/foto/photo_2026-02-25_10-38-21.jpg"
                    alt="Размерная сетка"
                    objectFit="contain"
                    enableSnapBack={true}

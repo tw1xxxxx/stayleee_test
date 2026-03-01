@@ -8,8 +8,10 @@ import ProductSkeleton from "../components/ProductSkeleton";
 import FadeIn from "../components/FadeIn";
 import MenuOverlay from "../components/MenuOverlay";
 import SafeImage from "@/app/components/SafeImage";
+import FilterButton from "../components/FilterButton";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "framer-motion";
 import { useCart } from "../context/CartContext";
+import { formatPrice } from "@/lib/utils";
 
 interface ApiProduct {
   id: string;
@@ -263,20 +265,11 @@ function CatalogContent() {
           </button>
 
           {/* Filters */}
-          <button 
+          <FilterButton 
             onClick={handleFilterClick}
-            className="p-1 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center shrink-0"
-            aria-label="Фильтры"
-          >
-            <div className="relative w-9 h-9 brightness-0 invert">
-              <Image 
-                src="/images/filter-icon.png" 
-                alt="Фильтры" 
-                fill
-                className="object-contain"
-              />
-            </div>
-          </button>
+            active={!activeFilters.includes("all")}
+            className="shrink-0"
+          />
 
           {/* Cart */}
           <Link href="/cart" prefetch={false} className="p-2 hover:bg-white/10 rounded-full transition-colors relative shrink-0">
@@ -377,20 +370,11 @@ function CatalogContent() {
           </div>
 
           {/* Filter Button */}
-          <button 
+          <FilterButton 
             onClick={() => setIsFilterOpen(true)}
-            className="bg-white text-brand-brown p-2 rounded-xl hover:bg-white/80 transition-colors flex items-center justify-center border border-brand-brown/5"
-            aria-label="Фильтры"
-          >
-            <div className="relative w-7 h-7">
-              <Image 
-                src="/images/filter-icon.png" 
-                alt="Фильтры" 
-                fill
-                className="object-contain opacity-90"
-              />
-            </div>
-          </button>
+            active={!activeFilters.includes("all")}
+            className="bg-white rounded-xl shadow-sm border border-brand-brown/5 w-[46px] h-[46px]"
+          />
         </div>
       </div>
 
@@ -434,7 +418,7 @@ function CatalogContent() {
               <ProductSkeleton />
             </div>
           ))
-        ) : (
+        ) : filteredProducts.length > 0 ? (
           // Real Products
           filteredProducts.map((product) => (
             <FadeIn key={product.id} layout delay={0.05} className="h-full">
@@ -455,11 +439,33 @@ function CatalogContent() {
                       {product.name}
                     </h3>
                   </div>
-                  <p className="font-bold text-sm md:text-base lg:text-lg mt-1">{product.price.toLocaleString()} ₽</p>
+                  <p className="font-bold text-sm md:text-base lg:text-lg mt-1">{formatPrice(product.price)} ₽</p>
                 </div>
               </Link>
             </FadeIn>
           ))
+        ) : (
+          // Empty State
+          <div className="col-span-full flex flex-col items-center justify-center py-32 text-brand-brown/30">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col items-center"
+            >
+              <span className="text-8xl mb-6 font-light select-none">:(</span>
+              <h3 className="text-xl font-bold uppercase tracking-[0.2em]">Ничего не найдено</h3>
+              <p className="mt-2 text-sm opacity-60">Попробуйте изменить параметры поиска</p>
+              <button 
+                onClick={() => {
+                  setSearchQuery("");
+                  updateFilters(["all"]);
+                }}
+                className="mt-10 px-8 py-3 bg-brand-brown text-white rounded-full text-xs font-bold uppercase tracking-widest hover:bg-brand-brown/90 transition-all shadow-lg shadow-brand-brown/10 active:scale-95"
+              >
+                Сбросить всё
+              </button>
+            </motion.div>
+          </div>
         )}
       </motion.div>
 

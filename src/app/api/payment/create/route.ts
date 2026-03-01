@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { orderId, amount, returnUrl } = body;
+    const { orderId, amount, returnUrl, items, customer } = body;
 
     if (!orderId || !amount) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
@@ -28,6 +28,25 @@ export async function POST(request: Request) {
       metadata: {
         order_id: orderId,
       },
+      ...(items && customer ? {
+        receipt: {
+          customer: {
+            email: customer.email,
+            phone: customer.phone,
+          },
+          items: items.map((item: any) => ({
+            description: item.name,
+            amount: {
+              value: item.price.toFixed(2),
+              currency: 'RUB',
+            },
+            quantity: item.quantity.toString(),
+            vat_code: 1, // 1 for "No VAT" or adjust based on your taxation
+            payment_mode: 'full_payment',
+            payment_subject: 'commodity',
+          })),
+        }
+      } : {}),
     });
 
     try {

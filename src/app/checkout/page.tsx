@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import { formatPrice } from "@/lib/utils";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent, Variants } from "framer-motion";
 
 
@@ -24,7 +25,23 @@ export default function CheckoutPage() {
   const [isCheckoutVisible, setIsCheckoutVisible] = useState(true);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [gifts, setGifts] = useState<any[]>([]);
   const { scrollY } = useScroll();
+
+  useEffect(() => {
+    const fetchGifts = async () => {
+      try {
+        const res = await fetch("/api/gifts", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          setGifts(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch gifts", error);
+      }
+    };
+    fetchGifts();
+  }, []);
   const lastScrollY = useRef(0);
   
   // Use callback for handleCloseModal to be used in effect
@@ -182,41 +199,21 @@ export default function CheckoutPage() {
     }
   };
 
-  // Gift Configuration
-  const GIFTS = [
-    { 
-      id: "gift-1000", 
-      threshold: 1000, 
-      title: "Фирменный стикерпак", 
-    },
-    { 
-      id: "gift-5000", 
-      threshold: 5000, 
-      title: "Полотенце шефа", 
-    },
-    { 
-      id: "gift-10000", 
-      threshold: 10000, 
-      title: "Фартук шефа (Lite)", 
-    },
-  ];
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!isAgreed || items.length === 0 || isSubmitting) return;
-    
-    setIsSubmitting(true);
+    if (!isFormValid) return;
 
-    // Create order object
+    setIsSubmitting(true);
     const orderItems = items.map(item => ({
       id: item.id,
       name: item.title,
       price: item.price,
-      quantity: item.quantity
+      quantity: item.quantity,
+      size: item.size
     }));
 
     // Add earned gifts
-    const earnedGifts = GIFTS.filter(gift => total >= gift.threshold);
+    const earnedGifts = gifts.filter(gift => total >= gift.threshold);
     earnedGifts.forEach((gift, index) => {
       // Use negative IDs for gifts to avoid collision with product IDs
       // and ensure uniqueness among gifts
@@ -225,7 +222,7 @@ export default function CheckoutPage() {
         name: `Подарок: ${gift.title}`,
         price: 0,
         quantity: 1
-      });
+      } as any);
     });
 
     try {
@@ -233,11 +230,11 @@ export default function CheckoutPage() {
       const order = await addOrder({
         address: `${formData.city}, ${formData.address}`,
         amount: total,
-        items: orderItems,
+        items: orderItems as any,
         customer: {
           name: formData.name,
           phone: formData.phone,
-          email: user?.email
+          email: user?.email || ""
         }
       });
       
@@ -253,7 +250,13 @@ export default function CheckoutPage() {
             body: JSON.stringify({
               orderId: order.id,
               amount: total,
-              returnUrl: `${window.location.origin}/profile?payment_check=true&orderId=${order.id}`
+              returnUrl: `${window.location.origin}/profile?payment_check=true&orderId=${order.id}`,
+              items: orderItems,
+              customer: {
+                name: formData.name,
+                phone: formData.phone,
+                email: user?.email
+              }
             }),
           });
 
@@ -294,12 +297,6 @@ export default function CheckoutPage() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-
-
-  const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   };
 
   const isFormValid = 
@@ -351,14 +348,15 @@ export default function CheckoutPage() {
           Оформление
         </h1>
 
-        <Link href="/profile" prefetch={false} className="p-2 -mr-2 hover:bg-white/50 rounded-full transition-colors active:scale-95 duration-200">
-          <div className="w-8 h-8 relative flex items-center justify-center -translate-y-1">
+        <Link href="/profile" prefetch={false} className="p-0.5 -mr-1.5 hover:bg-white/50 rounded-full transition-colors">
+          <div className="w-12 h-12 relative flex items-center justify-center">
             <Image 
-              src="/images/profile-chef-happy-v2.png" 
+              src="/images/profile-icon.png" 
               alt="Профиль" 
-              width={25}
-              height={25}
+              width={44}
+              height={44}
               className="object-contain"
+              priority
             />
           </div>
         </Link>

@@ -1,34 +1,21 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useCart } from "../context/CartContext";
 import SafeImage from "@/app/components/SafeImage";
+import { formatPrice } from "@/lib/utils";
 
-// Gift Configuration
-const GIFTS = [
-  { 
-    id: "gift-1000", 
-    threshold: 1000, 
-    title: "Фирменный стикерпак", 
-    image: "/images/logo/StaySee_Logo_whitesand_v1-0.svg" 
-  },
-  { 
-    id: "gift-5000", 
-    threshold: 5000, 
-    title: "Полотенце шефа", 
-    image: "/images/logo/StaySee_Logo_whitesand_v1-0.svg" 
-  },
-  { 
-    id: "gift-10000", 
-    threshold: 10000, 
-    title: "Фартук шефа (Lite)", 
-    image: "/images/logo/StaySee_Logo_whitesand_v1-0.svg" 
-  },
-];
+// Gift Interface
+interface Gift {
+  id: string;
+  threshold: number;
+  title: string;
+  image: string;
+}
 
 export default function CartPage() {
   const router = useRouter();
@@ -42,8 +29,24 @@ export default function CartPage() {
   } = useCart();
 
   const [isCheckoutVisible, setIsCheckoutVisible] = useState(true);
+  const [gifts, setGifts] = useState<Gift[]>([]);
   const { scrollY } = useScroll();
   const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const fetchGifts = async () => {
+      try {
+        const res = await fetch("/api/gifts", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          setGifts(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch gifts", error);
+      }
+    };
+    fetchGifts();
+  }, []);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = lastScrollY.current;
@@ -67,11 +70,6 @@ export default function CartPage() {
     
     lastScrollY.current = latest;
   });
-
-  // Use a stable formatter to prevent hydration mismatch (server vs client locale differences)
-  const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-  };
 
   const isAllSelected = items.length > 0 && selectedItems.length === items.length;
 
@@ -107,7 +105,7 @@ export default function CartPage() {
   
   // Calculate progress for gifts
   const currentTotal = total;
-  const nextGift = GIFTS.find(g => g.threshold > currentTotal);
+  const nextGift = gifts.length > 0 ? gifts.find(g => g.threshold > currentTotal) : null;
   const progress = nextGift ? {
     target: nextGift.threshold,
     current: currentTotal,
@@ -115,14 +113,14 @@ export default function CartPage() {
     message: `Ещё ${formatPrice(nextGift.threshold - currentTotal)} ₽ до подарка`,
     completed: false
   } : {
-    target: GIFTS[GIFTS.length - 1].threshold,
+    target: gifts.length > 0 ? gifts[gifts.length - 1].threshold : 0,
     current: currentTotal,
     percent: 100,
-    message: "Все подарки получены!",
-    completed: true
+    message: gifts.length > 0 ? "Все подарки получены!" : "Загрузка подарков...",
+    completed: gifts.length > 0
   };
 
-  const earnedGifts = GIFTS.filter(g => currentTotal >= g.threshold);
+  const earnedGifts = gifts.filter(g => currentTotal >= g.threshold);
 
   return (
     <div className="min-h-screen bg-brand-beige font-sans text-brand-brown pb-32">
@@ -141,17 +139,13 @@ export default function CartPage() {
           Корзина
         </h1>
 
-        <Link 
-          href="/profile"
-          prefetch={false}
-          className="p-2 -mr-2 hover:bg-white/50 rounded-full transition-colors active:scale-95 duration-200 text-brand-brown"
-        >
-          <div className="w-8 h-8 relative flex items-center justify-center -translate-y-1">
+        <Link href="/profile" prefetch={false} className="p-0.5 -mr-1.5 hover:bg-white/50 rounded-full transition-colors">
+          <div className="w-12 h-12 relative flex items-center justify-center">
             <Image 
-              src="/images/profile-chef-happy-v2.png" 
+              src="/images/profile-icon.png" 
               alt="Профиль" 
-              width={25}
-              height={25}
+              width={44}
+              height={44}
               className="object-contain"
               priority
             />
@@ -211,24 +205,43 @@ export default function CartPage() {
                     </div>
 
                     {/* Product Image */}
-                    <Link href={`/product/${item.id}`} prefetch={false} className="relative w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100 block">
-                      <SafeImage
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </Link>
+                    {item.id.toString().includes('gift') ? (
+                      <div className="relative w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100 block">
+                        <SafeImage
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <Link href={`/product/${item.id}`} prefetch={false} className="relative w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100 block">
+                        <SafeImage
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </Link>
+                    )}
 
                     {/* Product Details */}
                     <div className="flex-1 flex flex-col justify-between min-h-[96px]">
                       <div>
                         <div className="flex justify-between items-start">
-                          <Link href={`/product/${item.id}`} prefetch={false} className="block">
-                            <h3 className="font-medium text-sm leading-tight pr-6 hover:text-brand-red transition-colors line-clamp-2">
-                              {item.title}
-                            </h3>
-                          </Link>
+                          {item.id.toString().includes('gift') ? (
+                            <div className="block">
+                              <h3 className="font-medium text-sm leading-tight pr-6 line-clamp-2">
+                                {item.title}
+                              </h3>
+                            </div>
+                          ) : (
+                            <Link href={`/product/${item.id}`} prefetch={false} className="block">
+                              <h3 className="font-medium text-sm leading-tight pr-6 hover:text-brand-red transition-colors line-clamp-2">
+                                {item.title}
+                              </h3>
+                            </Link>
+                          )}
                           {/* Remove Button */}
                           <button
                             onClick={() => removeItem(item.cartId)}
@@ -241,15 +254,25 @@ export default function CartPage() {
                           </button>
                         </div>
 
-                        <div className="mt-1 flex flex-wrap gap-2 text-xs text-brand-brown/60">
-                          <span className="bg-brand-beige px-1.5 py-0.5 rounded whitespace-nowrap">Размер: {item.size}</span>
-                          <span className="bg-brand-beige px-1.5 py-0.5 rounded whitespace-nowrap">Цвет: {item.color}</span>
-                        </div>
+                        {!item.id.toString().includes('gift') && (
+                          <div className="mt-1 flex flex-wrap gap-2 text-xs text-brand-brown/60">
+                            <span className="bg-brand-beige px-1.5 py-0.5 rounded whitespace-nowrap">Размер: {item.size}</span>
+                            <span className="bg-brand-beige px-1.5 py-0.5 rounded whitespace-nowrap">Цвет: {item.color}</span>
+                            {item.embroidery && (
+                              <span className="bg-brand-brown/10 text-brand-brown px-1.5 py-0.5 rounded whitespace-nowrap font-medium flex items-center gap-1">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                                </svg>
+                                С вышивкой
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex flex-wrap items-end justify-between gap-x-2 gap-y-2 mt-2">
                         <span className="font-bold text-base whitespace-nowrap mb-0.5">
-                          {formatPrice(item.price * item.quantity)} ₽
+                          {formatPrice((item.price + (item.embroidery ? 900 : 0)) * item.quantity)} ₽
                         </span>
 
                         {/* Quantity Controls */}

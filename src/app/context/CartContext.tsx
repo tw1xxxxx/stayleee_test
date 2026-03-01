@@ -5,13 +5,14 @@ import { useAuth } from "./AuthContext";
 
 export interface CartItem {
   cartId: string; // Unique identifier: `${id}-${size}-${color}`
-  id: number;
+  id: number | string;
   title: string;
   price: number;
   size: string;
   color: string;
   image: string;
   quantity: number;
+  embroidery?: boolean;
 }
 
 export interface Order {
@@ -20,7 +21,7 @@ export interface Order {
   status: string;
   amount: number;
   items: {
-    id: number;
+    id: number | string;
     name: string;
     price: number;
     quantity?: number;
@@ -43,7 +44,7 @@ interface CartContextType {
   toggleSelection: (cartId: string) => void;
   selectedItems: string[];
   total: number;
-  getItemQuantity: (id: number, size: string, color: string) => number;
+  getItemQuantity: (id: number, size: string, color: string, embroidery?: boolean) => number;
   clearCart: () => void;
   orders: Order[];
   isInitialized: boolean;
@@ -91,7 +92,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const total = items
     .filter(item => selectedItems.includes(item.cartId))
-    .reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    .reduce((sum, item) => {
+      const itemPrice = item.price + (item.embroidery ? 900 : 0);
+      return sum + (itemPrice * item.quantity);
+    }, 0);
 
   // Fetch orders from backend when user is logged in
   useEffect(() => {
@@ -269,7 +273,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
 
   const addToCart = (product: Omit<CartItem, "quantity" | "cartId">) => {
-    const cartId = `${product.id}-${product.size}-${product.color}`;
+    const cartId = `${product.id}-${product.size}-${product.color}${product.embroidery ? '-embroidery' : ''}`;
     
     setItems(prev => {
       const existingItem = prev.find(item => item.cartId === cartId);
@@ -311,8 +315,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  const getItemQuantity = (id: number, size: string, color: string) => {
-    const cartId = `${id}-${size}-${color}`;
+  const getItemQuantity = (id: number, size: string, color: string, embroidery?: boolean) => {
+    const cartId = `${id}-${size}-${color}${embroidery ? '-embroidery' : ''}`;
     return items.find(item => item.cartId === cartId)?.quantity || 0;
   };
 

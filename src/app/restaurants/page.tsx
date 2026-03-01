@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import MenuOverlay from "../components/MenuOverlay";
 import FadeIn from "../components/FadeIn";
@@ -23,28 +24,71 @@ const STAGES = [
     number: '01',
     title: 'Концепция',
     icon: '/images/icons8-концепция-64.png',
-    text: 'Мы обсуждаем Ваши идеи и создаём образ будущего изделия — его стиль, характер и настроение.'
+    text: 'Мы обсуждаем Ваши идеи и создаём образ будущего изделия — его стиль, характер и настроение'
   },
   {
     id: 'construction',
     number: '02',
     title: 'Конструкция',
     icon: '/images/icons8-телевышка-50.png',
-    text: 'Разрабатываем индивидуальную конструкцию с учётом особенностей фигуры для идеальной посадки.'
+    text: 'Разрабатываем индивидуальную конструкцию с учётом особенностей фигуры для идеальной посадки'
   },
   {
     id: 'fabric',
     number: '03',
     title: 'Ткань',
     icon: '/images/icons8-cloth-64.png',
-    text: 'Подбираем материалы, которые подчеркнут концепцию и будут комфортны в носке.'
+    text: 'Подбираем материалы, которые подчеркнут концепцию и будут комфортны в носке'
   },
   {
     id: 'fitting',
     number: '04',
     title: 'Примерки\nи финал',
     icon: '/images/icons8-победитель-гонки-53.png',
-    text: 'На примерках оттачиваем детали и доводим изделие до совершенства. В результате Вы получаете уникальную вещь, созданную специально для Вас.'
+    text: 'На примерках оттачиваем детали и доводим изделие до совершенства. В результате Вы получаете уникальную вещь, созданную специально для Вас'
+  }
+];
+
+const SPECIAL_OFFERS = [
+  {
+    title: "Бесплатная вышивка",
+    description: "При заказе от 50 единиц продукции вышивка в подарок",
+    icon: "🧵"
+  },
+  {
+    title: "Выезд на замеры",
+    description: "Первичный бесплатный выезд специалиста на замеры (в пределах МКАД)",
+    icon: "📏"
+  },
+  {
+    title: "Костюм управляющему",
+    description: "При заказе формы и текстиля для всего ресторана — индивидуальный пошив костюма для управляющего в подарок!",
+    icon: "🕴️"
+  },
+  {
+    title: "Логотип и доставка",
+    description: "При заказе от 40 ед — отрисовка вышивки Вашего логотипа в подарок и бесплатная доставка",
+    icon: "🎁"
+  },
+  {
+    title: "Дизайн в подарок",
+    description: "Комплексная разработка дизайна при сумме от 300 тыс. руб. в подарок и бесплатная доставка",
+    icon: "🎨"
+  },
+  {
+    title: "Видео проекта",
+    description: "В конце Вашего проекта мы приезжаем и снимаем для Вас красивое профессиональное видео",
+    icon: "🎥"
+  },
+  {
+    title: "Скидка 10% в WEWASH",
+    description: "При оформлении заказа на форму и текстиль вы получаете пожизненную скидку на прачечную",
+    icon: "🧼"
+  },
+  {
+    title: "Система подарков",
+    description: "От 15к — карандаш; от 20к — стикеры; от 25к — фартук; от 35к — вышивка",
+    icon: "✨"
   }
 ];
 
@@ -90,6 +134,43 @@ export default function RestaurantsPage() {
     return false;
   });
 
+  // Interleave Special Offers into Projects
+  const interleavedItems = (() => {
+    if (searchQuery) return filteredItems;
+    
+    const result: any[] = [];
+    let offerIndex = 0;
+    
+    filteredItems.forEach((item, index) => {
+      result.push(item);
+      // Insert an offer every 2 projects, if available
+      if ((index + 1) % 2 === 0 && offerIndex < SPECIAL_OFFERS.length) {
+        result.push({
+          id: `offer-${offerIndex}`,
+          type: 'promo',
+          text: SPECIAL_OFFERS[offerIndex].description,
+          title: SPECIAL_OFFERS[offerIndex].title,
+          icon: SPECIAL_OFFERS[offerIndex].icon
+        });
+        offerIndex++;
+      }
+    });
+    
+    // Add remaining offers at the end if any
+    while (offerIndex < SPECIAL_OFFERS.length) {
+      result.push({
+        id: `offer-${offerIndex}`,
+        type: 'promo',
+        text: SPECIAL_OFFERS[offerIndex].description,
+        title: SPECIAL_OFFERS[offerIndex].title,
+        icon: SPECIAL_OFFERS[offerIndex].icon
+      });
+      offerIndex++;
+    }
+    
+    return result;
+  })();
+
   return (
     <div className="min-h-screen bg-brand-beige font-sans text-brand-brown pb-24">
       {/* Header - Matching Catalog Style */}
@@ -110,8 +191,17 @@ export default function RestaurantsPage() {
         </h1>
 
         <div className="flex items-center gap-2 relative z-10">
-          {/* Right side icons or empty for balance */}
-          <div className="w-8 h-8"></div>
+          <Link href="/profile" prefetch={false} className="p-0.5 -mr-1.5 hover:bg-white/50 rounded-full transition-colors">
+            <div className="w-12 h-12 relative flex items-center justify-center">
+              <Image 
+                src="/images/profile-icon.png" 
+                alt="Профиль" 
+                width={44}
+                height={44}
+                className="object-contain"
+              />
+            </div>
+          </Link>
         </div>
       </header>
 
@@ -198,18 +288,28 @@ export default function RestaurantsPage() {
                 <div className="absolute inset-0 skeleton-shimmer" />
               </div>
             ))
-          ) : filteredItems.length > 0 ? (
-            filteredItems.map((item, index) => (
+          ) : interleavedItems.length > 0 ? (
+            interleavedItems.map((item, index) => (
               <FadeIn key={item.id} delay={0.2 + (index % 3) * 0.1} className="h-full">
                 {item.type === 'promo' ? (
-                  <div className="relative w-full h-full min-h-[200px] flex flex-col justify-center bg-white/30 rounded-[2rem] p-8 border border-brand-brown/5">
-                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-brand-brown/40 block mb-3">
-                      Специальное предложение
-                    </span>
+                  <div className="group relative w-full h-full min-h-[280px] flex flex-col justify-center bg-white rounded-[2rem] p-8 border border-brand-brown/5 transition-all duration-300 hover:shadow-xl hover:border-brand-brown/10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-3xl">{item.icon}</span>
+                      <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-brand-brown/40">
+                        Специальное предложение
+                      </span>
+                    </div>
                     <div className="pl-4 border-l-2 border-brand-brown/30">
-                      <p className="text-xl md:text-2xl font-semibold uppercase tracking-wide text-brand-brown leading-tight">
+                      <h3 className="text-lg font-bold uppercase tracking-widest text-brand-brown leading-tight mb-2">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-brand-brown/60 font-medium">
                         {item.text}
                       </p>
+                    </div>
+                    {/* Bottom accent line */}
+                    <div className="absolute bottom-0 left-6 right-6 h-1 bg-brand-brown/5 rounded-full overflow-hidden">
+                      <div className="h-full w-0 bg-brand-brown group-hover:w-full transition-all duration-700 ease-out" />
                     </div>
                   </div>
                 ) : (
