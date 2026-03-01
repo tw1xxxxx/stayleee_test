@@ -264,14 +264,15 @@ export const db = {
     const redisClient = await getRedisClient();
     if (redisClient) {
       const data = await redisClient.get(USERS_KEY);
-      if (!data) {
-        return [];
-      }
-      try {
-        const users = JSON.parse(data);
-        return Array.isArray(users) ? users : [];
-      } catch (error) {
-        console.error('Error parsing users from Redis:', error);
+      if (data) {
+        try {
+          const users = JSON.parse(data);
+          if (Array.isArray(users)) {
+            return users;
+          }
+        } catch (error) {
+          console.error('Error parsing users from Redis:', error);
+        }
       }
     }
     try {
@@ -293,14 +294,15 @@ export const db = {
     const redisClient = await getRedisClient();
     if (redisClient) {
       const data = await redisClient.get(ORDERS_KEY);
-      if (!data) {
-        return [];
-      }
-      try {
-        const orders = JSON.parse(data);
-        return Array.isArray(orders) ? orders : [];
-      } catch (error) {
-        console.error('Error parsing orders from Redis:', error);
+      if (data) {
+        try {
+          const orders = JSON.parse(data);
+          if (Array.isArray(orders)) {
+            return orders;
+          }
+        } catch (error) {
+          console.error('Error parsing orders from Redis:', error);
+        }
       }
     }
     try {
@@ -412,14 +414,15 @@ export const db = {
     const redisClient = await getRedisClient();
     if (redisClient) {
       const data = await redisClient.get(COLLECTIONS_KEY);
-      if (!data) {
-        return [];
-      }
-      try {
-        const collections = JSON.parse(data);
-        return Array.isArray(collections) ? collections : [];
-      } catch (error) {
-        console.error('Error parsing collections from Redis:', error);
+      if (data) {
+        try {
+          const collections = JSON.parse(data);
+          if (Array.isArray(collections)) {
+            return collections;
+          }
+        } catch (error) {
+          console.error('Error parsing collections from Redis:', error);
+        }
       }
     }
     try {
@@ -496,14 +499,15 @@ export const db = {
     const redisClient = await getRedisClient();
     if (redisClient) {
       const data = await redisClient.get(PRODUCTS_KEY);
-      if (!data) {
-        return [];
-      }
-      try {
-        const products = JSON.parse(data);
-        return Array.isArray(products) ? products : [];
-      } catch (error) {
-        console.error('Error parsing products from Redis:', error);
+      if (data) {
+        try {
+          const products = JSON.parse(data);
+          if (Array.isArray(products)) {
+            return products;
+          }
+        } catch (error) {
+          console.error('Error parsing products from Redis:', error);
+        }
       }
     }
     try {
@@ -571,14 +575,15 @@ export const db = {
     const redisClient = await getRedisClient();
     if (redisClient) {
       const data = await redisClient.get(PROJECTS_KEY);
-      if (!data) {
-        return [];
-      }
-      try {
-        const projects = JSON.parse(data);
-        return Array.isArray(projects) ? projects : [];
-      } catch (error) {
-        console.error('Error parsing projects from Redis:', error);
+      if (data) {
+        try {
+          const projects = JSON.parse(data);
+          if (Array.isArray(projects)) {
+            return projects;
+          }
+        } catch (error) {
+          console.error('Error parsing projects from Redis:', error);
+        }
       }
     }
     try {
@@ -601,14 +606,15 @@ export const db = {
     const redisClient = await getRedisClient();
     if (redisClient) {
       const data = await redisClient.get(FILTERS_KEY);
-      if (!data) {
-        return [];
-      }
-      try {
-        const filters = JSON.parse(data);
-        return Array.isArray(filters) ? filters : [];
-      } catch (error) {
-        console.error('Error parsing filters from Redis:', error);
+      if (data) {
+        try {
+          const filters = JSON.parse(data);
+          if (Array.isArray(filters)) {
+            return filters;
+          }
+        } catch (error) {
+          console.error('Error parsing filters from Redis:', error);
+        }
       }
     }
     try {
@@ -677,14 +683,15 @@ export const db = {
     const redisClient = await getRedisClient();
     if (redisClient) {
       const data = await redisClient.get(TRANSACTIONS_KEY);
-      if (!data) {
-        return [];
-      }
-      try {
-        const transactions = JSON.parse(data);
-        return Array.isArray(transactions) ? transactions : [];
-      } catch (error) {
-        console.error('Error parsing transactions from Redis:', error);
+      if (data) {
+        try {
+          const transactions = JSON.parse(data);
+          if (Array.isArray(transactions)) {
+            return transactions;
+          }
+        } catch (error) {
+          console.error('Error parsing transactions from Redis:', error);
+        }
       }
     }
     try {
@@ -792,7 +799,9 @@ export const db = {
       if (data) {
         try {
           const gifts = JSON.parse(data);
-          return Array.isArray(gifts) ? gifts : [];
+          if (Array.isArray(gifts)) {
+            return gifts;
+          }
         } catch (error) {
           console.error('Error parsing gifts from Redis:', error);
         }
