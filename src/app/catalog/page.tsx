@@ -155,10 +155,15 @@ function CatalogContent() {
   const filterById = new Map(filters.map(filter => [filter.id, filter]));
 
   const filteredProducts = products.filter((product) => {
-    const isAll = activeFilters.includes("all");
+    const isAll = activeFilters.includes("all") || activeFilters.length === 0;
+    
+    // Check if filters are loaded, if not - show all
+    if (filters.length === 0 && isAll) return true;
+
     const productFilterSlugs = (product.filterIds || [])
       .map(filterId => filterById.get(filterId)?.slug)
       .filter((slug): slug is string => Boolean(slug));
+    
     const matchesFilter = isAll || productFilterSlugs.some(slug => activeFilters.includes(slug));
     
     const searchLower = searchQuery.toLowerCase();
