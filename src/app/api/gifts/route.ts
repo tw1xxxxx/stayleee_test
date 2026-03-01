@@ -15,7 +15,7 @@ export async function GET() {
           threshold: 15000,
           title: "Фирменный карандаш",
           description: "Наш фирменный карандаш для записей ваших идей",
-          image: "/images/catalog-product.jpg",
+          image: "/foto/gift_pencil_stickers.heic",
           price: 150
         },
         {
@@ -23,7 +23,7 @@ export async function GET() {
           threshold: 20000,
           title: "Набор стикеров",
           description: "Набор виниловых стикеров с нашей символикой",
-          image: "/images/catalog-product.jpg",
+          image: "/images/DSC00125.jpg",
           price: 300
         },
         {
@@ -31,8 +31,16 @@ export async function GET() {
           threshold: 25000,
           title: "Фартук в подарок",
           description: "Классический фартук StaySee из прочного хлопка",
-          image: "/images/catalog-product.jpg",
-          price: 1500
+          image: "/images/catalog/aprons/simple/1.jpg",
+          price: 11111
+        },
+        {
+          id: "gift-35000",
+          threshold: 35000,
+          title: "Вышивка на изделии",
+          description: "Индивидуальная вышивка вашего логотипа или имени",
+          image: "/images/logo/StaySee_Logo_whitesand_v1-0.svg",
+          price: 800
         }
       ];
 
