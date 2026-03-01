@@ -6,9 +6,7 @@ export const dynamic = 'force-dynamic';
 const normalizeProduct = (product: Product): Product => {
   const images = Array.isArray(product.images) ? product.images.filter(Boolean) : [];
   const imageFallback = product.image ? [product.image] : [];
-  const normalizedImages = (images.length > 0 ? images : imageFallback).map((image) =>
-    image.startsWith('/images/products/') ? '/images/catalog-product.jpg' : image
-  );
+  const normalizedImages = (images.length > 0 ? images : imageFallback);
   const normalizedFilterIds = Array.isArray(product.filterIds) ? product.filterIds.filter(Boolean) : [];
   return {
     ...product,

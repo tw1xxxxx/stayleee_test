@@ -214,7 +214,7 @@ export const db = {
   getUsers: async (): Promise<User[]> => {
     if (useKv) {
       const users = await kvGetJson<User[]>(USERS_KEY);
-      if (Array.isArray(users)) {
+      if (Array.isArray(users) && users.length > 0) {
         return users;
       }
     }
@@ -224,7 +224,7 @@ export const db = {
       if (data) {
         try {
           const users = JSON.parse(data);
-          if (Array.isArray(users)) {
+          if (Array.isArray(users) && users.length > 0) {
             return users;
           }
         } catch (error) {
@@ -244,7 +244,7 @@ export const db = {
   getOrders: async (): Promise<Order[]> => {
     if (useKv) {
       const orders = await kvGetJson<Order[]>(ORDERS_KEY);
-      if (Array.isArray(orders)) {
+      if (Array.isArray(orders) && orders.length > 0) {
         return orders;
       }
     }
@@ -254,7 +254,7 @@ export const db = {
       if (data) {
         try {
           const orders = JSON.parse(data);
-          if (Array.isArray(orders)) {
+          if (Array.isArray(orders) && orders.length > 0) {
             return orders;
           }
         } catch (error) {
@@ -364,7 +364,7 @@ export const db = {
   getCollections: async (): Promise<Collection[]> => {
     if (useKv) {
       const collections = await kvGetJson<Collection[]>(COLLECTIONS_KEY);
-      if (Array.isArray(collections)) {
+      if (Array.isArray(collections) && collections.length > 0) {
         return collections;
       }
     }
@@ -374,7 +374,7 @@ export const db = {
       if (data) {
         try {
           const collections = JSON.parse(data);
-          if (Array.isArray(collections)) {
+          if (Array.isArray(collections) && collections.length > 0) {
             return collections;
           }
         } catch (error) {
@@ -449,7 +449,7 @@ export const db = {
   getProducts: async (): Promise<Product[]> => {
     if (useKv) {
       const products = await kvGetJson<Product[]>(PRODUCTS_KEY);
-      if (Array.isArray(products)) {
+      if (Array.isArray(products) && products.length > 0) {
         return products;
       }
     }
@@ -459,7 +459,7 @@ export const db = {
       if (data) {
         try {
           const products = JSON.parse(data);
-          if (Array.isArray(products)) {
+          if (Array.isArray(products) && products.length > 0) {
             return products;
           }
         } catch (error) {
@@ -475,6 +475,23 @@ export const db = {
       return [];
     }
   },
+
+  saveProducts: async (products: Product[]): Promise<void> => {
+    try {
+      if (useKv) {
+        const saved = await kvSetJson(PRODUCTS_KEY, products);
+        if (saved) return;
+      }
+      const redisClient = await getRedisClient();
+      if (redisClient) {
+        await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
+        return;
+      }
+      await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
+    } catch (error) { 
+      console.error('Error saving products:', error);
+    }
+  },
   
   saveProduct: async (product: Product): Promise<void> => {
     try {
@@ -487,16 +504,7 @@ export const db = {
         products.push(product);
       }
 
-      if (useKv) {
-        const saved = await kvSetJson(PRODUCTS_KEY, products);
-        if (saved) return;
-      }
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
-        return;
-      }
-      await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
+      await db.saveProducts(products);
     } catch (error) {
       console.error('Error saving product:', error);
     }
@@ -525,7 +533,7 @@ export const db = {
   getProjects: async (): Promise<Project[]> => {
     if (useKv) {
       const projects = await kvGetJson<Project[]>(PROJECTS_KEY);
-      if (Array.isArray(projects)) {
+      if (Array.isArray(projects) && projects.length > 0) {
         return projects;
       }
     }
@@ -535,7 +543,7 @@ export const db = {
       if (data) {
         try {
           const projects = JSON.parse(data);
-          if (Array.isArray(projects)) {
+          if (Array.isArray(projects) && projects.length > 0) {
             return projects;
           }
         } catch (error) {
@@ -556,7 +564,7 @@ export const db = {
   getFilters: async (): Promise<Filter[]> => {
     if (useKv) {
       const filters = await kvGetJson<Filter[]>(FILTERS_KEY);
-      if (Array.isArray(filters)) {
+      if (Array.isArray(filters) && filters.length > 0) {
         return filters;
       }
     }
@@ -566,7 +574,7 @@ export const db = {
       if (data) {
         try {
           const filters = JSON.parse(data);
-          if (Array.isArray(filters)) {
+          if (Array.isArray(filters) && filters.length > 0) {
             return filters;
           }
         } catch (error) {
@@ -633,7 +641,7 @@ export const db = {
   getTransactions: async (): Promise<Transaction[]> => {
     if (useKv) {
       const transactions = await kvGetJson<Transaction[]>(TRANSACTIONS_KEY);
-      if (Array.isArray(transactions)) {
+      if (Array.isArray(transactions) && transactions.length > 0) {
         return transactions;
       }
     }
@@ -643,7 +651,7 @@ export const db = {
       if (data) {
         try {
           const transactions = JSON.parse(data);
-          if (Array.isArray(transactions)) {
+          if (Array.isArray(transactions) && transactions.length > 0) {
             return transactions;
           }
         } catch (error) {
@@ -746,7 +754,7 @@ export const db = {
   getGifts: async (): Promise<Gift[]> => {
     if (useKv) {
       const gifts = await kvGetJson<Gift[]>(GIFTS_KEY);
-      if (Array.isArray(gifts)) {
+      if (Array.isArray(gifts) && gifts.length > 0) {
         return gifts;
       }
     }
@@ -756,7 +764,7 @@ export const db = {
       if (data) {
         try {
           const gifts = JSON.parse(data);
-          if (Array.isArray(gifts)) {
+          if (Array.isArray(gifts) && gifts.length > 0) {
             return gifts;
           }
         } catch (error) {
