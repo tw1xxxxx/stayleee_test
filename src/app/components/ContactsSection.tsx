@@ -220,8 +220,8 @@ export default function ContactsSection({ showMap = true }: ContactsSectionProps
                   Переведеновский пер. 13 с.13
                 </p>
                 <div className="space-y-2">
-                  <a href="mailto:info@staysee.shop" className="block text-xl md:text-2xl font-light hover:opacity-60 transition-opacity">
-                    info@staysee.shop
+                  <a href="mailto:shop.stay.see@yandex.ru" className="block text-xl md:text-2xl font-light hover:opacity-60 transition-opacity">
+                    shop.stay.see@yandex.ru
                   </a>
                   <a href="tel:+79099804077" className="block text-xl md:text-2xl font-light hover:opacity-60 transition-opacity">
                     +7 (909) 980-40-77
@@ -231,12 +231,15 @@ export default function ContactsSection({ showMap = true }: ContactsSectionProps
 
               <div className="space-y-6 text-center md:text-left">
                 <h3 className="text-sm uppercase tracking-[0.3em] opacity-50 mb-4">Соцсети</h3>
-                <div className="flex gap-8 justify-center md:justify-start items-center">
-                  <Link href="#" className="hover:opacity-60 transition-opacity">
+                <div className="flex flex-wrap gap-x-8 gap-y-4 justify-center md:justify-start items-center">
+                  <Link href="https://vk.ru/shopstaysee" target="_blank" className="hover:opacity-60 transition-opacity">
                     <span className="text-xl md:text-2xl font-light uppercase tracking-widest">VKontakte</span>
                   </Link>
-                  <Link href="#" className="hover:opacity-60 transition-opacity">
+                  <Link href="https://t.me/stayseesh0p" target="_blank" className="hover:opacity-60 transition-opacity">
                     <span className="text-xl md:text-2xl font-light uppercase tracking-widest">Telegram</span>
+                  </Link>
+                  <Link href="https://www.instagram.com/stayseeshop?igsh=ZzN6Mnhzdzh4aHg3&utm_source=qr" target="_blank" className="hover:opacity-60 transition-opacity">
+                    <span className="text-xl md:text-2xl font-light uppercase tracking-widest">Instagram</span>
                   </Link>
                 </div>
                 <div className="pt-4">
