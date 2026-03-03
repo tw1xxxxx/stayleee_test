@@ -13,6 +13,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
+    // Fetch order to get items/customer if not provided
+    let finalItems = items;
+    let finalCustomer = customer;
+
+    if (!finalItems || !finalCustomer) {
+      const orders = await db.getOrders();
+      const order = orders.find(o => o.id === orderId || o.id.toString() === orderId.toString());
+      if (order) {
+        if (!finalItems) finalItems = order.items;
+        if (!finalCustomer) finalCustomer = order.customer;
+      }
+    }
+
     // Create payment in YooKassa
     const payment = await createYooKassaPayment({
       amount: {
@@ -28,13 +41,13 @@ export async function POST(request: Request) {
       metadata: {
         order_id: orderId,
       },
-      ...(items && customer ? {
+      ...(finalItems && finalCustomer ? {
         receipt: {
           customer: {
-            email: customer.email,
-            phone: customer.phone,
+            email: finalCustomer.email,
+            phone: finalCustomer.phone,
           },
-          items: items.map((item: any) => ({
+          items: finalItems.map((item: any) => ({
             description: item.name,
             amount: {
               value: item.price.toFixed(2),
@@ -68,7 +81,7 @@ export async function POST(request: Request) {
     try {
       // Update order with payment ID
       const orders = await db.getOrders();
-      const order = orders.find((o) => o.id === orderId);
+      const order = orders.find((o) => o.id === orderId || o.id.toString() === orderId.toString());
       if (order) {
         order.paymentId = payment.id;
         order.paymentStatus = 'pending';
