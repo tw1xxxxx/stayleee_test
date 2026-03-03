@@ -12,7 +12,7 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent, Variants } fro
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, total, clearCart, addOrder } = useCart();
+  const { items, total, totalWithoutDiscount, discount, clearCart, addOrder } = useCart();
   const { isAuthenticated, isLoading, user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
@@ -475,6 +475,20 @@ export default function CheckoutPage() {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-md bg-white/90 backdrop-blur-md border border-brand-brown/10 p-4 rounded-2xl shadow-2xl z-30"
           >
+            <div className="flex flex-col gap-1 mb-2">
+              {discount > 0 && (
+                <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-bold">
+                  <span className="text-brand-brown/40">Сумма без скидки:</span>
+                  <span className="text-brand-brown/40 line-through">{formatPrice(totalWithoutDiscount)} ₽</span>
+                </div>
+              )}
+              {discount > 0 && (
+                <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-bold">
+                  <span className="text-brand-red">Ваша скидка ({discount}%):</span>
+                  <span className="text-brand-red">-{formatPrice(totalWithoutDiscount - total)} ₽</span>
+                </div>
+              )}
+            </div>
             <button 
                 onClick={handleSubmit}
                 disabled={!isFormValid}

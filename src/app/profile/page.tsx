@@ -12,7 +12,7 @@ function ProfileContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, logout, isAuthenticated, isLoading } = useAuth();
-  const { orders, clearCart, deleteOrder } = useCart();
+  const { orders, totalBuyout, discount, clearCart, deleteOrder } = useCart();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [showPaymentError, setShowPaymentError] = useState(false);
   const [localOrders, setLocalOrders] = useState<Order[]>([]);
@@ -261,11 +261,6 @@ function ProfileContent() {
   // Combine mock orders and real orders
   const allOrders = localOrders;
 
-  // Calculate total buyout amount
-  const totalBuyout = allOrders
-    .filter(o => o.paymentStatus === 'succeeded' || o.status === 'completed' || o.status === 'В обработке')
-    .reduce((sum, order) => sum + order.amount, 0);
-
   // Format date helper
   const formatDate = (dateString?: string) => {
     if (!dateString) return "";
@@ -367,7 +362,7 @@ function ProfileContent() {
             <div className="flex flex-col gap-1 items-end text-right">
               <span className="text-[10px] font-bold text-black/40 uppercase tracking-widest">Скидка</span>
               <span className="text-2xl font-black text-brand-brown tracking-tight">
-                10%
+                {discount}%
               </span>
             </div>
           </div>

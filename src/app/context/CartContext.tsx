@@ -44,10 +44,13 @@ interface CartContextType {
   toggleSelection: (cartId: string) => void;
   selectedItems: string[];
   total: number;
+  totalWithoutDiscount: number;
   getItemQuantity: (id: number, size: string, color: string, embroidery?: boolean) => number;
   clearCart: () => void;
   orders: Order[];
   isInitialized: boolean;
+  totalBuyout: number;
+  discount: number;
   addOrder: (order: Omit<Order, "id" | "date" | "status">) => Promise<Order | null>;
   deleteOrder: (orderId: string) => Promise<boolean>;
   setItems: (items: CartItem[]) => void;
@@ -67,56 +70,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
   const { user } = useAuth();
 
-  const mergeOrders = (localOrders: Order[], serverOrders: Order[]) => {
-    const getKey = (order: Order) => {
-      if (order.id) return `id:${order.id}`;
-      return `meta:${order.amount}-${order.address}-${order.date}`;
-    };
+  // Calculate total buyout from paid orders
+  const totalBuyout = orders
+    .filter(o => o.paymentStatus === 'succeeded' || o.status === 'completed' || o.status === 'В обработке')
+    .reduce((sum, order) => sum + order.amount, 0);
 
-    const merged = new Map<string, Order>();
-    serverOrders.forEach(order => {
-      merged.set(getKey(order), order);
-    });
-    localOrders.forEach(order => {
-      const key = getKey(order);
-      if (!merged.has(key)) {
-        merged.set(key, order);
-      }
-    });
-
-    return Array.from(merged.values()).sort((a, b) => {
-      const aTime = new Date(a.date).getTime();
-      const bTime = new Date(b.date).getTime();
-      return bTime - aTime;
-    });
+  // Calculate tiered discount
+  const getDiscount = (buyout: number) => {
+    if (buyout >= 500000) return 10;
+    if (buyout >= 300000) return 7;
+    if (buyout >= 100000) return 5;
+    return 0;
   };
 
-  const total = items
+  const discount = getDiscount(totalBuyout);
+
+  const totalWithoutDiscount = items
     .filter(item => selectedItems.includes(item.cartId))
     .reduce((sum, item) => {
       const itemPrice = item.price + (item.embroidery ? 900 : 0);
       return sum + (itemPrice * item.quantity);
     }, 0);
 
+  const total = totalWithoutDiscount * (1 - discount / 100);
+
   // Fetch orders from backend when user is logged in
   useEffect(() => {
     if (user) {
-      const savedOrders = localStorage.getItem("orders");
-      let localOrders: Order[] = [];
-      if (savedOrders) {
-        try {
-          const parsed = JSON.parse(savedOrders);
-          if (Array.isArray(parsed)) {
-            localOrders = parsed.filter((o: unknown) => {
-              if (typeof o !== 'object' || o === null) return false;
-              const order = o as { id: string };
-              return /^\d+$/.test(order.id);
-            }) as Order[];
-          }
-        } catch (error) {
-          console.error("Failed to parse orders", error);
-        }
-      }
+      // Clear local storage orders when user logs in to avoid using mock data
+      localStorage.removeItem("orders");
+      
       fetch(`/api/orders?userId=${user.id}`)
         .then(async res => {
           if (!res.ok) {
@@ -143,14 +126,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
               paymentId: o.paymentId,
               paymentStatus: o.paymentStatus
             }));
-            setOrders(mergeOrders(localOrders, mappedOrders));
+            setOrders(mappedOrders);
           } else {
-            setOrders(localOrders);
+            setOrders([]);
           }
         })
         .catch(err => {
           console.error("Failed to fetch orders:", err);
-          setOrders(localOrders);
+          setOrders([]);
         });
     } else {
       // User logged out or is guest
@@ -410,13 +393,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
       addToCart, 
       removeFromCart, 
       updateQuantity, 
-      total, 
       toggleSelection, 
       selectedItems, 
+      total, 
+      totalWithoutDiscount,
       getItemQuantity, 
       clearCart, 
       orders, 
-      isInitialized, 
+      isInitialized,
+      totalBuyout,
+      discount,
       addOrder, 
       deleteOrder,
       setItems,

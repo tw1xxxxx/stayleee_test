@@ -25,6 +25,8 @@ export default function CartPage() {
     toggleSelection, 
     selectedItems, 
     total,
+    totalWithoutDiscount,
+    discount,
     removeFromCart
   } = useCart();
 
@@ -407,7 +409,19 @@ export default function CartPage() {
           >
             <div className="flex items-center justify-between gap-4">
               <div className="flex flex-col">
-                <span className="text-xs text-brand-brown/50 font-medium uppercase tracking-wide">Итого</span>
+                {discount > 0 && (
+                  <span className="text-[10px] text-brand-red font-bold uppercase tracking-wider line-through opacity-50">
+                    {formatPrice(totalWithoutDiscount)} ₽
+                  </span>
+                )}
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xs text-brand-brown/50 font-medium uppercase tracking-wide">Итого</span>
+                  {discount > 0 && (
+                    <span className="text-[10px] bg-brand-red/10 text-brand-red px-1.5 py-0.5 rounded-full font-bold">
+                      -{discount}%
+                    </span>
+                  )}
+                </div>
                 <span className="text-2xl font-bold text-brand-brown leading-none">
                   {formatPrice(total)} ₽
                 </span>

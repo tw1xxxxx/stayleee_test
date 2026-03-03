@@ -212,6 +212,16 @@ export interface Gift {
 
 export const db = {
   getUsers: async (): Promise<User[]> => {
+    try {
+      const data = await fs.promises.readFile(USERS_FILE, 'utf-8');
+      const users = JSON.parse(data);
+      if (Array.isArray(users)) {
+        return users;
+      }
+    } catch (error) {
+      console.error('Error reading users file:', error);
+    }
+
     if (useKv) {
       const users = await kvGetJson<User[]>(USERS_KEY);
       if (Array.isArray(users) && users.length > 0) {
@@ -232,16 +242,20 @@ export const db = {
         }
       }
     }
-    try {
-      const data = await fs.promises.readFile(USERS_FILE, 'utf-8');
-      return JSON.parse(data);
-    } catch (error) {
-      console.error('Error reading users file:', error);
-      return [];
-    }
+    return [];
   },
 
   getOrders: async (): Promise<Order[]> => {
+    try {
+      const data = await fs.promises.readFile(ORDERS_FILE, 'utf-8');
+      const orders = JSON.parse(data);
+      if (Array.isArray(orders)) {
+        return orders;
+      }
+    } catch (error) {
+      console.error('Error reading orders file:', error);
+    }
+
     if (useKv) {
       const orders = await kvGetJson<Order[]>(ORDERS_KEY);
       if (Array.isArray(orders) && orders.length > 0) {
@@ -262,13 +276,7 @@ export const db = {
         }
       }
     }
-    try {
-      const data = await fs.promises.readFile(ORDERS_FILE, 'utf-8');
-      return JSON.parse(data);
-    } catch (error) {
-      console.error('Error reading orders file:', error);
-      return [];
-    }
+    return [];
   },
 
   getUserByEmail: async (email: string): Promise<User | undefined> => {

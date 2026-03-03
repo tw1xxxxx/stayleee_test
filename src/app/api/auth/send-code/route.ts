@@ -53,7 +53,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Email is required" }, { status: 400 });
     }
 
-    const userExists = await db.userExists(normalizedEmail);
+    const users = await db.getUsers();
+    console.log("Searching for user:", normalizedEmail);
+    console.log("Current users in DB:", users.map(u => u.email));
+    
+    const userExists = users.some(u => u.email.toLowerCase() === normalizedEmail);
+    console.log("User exists?", userExists);
 
     if (type === 'login') {
       if (!userExists) {
