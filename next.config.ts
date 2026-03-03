@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
+import path from 'path';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  turbopack: {
+    root: path.resolve(__dirname || process.cwd()),
+  },
+  experimental: {
+    optimizePackageImports: ["framer-motion"],
+  },
   images: {
     remotePatterns: [
       {
@@ -13,9 +20,6 @@ const nextConfig: NextConfig = {
         hostname: '*.public.blob.vercel-storage.com',
       },
     ],
-  },
-  experimental: {
-    optimizePackageImports: ["framer-motion"],
   },
   reactCompiler: true,
   compress: true,
