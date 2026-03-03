@@ -43,37 +43,27 @@ const kvSetExJson = async (key: string, seconds: number, value: unknown): Promis
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log("DEBUG: POST request received at /api/auth/send-code");
-    console.log("DEBUG: Request body:", JSON.stringify(body, null, 2));
     const { email, name, type } = body;
 
     if (!email) {
-      console.log("DEBUG: Missing email in request");
       return NextResponse.json({ message: "Email is required" }, { status: 400 });
     }
 
     const normalizedEmail = String(email).trim().toLowerCase();
-    console.log("DEBUG: Normalized email:", normalizedEmail);
-    console.log("DEBUG: Email char codes:", Array.from(normalizedEmail).map(c => c.charCodeAt(0)));
     if (!normalizedEmail) {
-      console.log("DEBUG: Normalized email is empty");
       return NextResponse.json({ message: "Email is required" }, { status: 400 });
     }
 
     const users = await db.getUsers();
-    console.log("DEBUG: All users in DB (emails):", users.map(u => u.email));
     
     const userExists = users.some(u => u.email.toLowerCase() === normalizedEmail);
-    console.log("DEBUG: userExists?", userExists, "for type:", type);
 
     if (type === 'login') {
       if (!userExists) {
-        console.log("DEBUG: Returning 400 - Email not registered");
         return NextResponse.json({ message: "Email not registered" }, { status: 400 });
       }
     } else if (type === 'register') {
       if (userExists) {
-        console.log("DEBUG: Returning 400 - User already exists");
         return NextResponse.json({ message: "User already exists" }, { status: 400 });
       }
     }

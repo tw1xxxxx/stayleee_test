@@ -45,33 +45,45 @@ export interface CreatePaymentParams {
 }
 
 export const createYooKassaPayment = async (params: CreatePaymentParams) => {
-  // Always return mock payment for testing as requested
-  console.log('Returning mock payment (TEST MODE enabled)');
-  return {
-    id: `mock_payment_${uuidv4()}`,
-    status: 'pending',
-    amount: params.amount,
-    description: params.description,
-    recipient: {
-      account_id: 'mock_account',
-      gateway_id: 'mock_gateway',
-    },
-    created_at: new Date().toISOString(),
-    confirmation: {
-      type: 'redirect',
-      confirmation_url: params.confirmation.return_url, // Redirect back immediately
-    },
-    test: true,
-    paid: false,
-    refundable: false,
-    metadata: params.metadata,
-  };
-
-  /* // Original YooKassa logic commented out for testing
   if (!SHOP_ID || !SECRET_KEY) {
-    // ... rest of the logic
+    // Return mock payment if credentials are missing
+    return {
+      id: `mock_payment_${uuidv4()}`,
+      status: 'pending',
+      amount: params.amount,
+      description: params.description,
+      recipient: {
+        account_id: 'mock_account',
+        gateway_id: 'mock_gateway',
+      },
+      created_at: new Date().toISOString(),
+      confirmation: {
+        type: 'redirect',
+        confirmation_url: params.confirmation.return_url, // Redirect back immediately
+      },
+      test: true,
+      paid: false,
+      refundable: false,
+      metadata: params.metadata,
+    };
   }
-  */
+
+  const response = await fetch(`${YOOKASSA_API_URL}/payments`, {
+    method: 'POST',
+    headers: {
+      'Authorization': getAuthHeader(),
+      'Idempotence-Key': uuidv4(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(`YooKassa API Error: ${JSON.stringify(errorData)}`);
+  }
+
+  return response.json();
 };
 
 export const getYooKassaPayment = async (paymentId: string) => {

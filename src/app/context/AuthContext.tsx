@@ -43,7 +43,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string) => {
     try {
-      console.log("DEBUG: Calling /api/auth/send-code with email:", email);
       const response = await fetch("/api/auth/send-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,15 +50,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       
       const data = await response.json();
-      console.log("DEBUG: Response from /api/auth/send-code:", response.status, data);
       
       if (!response.ok) {
         throw new Error(data.message || "Failed to send code");
-      }
-
-      if (data.debugCode) {
-        console.log("Development Mode - Verification Code:", data.debugCode);
-        alert(`Development Mode: Ваш код подтверждения ${data.debugCode}`);
       }
 
       return true;
@@ -81,11 +74,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if (!response.ok) {
         throw new Error(data.message || "Failed to send code");
-      }
-
-      if (data.debugCode) {
-        console.log("Development Mode - Verification Code:", data.debugCode);
-        alert(`Development Mode: Ваш код подтверждения ${data.debugCode}`);
       }
 
       return true;

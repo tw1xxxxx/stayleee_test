@@ -75,10 +75,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     .filter(o => o.paymentStatus === 'succeeded' || o.status === 'completed' || o.status === 'В обработке')
     .reduce((sum, order) => sum + order.amount, 0);
 
-  console.log("DEBUG: CartContext - orders count:", orders.length);
-  console.log("DEBUG: CartContext - paid orders:", orders.filter(o => o.paymentStatus === 'succeeded' || o.status === 'completed' || o.status === 'В обработке').length);
-  console.log("DEBUG: CartContext - totalBuyout calculated:", totalBuyout);
-
   // Calculate tiered discount
   const getDiscount = (buyout: number) => {
     if (buyout >= 500000) return 10;
@@ -88,7 +84,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const discount = getDiscount(totalBuyout);
-  console.log("DEBUG: CartContext - applied discount %:", discount);
 
   const totalWithoutDiscount = items
     .filter(item => selectedItems.includes(item.cartId))
