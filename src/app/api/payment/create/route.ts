@@ -48,7 +48,7 @@ export async function POST(request: Request) {
             email: finalCustomer.email,
             phone: finalCustomer.phone,
           },
-          items: finalItems.map((item: any) => ({
+          items: finalItems.map((item: { name: string; price: number; quantity: number }) => ({
             description: item.name,
             amount: {
               value: item.price.toFixed(2),
