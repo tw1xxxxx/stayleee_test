@@ -243,7 +243,13 @@ export default function ContactsSection({ showMap = true }: ContactsSectionProps
                   </Link>
                 </div>
                 <div className="pt-4">
-                  <p className="text-sm uppercase tracking-[0.2em] font-light">форма для horeca</p>
+                  <Link 
+                    href="https://alpha-development.ru" 
+                    target="_blank" 
+                    className="text-sm uppercase tracking-[0.2em] font-light hover:opacity-60 transition-opacity"
+                  >
+                    Made by Alpha
+                  </Link>
                 </div>
               </div>
             </div>

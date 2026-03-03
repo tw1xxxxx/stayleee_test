@@ -91,10 +91,24 @@ export async function POST(request: Request) {
     // Send email
     const subject = "Ваш код подтверждения StaySee";
     const html = `
-      <div style="font-family: Arial, sans-serif; padding: 20px;">
-        <h2>Код подтверждения: <strong>${code}</strong></h2>
-        <p>Используйте этот код для входа или регистрации в StaySee.</p>
-        <p>Код действителен в течение 5 минут.</p>
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #4A3E3E; background-color: #FDFCF8; border-radius: 12px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+          <h1 style="font-size: 24px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin: 0;">StaySee</h1>
+        </div>
+        
+        <div style="background-color: #FFFFFF; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(74, 62, 62, 0.05); text-align: center;">
+          <p style="font-size: 16px; margin-bottom: 25px; line-height: 1.6;">Используйте этот код для входа или регистрации в личном кабинете:</p>
+          
+          <div style="background-color: #FDFCF8; border: 1px solid #E5E1D8; padding: 20px; border-radius: 8px; margin: 25px 0;">
+            <span style="font-size: 36px; font-weight: 600; letter-spacing: 0.2em; color: #4A3E3E;">${code}</span>
+          </div>
+          
+          <p style="font-size: 14px; color: #8C8279; margin-top: 25px;">Код действителен в течение 5 минут.</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+          <p style="font-size: 12px; color: #B0A9A2;">© ${new Date().getFullYear()} StaySee. Все права защищены.</p>
+        </div>
       </div>
     `;
 

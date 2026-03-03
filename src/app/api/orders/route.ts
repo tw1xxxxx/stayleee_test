@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { sendOrderToTelegram } from '@/lib/telegram';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,6 +52,14 @@ export async function POST(request: Request) {
     };
 
     await db.createOrder(newOrder);
+
+    // Send notification to Telegram
+    try {
+      await sendOrderToTelegram(newOrder);
+    } catch (tgError) {
+      console.error("Error sending order to Telegram:", tgError);
+      // Don't fail the request if TG notification fails
+    }
 
     return NextResponse.json({ message: "Order created successfully", order: newOrder }, { status: 201 });
   } catch (error) {

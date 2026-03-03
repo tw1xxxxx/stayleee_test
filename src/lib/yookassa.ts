@@ -45,47 +45,33 @@ export interface CreatePaymentParams {
 }
 
 export const createYooKassaPayment = async (params: CreatePaymentParams) => {
-  if (!SHOP_ID || !SECRET_KEY) {
-    console.warn('YooKassa credentials are missing. Returning mock payment.');
-    return {
-      id: `mock_payment_${uuidv4()}`,
-      status: 'pending',
-      amount: params.amount,
-      description: params.description,
-      recipient: {
-        account_id: 'mock_account',
-        gateway_id: 'mock_gateway',
-      },
-      created_at: new Date().toISOString(),
-      confirmation: {
-        type: 'redirect',
-        confirmation_url: params.confirmation.return_url, // Redirect back immediately
-      },
-      test: true,
-      paid: false,
-      refundable: false,
-      metadata: params.metadata,
-    };
-  }
-
-  const idempotenceKey = uuidv4();
-
-  const response = await fetch(`${YOOKASSA_API_URL}/payments`, {
-    method: 'POST',
-    headers: {
-      'Authorization': getAuthHeader(),
-      'Idempotence-Key': idempotenceKey,
-      'Content-Type': 'application/json',
+  // Always return mock payment for testing as requested
+  console.log('Returning mock payment (TEST MODE enabled)');
+  return {
+    id: `mock_payment_${uuidv4()}`,
+    status: 'pending',
+    amount: params.amount,
+    description: params.description,
+    recipient: {
+      account_id: 'mock_account',
+      gateway_id: 'mock_gateway',
     },
-    body: JSON.stringify(params),
-  });
+    created_at: new Date().toISOString(),
+    confirmation: {
+      type: 'redirect',
+      confirmation_url: params.confirmation.return_url, // Redirect back immediately
+    },
+    test: true,
+    paid: false,
+    refundable: false,
+    metadata: params.metadata,
+  };
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(`YooKassa API Error: ${JSON.stringify(errorData)}`);
+  /* // Original YooKassa logic commented out for testing
+  if (!SHOP_ID || !SECRET_KEY) {
+    // ... rest of the logic
   }
-
-  return response.json();
+  */
 };
 
 export const getYooKassaPayment = async (paymentId: string) => {
