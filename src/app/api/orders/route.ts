@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { db, Order } from '@/lib/db';
 import { sendOrderToTelegram } from '@/lib/telegram';
 
 export const dynamic = 'force-dynamic';
@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     ]);
     
     // Filter orders by userId if provided
-    let filteredOrders: any[] = [];
+    let filteredOrders: Order[] = orders;
     if (userId) {
       filteredOrders = orders.filter(order => order.userId === userId);
     } else {

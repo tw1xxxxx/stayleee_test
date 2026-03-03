@@ -5,19 +5,30 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import FadeIn from "../components/FadeIn";
 import MenuOverlay from "../components/MenuOverlay";
-import { AnimatePresence, motion } from "framer-motion";
 
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "@/lib/utils";
 
+interface Gift {
+  id: string | number;
+  title: string;
+  price: number;
+  image: string;
+  description?: string;
+}
+
 export default function GiftsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [gifts, setGifts] = useState<any[]>([]);
+  const [gifts, setGifts] = useState<Gift[]>([]);
   const { total, addToCart, items, updateQuantity, removeFromCart } = useCart();
 
   useEffect(() => {
-    setIsMounted(true);
+    // We set mounted in a timeout to avoid cascading renders warning
+    const mountTimer = setTimeout(() => {
+      setIsMounted(true);
+    }, 0);
+    
     const fetchGifts = async () => {
       try {
         const res = await fetch("/api/gifts", { cache: "no-store" });
@@ -30,11 +41,13 @@ export default function GiftsPage() {
       }
     };
     fetchGifts();
+
+    return () => clearTimeout(mountTimer);
   }, []);
 
-  const handleAddToCart = (gift: any) => {
+  const handleAddToCart = (gift: Gift) => {
     addToCart({
-      id: gift.id,
+      id: gift.id.toString(),
       title: gift.title,
       price: gift.price,
       image: gift.image,

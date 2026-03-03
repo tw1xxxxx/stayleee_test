@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import ContactsSection from "../components/ContactsSection";
 import FadeIn from "../components/FadeIn";
 import MenuOverlay from "../components/MenuOverlay";
-import BonusesSection from "../components/BonusesSection";
 
 export default function CooperationPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import MenuOverlay from "../components/MenuOverlay";
 import FadeIn from "../components/FadeIn";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import SafeImage from "@/app/components/SafeImage";
 
 // Content data structure for search functionality
@@ -138,7 +138,7 @@ export default function RestaurantsPage() {
   const interleavedItems = (() => {
     if (searchQuery) return filteredItems;
     
-    const result: any[] = [];
+    const result: (Project | { id: string; type: 'promo'; text: string; title: string; icon: string })[] = [];
     let offerIndex = 0;
     
     filteredItems.forEach((item, index) => {

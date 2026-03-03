@@ -7,12 +7,12 @@ import { useRouter } from "next/navigation";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { formatPrice } from "@/lib/utils";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent, Variants } from "framer-motion";
-
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { Gift } from "@/lib/db";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, total, totalWithoutDiscount, discount, clearCart, addOrder } = useCart();
+  const { items, total, clearCart, addOrder } = useCart();
   const { isAuthenticated, isLoading, user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
@@ -25,7 +25,7 @@ export default function CheckoutPage() {
   const [isCheckoutVisible, setIsCheckoutVisible] = useState(true);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [gifts, setGifts] = useState<any[]>([]);
+  const [gifts, setGifts] = useState<Gift[]>([]);
   const { scrollY } = useScroll();
 
   useEffect(() => {
@@ -204,7 +204,7 @@ export default function CheckoutPage() {
     if (!isFormValid) return;
 
     setIsSubmitting(true);
-    const orderItems = items.map(item => ({
+    const orderItems: { id: string | number; name: string; price: number; quantity: number; size?: string }[] = items.map(item => ({
       id: item.id,
       name: item.title,
       price: item.price,
@@ -222,7 +222,7 @@ export default function CheckoutPage() {
         name: `Подарок: ${gift.title}`,
         price: 0,
         quantity: 1
-      } as any);
+      });
     });
 
     try {
@@ -230,7 +230,7 @@ export default function CheckoutPage() {
       const order = await addOrder({
         address: `${formData.city}, ${formData.address}`,
         amount: total,
-        items: orderItems as any,
+        items: orderItems,
         customer: {
           name: formData.name,
           phone: formData.phone,

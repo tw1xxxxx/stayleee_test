@@ -1,10 +1,30 @@
 const TELEGRAM_BOT_TOKEN = '8797227038:AAHge3hqsmeuYBTW3lCAkvPwtBnpvcXeSSc';
 const TELEGRAM_CHAT_IDS = ['868522391', '470478890', '6590263916'];
 
-export async function sendOrderToTelegram(order: any) {
+interface OrderItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+interface Order {
+  id: string | number;
+  items: OrderItem[];
+  customer?: {
+    name?: string;
+    phone?: string;
+    email?: string;
+  };
+  createdAt: string | number | Date;
+  total: number;
+  address?: string;
+  userId?: string;
+}
+
+export async function sendOrderToTelegram(order: Order) {
   try {
     const itemsText = order.items
-      .map((item: any) => `- ${item.name} (${item.quantity} шт.) — ${item.price * (item.quantity || 1)} ₽`)
+      .map((item: OrderItem) => `- ${item.name} (${item.quantity} шт.) — ${item.price * (item.quantity || 1)} ₽`)
       .join('\n');
 
     const customerInfo = order.customer ? `

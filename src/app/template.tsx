@@ -3,12 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React, { useEffect } from "react";
-import { usePathname } from "next/navigation";
 
 export default function Template({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isHome = pathname === "/";
-
   // Блокируем скролл на время анимации
   useEffect(() => {
     document.body.style.overflow = "hidden";

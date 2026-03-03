@@ -24,7 +24,7 @@ const createProductId = () => `${Date.now()}${Math.floor(Math.random() * 1000)}`
 
 export async function GET() {
   try {
-    let products = await db.getProducts();
+    const products = await db.getProducts();
 
     // Seed dummy products if empty (for development/testing since Catalog isn't ready)
     // DISABLED: We should not seed dummy products if they are empty in DB, as this hides real data issues
