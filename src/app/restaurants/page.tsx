@@ -18,6 +18,20 @@ interface Project {
   order: number;
 }
 
+interface Promo {
+  id: string;
+  type: 'promo';
+  text: string;
+  title: string;
+  icon: string;
+}
+
+type InterleavedItem = Project | Promo;
+
+function isPromo(item: InterleavedItem): item is Promo {
+  return item.type === 'promo' && 'icon' in item;
+}
+
 const STAGES = [
   {
     id: 'concept',
@@ -135,10 +149,10 @@ export default function RestaurantsPage() {
   });
 
   // Interleave Special Offers into Projects
-  const interleavedItems = (() => {
+  const interleavedItems: InterleavedItem[] = (() => {
     if (searchQuery) return filteredItems;
     
-    const result: (Project | { id: string; type: 'promo'; text: string; title: string; icon: string })[] = [];
+    const result: InterleavedItem[] = [];
     let offerIndex = 0;
     
     filteredItems.forEach((item, index) => {
@@ -291,7 +305,7 @@ export default function RestaurantsPage() {
           ) : interleavedItems.length > 0 ? (
             interleavedItems.map((item, index) => (
               <FadeIn key={item.id} delay={0.2 + (index % 3) * 0.1} className="h-full">
-                {item.type === 'promo' ? (
+                {isPromo(item) ? (
                   <div className="group relative w-full h-full min-h-[280px] flex flex-col justify-center bg-white rounded-[2rem] p-8 border border-brand-brown/5 transition-all duration-300 hover:shadow-xl hover:border-brand-brown/10">
                     <div className="flex items-center gap-3 mb-4">
                       <span className="text-3xl">{item.icon}</span>

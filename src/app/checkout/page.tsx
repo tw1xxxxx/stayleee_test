@@ -7,12 +7,12 @@ import { useRouter } from "next/navigation";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { formatPrice } from "@/lib/utils";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent, Variants } from "framer-motion";
 import { Gift } from "@/lib/db";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, total, clearCart, addOrder } = useCart();
+  const { items, total, totalWithoutDiscount, discount, clearCart, addOrder } = useCart();
   const { isAuthenticated, isLoading, user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",

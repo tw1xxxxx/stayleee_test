@@ -15,6 +15,7 @@ interface Gift {
   price: number;
   image: string;
   description?: string;
+  threshold: number;
 }
 
 export default function GiftsPage() {
