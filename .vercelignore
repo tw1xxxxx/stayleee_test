@@ -1,14 +1,12 @@
-# Ignore large local assets that should not be bundled into functions
+# Only ignore things that are truly not needed for the build
 video/
-partners/
 scripts/
-*.jpg
-*.png
-*.mov
-*.webm
+parse_3/
 .next/
 node_modules/
-public/
-data/
-!data/users.json
-!public/images/partners/
+*.mov
+*.webm
+
+# Do NOT ignore the public folder or images, as Next.js needs them for the frontend
+# and Vercel needs them to serve static assets.
+# The previous version ignored all .jpg and .png files, which broke the UI.
