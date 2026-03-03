@@ -27,6 +27,7 @@ export async function POST(request: Request) {
     }
 
     // Create payment in YooKassa
+    console.log(`Creating payment for order ${orderId}, amount: ${amount}`);
     const payment = await createYooKassaPayment({
       amount: {
         value: amount.toFixed(2),
@@ -54,13 +55,19 @@ export async function POST(request: Request) {
               currency: 'RUB',
             },
             quantity: item.quantity.toString(),
-            vat_code: 1, // 1 for "No VAT" or adjust based on your taxation
+            vat_code: 1,
             payment_mode: 'full_payment',
             payment_subject: 'commodity',
           })),
-        }
+        },
       } : {}),
     });
+
+    if (payment.test) {
+      console.log(`Payment created in TEST/MOCK mode for order ${orderId}`);
+    } else {
+      console.log(`Real payment created for order ${orderId}: ${payment.id}`);
+    }
 
     try {
       // Create transaction record

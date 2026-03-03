@@ -9,26 +9,50 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Manually load .env if not loaded by Next.js
-const envPath = path.join(__dirname, '../../.env');
-if (fs.existsSync(envPath)) {
-    const envContent = fs.readFileSync(envPath, 'utf-8');
-    envContent.split('\n').forEach(line => {
-        const [key, ...value] = line.split('=');
-        if (key && value.length > 0) {
-            process.env[key.trim()] = value.join('=').trim();
+// Try both the relative path and process.cwd()
+const loadEnv = () => {
+    const rootPath = process.cwd();
+    const possibleEnvPaths = [
+        path.join(rootPath, '.env'),
+        path.join(__dirname, '../../.env')
+    ];
+
+    for (const envPath of possibleEnvPaths) {
+        if (fs.existsSync(envPath)) {
+            const envContent = fs.readFileSync(envPath, 'utf-8');
+            envContent.split('\n').forEach(line => {
+                const [key, ...value] = line.split('=');
+                if (key && value.length > 0) {
+                    const trimmedKey = key.trim();
+                    if (!process.env[trimmedKey]) {
+                        process.env[trimmedKey] = value.join('=').trim();
+                    }
+                }
+            });
+            break;
         }
-    });
-}
+    }
+};
 
-const SHOP_ID = process.env.YOOKASSA_SHOP_ID;
-const SECRET_KEY = process.env.YOOKASSA_SECRET_KEY;
+loadEnv();
 
-if (!SHOP_ID || !SECRET_KEY) {
-  console.warn('YooKassa credentials are not set in environment variables.');
-}
+const getShopId = () => process.env.YOOKASSA_SHOP_ID;
+const getSecretKey = () => process.env.YOOKASSA_SECRET_KEY;
+
+const checkCredentials = () => {
+  const shopId = getShopId();
+  const secretKey = getSecretKey();
+  if (!shopId || !secretKey) {
+    console.warn('YooKassa credentials are not set in environment variables.');
+    return false;
+  }
+  return true;
+};
 
 const getAuthHeader = () => {
-  const authString = Buffer.from(`${SHOP_ID}:${SECRET_KEY}`).toString('base64');
+  const shopId = getShopId();
+  const secretKey = getSecretKey();
+  const authString = Buffer.from(`${shopId}:${secretKey}`).toString('base64');
   return `Basic ${authString}`;
 };
 
@@ -64,7 +88,7 @@ export interface CreatePaymentParams {
 }
 
 export const createYooKassaPayment = async (params: CreatePaymentParams) => {
-  if (!SHOP_ID || !SECRET_KEY) {
+  if (!checkCredentials()) {
     // Return mock payment if credentials are missing
     return {
       id: `mock_payment_${uuidv4()}`,
@@ -106,7 +130,7 @@ export const createYooKassaPayment = async (params: CreatePaymentParams) => {
 };
 
 export const getYooKassaPayment = async (paymentId: string) => {
-  if (!SHOP_ID || !SECRET_KEY) {
+  if (!checkCredentials()) {
     if (paymentId.startsWith('mock_payment_')) {
       return {
         id: paymentId,

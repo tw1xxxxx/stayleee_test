@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     // If orderId provided, find paymentId from order
     if (!targetPaymentId && orderId) {
       const orders = await db.getOrders();
-      const order = orders.find((o) => o.id === orderId);
+      const order = orders.find((o) => o.id.toString() === orderId.toString());
       if (!order || !order.paymentId) {
         return NextResponse.json({ status: 'unknown', message: 'Order or payment not found' });
       }
