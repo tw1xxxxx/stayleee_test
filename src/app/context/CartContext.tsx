@@ -49,6 +49,7 @@ interface CartContextType {
   orders: Order[];
   isInitialized: boolean;
   addOrder: (order: Omit<Order, "id" | "date" | "status">) => Promise<Order | null>;
+  deleteOrder: (orderId: string) => Promise<boolean>;
   setItems: (items: CartItem[]) => void;
   setOrders: (orders: Order[]) => void;
 }
@@ -386,6 +387,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const deleteOrder = async (orderId: string): Promise<boolean> => {
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        setOrders(prev => prev.filter(o => o.id !== orderId));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      return false;
+    }
+  };
+
   return (
     <CartContext.Provider value={{ 
       items, 
@@ -400,6 +418,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       orders, 
       isInitialized, 
       addOrder, 
+      deleteOrder,
       setItems,
       setOrders
     }}>

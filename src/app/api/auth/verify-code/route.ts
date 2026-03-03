@@ -123,34 +123,38 @@ export async function POST(request: Request) {
 
     let user;
     
-    // console.log(`Verifying code for ${normalizedEmail}, isRegistration: ${isRegistration}`);
+    // Check if user already exists regardless of isRegistration
+    const existingUser = await db.getUserByEmail(normalizedEmail);
 
     if (isRegistration) {
-      // Get existing users to generate numeric ID
-      const users = await db.getUsers();
-      
-      const maxId = users.reduce((max, u) => {
-        const numId = parseInt(u.id);
-        return !isNaN(numId) && numId > max ? numId : max;
-      }, 0);
-      
-      const newId = (maxId + 1).toString();
+      if (existingUser) {
+        // If user already exists, just use that user
+        user = existingUser;
+      } else {
+        // Get existing users to generate numeric ID
+        const users = await db.getUsers();
+        
+        const maxId = users.reduce((max, u) => {
+          const numId = parseInt(u.id);
+          return !isNaN(numId) && numId > max ? numId : max;
+        }, 0);
+        
+        const newId = (maxId + 1).toString();
 
-      // Create new user
-      user = {
-        id: newId,
-        email: normalizedEmail,
-        name: name || storedOtp.name || "User",
-        createdAt: new Date().toISOString(),
-      };
-      
-      // console.log("Creating new user:", user);
-      
-      // Save to store
-      await db.createUser(user);
+        // Create new user
+        user = {
+          id: newId,
+          email: normalizedEmail,
+          name: name || storedOtp.name || "User",
+          createdAt: new Date().toISOString(),
+        };
+        
+        // Save to store
+        await db.createUser(user);
+      }
     } else {
       // Find existing user
-      user = await db.getUserByEmail(normalizedEmail);
+      user = existingUser;
       
       // Fallback if not found (should be handled by send-code, but just in case)
       if (!user) {

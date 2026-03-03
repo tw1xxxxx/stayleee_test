@@ -276,27 +276,46 @@ export const db = {
     return users.find((user) => user.email.toLowerCase() === email.toLowerCase());
   },
 
-  createUser: async (user: User): Promise<void> => {
+  createUser: async (user: User): Promise<boolean> => {
     try {
       const users = await db.getUsers();
+      
+      // Check for existing user with same email just in case
+      const exists = users.some(u => u.email.toLowerCase() === user.email.toLowerCase());
+      if (exists) {
+        console.log(`User already exists: ${user.email}`);
+        return true; // Consider it success if already exists
+      }
+      
       users.push(user);
+      
       if (useKv) {
         const saved = await kvSetJson(USERS_KEY, users);
         if (saved) {
-          console.log(`User created: ${user.email}`);
-          return;
+          console.log(`User created in KV: ${user.email}`);
+          return true;
         }
       }
+      
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(USERS_KEY, JSON.stringify(users));
-        console.log(`User created: ${user.email}`);
-        return;
+        console.log(`User created in Redis: ${user.email}`);
+        return true;
       }
-      await fs.promises.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
-      console.log(`User created: ${user.email}`);
+      
+      // Fallback to file system
+      try {
+        await fs.promises.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+        console.log(`User created in File System: ${user.email}`);
+        return true;
+      } catch (fileError) {
+        console.error('Error writing to users file:', fileError);
+        return false;
+      }
     } catch (error) {
       console.error('Error creating user:', error);
+      return false;
     }
   },
 
@@ -325,6 +344,25 @@ export const db = {
   },
 
 
+
+  deleteOrder: async (id: string): Promise<void> => {
+    try {
+      const orders = await db.getOrders();
+      const filtered = orders.filter(o => o.id !== id);
+      if (useKv) {
+        const saved = await kvSetJson(ORDERS_KEY, filtered);
+        if (saved) return;
+      }
+      const redisClient = await getRedisClient();
+      if (redisClient) {
+        await redisClient.set(ORDERS_KEY, JSON.stringify(filtered));
+        return;
+      }
+      await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(filtered, null, 2));
+    } catch (error) {
+      console.error('Error deleting order:', error);
+    }
+  },
 
   updateOrder: async (order: Order): Promise<void> => {
     try {

@@ -4,17 +4,38 @@ import { sendOrderToTelegram } from '@/lib/telegram';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+
     const [orders, users] = await Promise.all([
       db.getOrders(),
       db.getUsers()
     ]);
     
+    // Filter orders by userId if provided
+    let filteredOrders = [];
+    if (userId) {
+      filteredOrders = orders.filter(order => order.userId === userId);
+    } else {
+      // If no userId, only return orders if explicitly requested (e.g. for admin)
+      // For now, let's keep it returning all for backward compatibility if needed, 
+      // but usually we want a userId.
+      // Actually, let's make it return everything ONLY if there's no userId param at all,
+      // but if it's there and empty, return nothing.
+      const hasUserIdParam = searchParams.has('userId');
+      if (hasUserIdParam && !userId) {
+        filteredOrders = [];
+      } else {
+        filteredOrders = orders;
+      }
+    }
+    
     // Create a map of userId -> User for faster lookup
     const userMap = new Map(users.map(u => [u.id, u]));
 
-    const enrichedOrders = orders.map(order => {
+    const enrichedOrders = filteredOrders.map(order => {
       const user = userMap.get(order.userId);
       return {
         ...order,
