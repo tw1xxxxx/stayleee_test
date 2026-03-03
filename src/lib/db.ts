@@ -20,7 +20,7 @@ if (fs.existsSync(envPath)) {
     });
 }
 
-const DATA_DIR = join(__dirname, '../../data');
+const DATA_DIR = join(process.cwd(), 'data');
 const USERS_FILE = join(DATA_DIR, 'users.json');
 const ORDERS_FILE = join(DATA_DIR, 'orders.json');
 const COLLECTIONS_FILE = join(DATA_DIR, 'collections.json');
