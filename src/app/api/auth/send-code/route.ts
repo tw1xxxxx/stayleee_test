@@ -67,17 +67,19 @@ export async function POST(request: Request) {
 
     // Generate 4-digit code
     const code = Math.floor(1000 + Math.random() * 9000).toString();
-    const expires = Date.now() + 5 * 60 * 1000; // 5 minutes
+    const expiryMinutes = 30;
+    const expirySeconds = expiryMinutes * 60;
+    const expires = Date.now() + expiryMinutes * 60 * 1000;
 
     // Store OTP
     let stored = false;
     if (useKv) {
-      stored = await kvSetExJson(`otp:${normalizedEmail}`, 300, { code, expires, name });
+      stored = await kvSetExJson(`otp:${normalizedEmail}`, expirySeconds, { code, expires, name });
     }
     if (!stored && useRedis) {
       const redisClient = await getRedisClient();
       if (redisClient) {
-        await redisClient.set(`otp:${normalizedEmail}`, JSON.stringify({ code, expires, name }), { EX: 300 });
+        await redisClient.set(`otp:${normalizedEmail}`, JSON.stringify({ code, expires, name }), { EX: expirySeconds });
         stored = true;
       } else {
         global.otpStore.set(normalizedEmail, { code, expires, name });
@@ -103,7 +105,7 @@ export async function POST(request: Request) {
             <span style="font-size: 36px; font-weight: 600; letter-spacing: 0.2em; color: #4A3E3E;">${code}</span>
           </div>
           
-          <p style="font-size: 14px; color: #8C8279; margin-top: 25px;">Код действителен в течение 5 минут.</p>
+          <p style="font-size: 14px; color: #8C8279; margin-top: 25px;">Код действителен в течение 30 минут.</p>
         </div>
         
         <div style="text-align: center; margin-top: 30px;">
