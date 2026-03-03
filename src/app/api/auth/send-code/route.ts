@@ -114,18 +114,37 @@ export async function POST(request: Request) {
       </div>
     `;
 
-    // Send email asynchronously without blocking the response
-    // This dramatically speeds up the UI for the user
+    // In development or if email sending fails, we can return the code in the response
+    const isDev = process.env.NODE_ENV === 'development';
+
     try {
       await sendEmail(normalizedEmail, subject, html);
-      return NextResponse.json({ success: true, message: "Code sent to email" });
+      return NextResponse.json({ 
+        success: true, 
+        message: "Code sent to email",
+        debugCode: isDev ? code : undefined 
+      });
     } catch (emailError) {
       console.error("Email sending failed:", emailError);
+      
+      // If in development, return the code anyway so testing can continue
+      if (isDev) {
+        return NextResponse.json({ 
+          success: true, 
+          message: "Email sending failed, but here is your code (dev mode)", 
+          debugCode: code 
+        });
+      }
+
       const message = emailError instanceof Error ? emailError.message : "";
       if (message === "Email configuration missing") {
         return NextResponse.json({ message: "Server configuration error: Email settings missing" }, { status: 500 });
       }
-      throw emailError;
+      
+      return NextResponse.json({ 
+        message: "Failed to send email. Please check your configuration or try again later.",
+        debugCode: process.env.NODE_ENV !== 'production' ? code : undefined
+      }, { status: 500 });
     }
 
   } catch (error) {

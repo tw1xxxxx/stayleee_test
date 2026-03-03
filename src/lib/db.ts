@@ -289,30 +289,35 @@ export const db = {
       
       users.push(user);
       
+      let success = false;
+
+      // Always try to write to File System first in development for transparency,
+      // or as part of the normal flow.
+      try {
+        await fs.promises.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+        console.log(`User created in File System: ${user.email}`);
+        success = true;
+      } catch (fileError) {
+        console.error('Error writing to users file:', fileError);
+      }
+      
+      // Also write to KV/Redis if available
       if (useKv) {
         const saved = await kvSetJson(USERS_KEY, users);
         if (saved) {
-          console.log(`User created in KV: ${user.email}`);
-          return true;
+          console.log(`User saved to KV: ${user.email}`);
+          success = true;
         }
       }
       
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(USERS_KEY, JSON.stringify(users));
-        console.log(`User created in Redis: ${user.email}`);
-        return true;
+        console.log(`User saved to Redis: ${user.email}`);
+        success = true;
       }
       
-      // Fallback to file system
-      try {
-        await fs.promises.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
-        console.log(`User created in File System: ${user.email}`);
-        return true;
-      } catch (fileError) {
-        console.error('Error writing to users file:', fileError);
-        return false;
-      }
+      return success;
     } catch (error) {
       console.error('Error creating user:', error);
       return false;
@@ -323,21 +328,28 @@ export const db = {
     try {
       const orders = await db.getOrders();
       orders.push(order);
+      
+      // Always write to File System first
+      try {
+        await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
+        console.log(`Order created in File System: ${order.id}`);
+      } catch (fileError) {
+        console.error('Error writing to orders file:', fileError);
+      }
+      
+      // Also write to KV/Redis if available
       if (useKv) {
         const saved = await kvSetJson(ORDERS_KEY, orders);
         if (saved) {
-          console.log(`Order created: ${order.id} for user ${order.userId}`);
-          return;
+          console.log(`Order saved to KV: ${order.id}`);
         }
       }
+      
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
-        console.log(`Order created: ${order.id} for user ${order.userId}`);
-        return;
+        console.log(`Order saved to Redis: ${order.id}`);
       }
-      await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
-      console.log(`Order created: ${order.id} for user ${order.userId}`);
     } catch (error) {
       console.error('Error creating order:', error);
     }
@@ -349,16 +361,23 @@ export const db = {
     try {
       const orders = await db.getOrders();
       const filtered = orders.filter(o => o.id !== id);
+      
+      // Always write to File System first
+      try {
+        await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(filtered, null, 2));
+        console.log(`Order deleted in File System: ${id}`);
+      } catch (fileError) {
+        console.error('Error writing to orders file:', fileError);
+      }
+      
+      // Also write to KV/Redis if available
       if (useKv) {
-        const saved = await kvSetJson(ORDERS_KEY, filtered);
-        if (saved) return;
+        await kvSetJson(ORDERS_KEY, filtered);
       }
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(ORDERS_KEY, JSON.stringify(filtered));
-        return;
       }
-      await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(filtered, null, 2));
     } catch (error) {
       console.error('Error deleting order:', error);
     }
@@ -368,21 +387,25 @@ export const db = {
     try {
       const orders = await db.getOrders();
       const index = orders.findIndex(o => o.id === order.id);
-      
-      if (index >= 0) {
+      if (index !== -1) {
         orders[index] = order;
         
+        // Always write to File System first
+        try {
+          await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
+          console.log(`Order updated in File System: ${order.id}`);
+        } catch (fileError) {
+          console.error('Error writing to orders file:', fileError);
+        }
+        
+        // Also write to KV/Redis if available
         if (useKv) {
-          const saved = await kvSetJson(ORDERS_KEY, orders);
-          if (saved) return;
+          await kvSetJson(ORDERS_KEY, orders);
         }
         const redisClient = await getRedisClient();
         if (redisClient) {
           await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
-          return;
         }
-        await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
-        // console.log(`Order updated: ${order.id}`);
       }
     } catch (error) {
       console.error('Error updating order:', error);
