@@ -458,7 +458,7 @@ export default function CheckoutPage() {
               </svg>
             </div>
             <label htmlFor="agreement" className="text-sm text-brand-brown/70 cursor-pointer select-none">
-              Пользовательское соглашение
+              Я согласен с <Link href="/privacy" className="underline decoration-brand-brown/30 hover:decoration-brand-brown transition-all">политикой конфиденциальности</Link>
             </label>
           </motion.div>
 
