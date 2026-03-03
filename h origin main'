@@ -1,0 +1,29 @@
+[33mcommit 8bd476cc4310607d903fbbf85f3bf3c8cd9359e1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: tw1xxxxx <133611442+tw1xxxxx@users.noreply.github.com>
+Date:   Tue Mar 3 16:24:21 2026 +0300
+
+    Fix_payment_paths_and_add_telegram_chat_ids
+
+[33mcommit df9e5c603f56f2b0266e4aa0859a80f84c86e15f[m
+Author: tw1xxxxx <133611442+tw1xxxxx@users.noreply.github.com>
+Date:   Tue Mar 3 15:36:01 2026 +0300
+
+    Update_collections_add_gifts_and_privacy_policy_page
+
+[33mcommit 082b5f26ffcd32c3e9617644babfc5343a91da74[m
+Author: tw1xxxxx <133611442+tw1xxxxx@users.noreply.github.com>
+Date:   Tue Mar 3 14:15:53 2026 +0300
+
+    cleanup
+
+[33mcommit c43512112b291896fca81182e492912fed0e3659[m
+Author: tw1xxxxx <133611442+tw1xxxxx@users.noreply.github.com>
+Date:   Tue Mar 3 14:11:11 2026 +0300
+
+    repay_feature
+
+[33mcommit b716805454ea97bf9023278cd9a1c3d761e4409f[m
+Author: tw1xxxxx <133611442+tw1xxxxx@users.noreply.github.com>
+Date:   Tue Mar 3 12:54:16 2026 +0300
+
+    fix_build_errors
