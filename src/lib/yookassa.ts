@@ -1,6 +1,25 @@
 import { v4 as uuidv4 } from 'uuid';
 
 const YOOKASSA_API_URL = 'https://api.yookassa.ru/v3';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Manually load .env if not loaded by Next.js
+const envPath = path.join(__dirname, '../../.env');
+if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf-8');
+    envContent.split('\n').forEach(line => {
+        const [key, ...value] = line.split('=');
+        if (key && value.length > 0) {
+            process.env[key.trim()] = value.join('=').trim();
+        }
+    });
+}
+
 const SHOP_ID = process.env.YOOKASSA_SHOP_ID;
 const SECRET_KEY = process.env.YOOKASSA_SECRET_KEY;
 

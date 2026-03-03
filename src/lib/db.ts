@@ -1,17 +1,34 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { createClient } from 'redis';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const USERS_FILE = path.join(DATA_DIR, 'users.json');
-const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
-const COLLECTIONS_FILE = path.join(DATA_DIR, 'collections.json');
-const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
-const FILTERS_FILE = path.join(DATA_DIR, 'filters.json');
-const PROJECTS_FILE = path.join(DATA_DIR, 'projects.json');
-const GIFTS_FILE = path.join(DATA_DIR, 'gifts.json');
-const TRANSACTIONS_FILE = path.join(DATA_DIR, 'transactions.json');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Manually load .env if not loaded by Next.js
+const envPath = join(__dirname, '../../.env');
+if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf-8');
+    envContent.split('\n').forEach(line => {
+        const [key, ...value] = line.split('=');
+        if (key && value.length > 0) {
+            process.env[key.trim()] = value.join('=').trim();
+        }
+    });
+}
+
+const DATA_DIR = join(__dirname, '../../data');
+const USERS_FILE = join(DATA_DIR, 'users.json');
+const ORDERS_FILE = join(DATA_DIR, 'orders.json');
+const COLLECTIONS_FILE = join(DATA_DIR, 'collections.json');
+const PRODUCTS_FILE = join(DATA_DIR, 'products.json');
+const FILTERS_FILE = join(DATA_DIR, 'filters.json');
+const PROJECTS_FILE = join(DATA_DIR, 'projects.json');
+const GIFTS_FILE = join(DATA_DIR, 'gifts.json');
+const TRANSACTIONS_FILE = join(DATA_DIR, 'transactions.json');
 const USERS_KEY = 'users';
 const ORDERS_KEY = 'orders';
 const COLLECTIONS_KEY = 'collections';
