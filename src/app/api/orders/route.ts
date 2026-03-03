@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     ]);
     
     // Filter orders by userId if provided
-    let filteredOrders = [];
+    let filteredOrders: any[] = [];
     if (userId) {
       filteredOrders = orders.filter(order => order.userId === userId);
     } else {

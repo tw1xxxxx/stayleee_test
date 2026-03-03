@@ -212,37 +212,66 @@ export interface Gift {
 
 export const db = {
   getUsers: async (): Promise<User[]> => {
+    let allUsers: User[] = [];
+    
+    // Try File System
     try {
-      const data = await fs.promises.readFile(USERS_FILE, 'utf-8');
-      const users = JSON.parse(data);
-      if (Array.isArray(users)) {
-        return users;
+      if (fs.existsSync(USERS_FILE)) {
+        const data = await fs.promises.readFile(USERS_FILE, 'utf-8');
+        const users = JSON.parse(data);
+        if (Array.isArray(users)) {
+          console.log(`DEBUG: Loaded ${users.length} users from File System`);
+          allUsers = [...users];
+        }
+      } else {
+        console.log("DEBUG: users.json does not exist on disk");
       }
     } catch (error) {
-      console.error('Error reading users file:', error);
+      console.error('DEBUG: Error reading users file:', error);
     }
 
+    // Try KV
     if (useKv) {
-      const users = await kvGetJson<User[]>(USERS_KEY);
-      if (Array.isArray(users) && users.length > 0) {
-        return users;
+      try {
+        const users = await kvGetJson<User[]>(USERS_KEY);
+        if (Array.isArray(users) && users.length > 0) {
+          console.log(`DEBUG: Loaded ${users.length} users from KV`);
+          // Merge users from KV if not already in allUsers
+          for (const user of users) {
+            if (!allUsers.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
+              allUsers.push(user);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('DEBUG: Error reading KV:', error);
       }
     }
+
+    // Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      const data = await redisClient.get(USERS_KEY);
-      if (data) {
-        try {
+      try {
+        const data = await redisClient.get(USERS_KEY);
+        if (data) {
           const users = JSON.parse(data);
           if (Array.isArray(users) && users.length > 0) {
-            return users;
+            console.log(`DEBUG: Loaded ${users.length} users from Redis`);
+            // Merge users from Redis if not already in allUsers
+            for (const user of users) {
+              if (!allUsers.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
+                allUsers.push(user);
+              }
+            }
           }
-        } catch (error) {
-          console.error('Error parsing users from Redis:', error);
         }
+      } catch (error) {
+        console.error('DEBUG: Error reading Redis:', error);
       }
     }
-    return [];
+    
+    console.log(`DEBUG: Total unique users found: ${allUsers.length}`);
+    return allUsers;
   },
 
   getOrders: async (): Promise<Order[]> => {
@@ -281,54 +310,59 @@ export const db = {
 
   getUserByEmail: async (email: string): Promise<User | undefined> => {
     const users = await db.getUsers();
-    return users.find((user) => user.email.toLowerCase() === email.toLowerCase());
+    const normalizedEmail = email.trim().toLowerCase();
+    console.log("DEBUG: getUserByEmail searching for:", normalizedEmail);
+    const user = users.find(u => u.email.toLowerCase() === normalizedEmail);
+    console.log("DEBUG: getUserByEmail found user:", user ? "YES" : "NO");
+    return user;
   },
 
-  createUser: async (user: User): Promise<boolean> => {
+  createUser: async (user: User): Promise<void> => {
     try {
       const users = await db.getUsers();
+      console.log("DEBUG: createUser - current count:", users.length);
       
-      // Check for existing user with same email just in case
-      const exists = users.some(u => u.email.toLowerCase() === user.email.toLowerCase());
-      if (exists) {
-        console.log(`User already exists: ${user.email}`);
-        return true; // Consider it success if already exists
+      // Update local array
+      if (!users.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
+        users.push(user);
+        console.log("DEBUG: createUser - user added to array:", user.email);
+      } else {
+        console.log("DEBUG: createUser - user already exists in array");
       }
-      
-      users.push(user);
-      
-      let success = false;
 
-      // Always try to write to File System first in development for transparency,
-      // or as part of the normal flow.
+      // 1. Write to File System (Priority for local testing)
       try {
+        console.log("DEBUG: createUser - writing to file:", USERS_FILE);
         await fs.promises.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
-        console.log(`User created in File System: ${user.email}`);
-        success = true;
+        console.log("DEBUG: createUser - file write success");
       } catch (fileError) {
-        console.error('Error writing to users file:', fileError);
+        console.error("DEBUG: createUser - file write error:", fileError);
       }
-      
-      // Also write to KV/Redis if available
+
+      // 2. Write to KV (Priority for Vercel)
       if (useKv) {
-        const saved = await kvSetJson(USERS_KEY, users);
-        if (saved) {
-          console.log(`User saved to KV: ${user.email}`);
-          success = true;
+        try {
+          console.log("DEBUG: createUser - writing to KV");
+          await kvSetJson(USERS_KEY, users);
+          console.log("DEBUG: createUser - KV write success");
+        } catch (kvError) {
+          console.error("DEBUG: createUser - KV write error:", kvError);
         }
       }
-      
+
+      // 3. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
-        await redisClient.set(USERS_KEY, JSON.stringify(users));
-        console.log(`User saved to Redis: ${user.email}`);
-        success = true;
+        try {
+          console.log("DEBUG: createUser - writing to Redis");
+          await redisClient.set(USERS_KEY, JSON.stringify(users));
+          console.log("DEBUG: createUser - Redis write success");
+        } catch (redisError) {
+          console.error("DEBUG: createUser - Redis write error:", redisError);
+        }
       }
-      
-      return success;
     } catch (error) {
-      console.error('Error creating user:', error);
-      return false;
+      console.error('DEBUG: createUser - general error:', error);
     }
   },
 

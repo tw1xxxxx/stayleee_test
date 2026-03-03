@@ -43,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string) => {
     try {
+      console.log("DEBUG: Calling /api/auth/send-code with email:", email);
       const response = await fetch("/api/auth/send-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,6 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       
       const data = await response.json();
+      console.log("DEBUG: Response from /api/auth/send-code:", response.status, data);
       
       if (!response.ok) {
         throw new Error(data.message || "Failed to send code");
