@@ -464,33 +464,54 @@ export const db = {
 
   // Collections
   getCollections: async (): Promise<Collection[]> => {
-    if (useKv) {
-      const collections = await kvGetJson<Collection[]>(COLLECTIONS_KEY);
-      if (Array.isArray(collections) && collections.length > 0) {
-        return collections;
-      }
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(COLLECTIONS_KEY);
-      if (data) {
-        try {
-          const collections = JSON.parse(data);
-          if (Array.isArray(collections) && collections.length > 0) {
-            return collections;
-          }
-        } catch (error) {
-          console.error('Error parsing collections from Redis:', error);
+    let allCollections: Collection[] = [];
+    
+    // 1. Try File System first (Primary for development)
+    try {
+      if (fs.existsSync(COLLECTIONS_FILE)) {
+        const data = await fs.promises.readFile(COLLECTIONS_FILE, 'utf-8');
+        const collections = JSON.parse(data);
+        if (Array.isArray(collections)) {
+          allCollections = collections;
         }
       }
-    }
-    try {
-      const data = await fs.promises.readFile(COLLECTIONS_FILE, 'utf-8');
-      return JSON.parse(data);
     } catch (error) {
       console.error('Error reading collections file:', error);
-      return [];
     }
+
+    // 2. Try KV
+    if (useKv) {
+      try {
+        const collections = await kvGetJson<Collection[]>(COLLECTIONS_KEY);
+        if (Array.isArray(collections) && collections.length > 0) {
+          // Merge or replace depending on logic, but for collections we usually want to sync
+          // If local is empty, use KV
+          if (allCollections.length === 0) {
+            allCollections = collections;
+          }
+        }
+      } catch (error) {
+        console.error('Error reading KV:', error);
+      }
+    }
+
+    // 3. Try Redis
+    const redisClient = await getRedisClient();
+    if (redisClient) {
+      try {
+        const data = await redisClient.get(COLLECTIONS_KEY);
+        if (data) {
+          const collections = JSON.parse(data);
+          if (Array.isArray(collections) && collections.length > 0 && allCollections.length === 0) {
+            allCollections = collections;
+          }
+        }
+      } catch (error) {
+        console.error('Error reading Redis:', error);
+      }
+    }
+    
+    return allCollections;
   },
 
   saveCollection: async (collection: Collection): Promise<void> => {
@@ -512,16 +533,23 @@ export const db = {
 
   saveCollections: async (collections: Collection[]): Promise<void> => {
     try {
-      if (useKv) {
-        const saved = await kvSetJson(COLLECTIONS_KEY, collections);
-        if (saved) return;
+      // 1. Write to File System (Priority for development)
+      try {
+        await fs.promises.writeFile(COLLECTIONS_FILE, JSON.stringify(collections, null, 2));
+      } catch (fileError) {
+        console.error("Error writing collections file:", fileError);
       }
+
+      // 2. Write to KV
+      if (useKv) {
+        await kvSetJson(COLLECTIONS_KEY, collections);
+      }
+
+      // 3. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(COLLECTIONS_KEY, JSON.stringify(collections));
-        return;
       }
-      await fs.promises.writeFile(COLLECTIONS_FILE, JSON.stringify(collections, null, 2));
     } catch (error) {
       console.error('Error saving collections:', error);
     }
@@ -531,17 +559,7 @@ export const db = {
     try {
       const collections = await db.getCollections();
       const filtered = collections.filter(c => c.id !== id);
-
-      if (useKv) {
-        const saved = await kvSetJson(COLLECTIONS_KEY, filtered);
-        if (saved) return;
-      }
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(COLLECTIONS_KEY, JSON.stringify(filtered));
-        return;
-      }
-      await fs.promises.writeFile(COLLECTIONS_FILE, JSON.stringify(filtered, null, 2));
+      await db.saveCollections(filtered);
     } catch (error) {
       console.error('Error deleting collection:', error);
     }
@@ -549,47 +567,71 @@ export const db = {
 
   // Products
   getProducts: async (): Promise<Product[]> => {
-    if (useKv) {
-      const products = await kvGetJson<Product[]>(PRODUCTS_KEY);
-      if (Array.isArray(products) && products.length > 0) {
-        return products;
-      }
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(PRODUCTS_KEY);
-      if (data) {
-        try {
-          const products = JSON.parse(data);
-          if (Array.isArray(products) && products.length > 0) {
-            return products;
-          }
-        } catch (error) {
-          console.error('Error parsing products from Redis:', error);
+    let allProducts: Product[] = [];
+
+    // 1. Try File System first
+    try {
+      if (fs.existsSync(PRODUCTS_FILE)) {
+        const data = await fs.promises.readFile(PRODUCTS_FILE, 'utf-8');
+        const products = JSON.parse(data);
+        if (Array.isArray(products)) {
+          allProducts = products;
         }
       }
-    }
-    try {
-      const data = await fs.promises.readFile(PRODUCTS_FILE, 'utf-8');
-      return JSON.parse(data);
     } catch (error) {
       console.error('Error reading products file:', error);
-      return [];
     }
+
+    // 2. Try KV
+    if (useKv) {
+      try {
+        const products = await kvGetJson<Product[]>(PRODUCTS_KEY);
+        if (Array.isArray(products) && products.length > 0 && allProducts.length === 0) {
+          allProducts = products;
+        }
+      } catch (error) {
+        console.error('Error reading KV:', error);
+      }
+    }
+
+    // 3. Try Redis
+    const redisClient = await getRedisClient();
+    if (redisClient) {
+      try {
+        const data = await redisClient.get(PRODUCTS_KEY);
+        if (data) {
+          const products = JSON.parse(data);
+          if (Array.isArray(products) && products.length > 0 && allProducts.length === 0) {
+            allProducts = products;
+          }
+        }
+      } catch (error) {
+        console.error('Error reading Redis:', error);
+      }
+    }
+
+    return allProducts;
   },
 
   saveProducts: async (products: Product[]): Promise<void> => {
     try {
-      if (useKv) {
-        const saved = await kvSetJson(PRODUCTS_KEY, products);
-        if (saved) return;
+      // 1. Write to File System
+      try {
+        await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
+      } catch (fileError) {
+        console.error("Error writing products file:", fileError);
       }
+
+      // 2. Write to KV
+      if (useKv) {
+        await kvSetJson(PRODUCTS_KEY, products);
+      }
+
+      // 3. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
-        return;
       }
-      await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
     } catch (error) { 
       console.error('Error saving products:', error);
     }
