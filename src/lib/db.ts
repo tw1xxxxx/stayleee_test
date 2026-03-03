@@ -7,33 +7,6 @@ import { createClient } from 'redis';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Manually load .env if not loaded by Next.js
-const loadEnv = () => {
-    const rootPath = process.cwd();
-    const possibleEnvPaths = [
-        join(rootPath, '.env'),
-        join(__dirname, '../../.env')
-    ];
-
-    for (const envPath of possibleEnvPaths) {
-        if (fs.existsSync(envPath)) {
-            const envContent = fs.readFileSync(envPath, 'utf-8');
-            envContent.split('\n').forEach(line => {
-                const [key, ...value] = line.split('=');
-                if (key && value.length > 0) {
-                    const trimmedKey = key.trim();
-                    if (!process.env[trimmedKey]) {
-                        process.env[trimmedKey] = value.join('=').trim();
-                    }
-                }
-            });
-            break;
-        }
-    }
-};
-
-loadEnv();
-
 const DATA_DIR = join(process.cwd(), 'data');
 const USERS_FILE = join(DATA_DIR, 'users.json');
 const ORDERS_FILE = join(DATA_DIR, 'orders.json');

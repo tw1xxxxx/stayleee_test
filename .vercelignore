@@ -1,0 +1,14 @@
+# Ignore large local assets that should not be bundled into functions
+video/
+partners/
+scripts/
+*.jpg
+*.png
+*.mov
+*.webm
+.next/
+node_modules/
+public/
+data/
+!data/users.json
+!public/images/partners/
