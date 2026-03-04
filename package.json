@@ -27,12 +27,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/nodemailer": "^7.0.10",
+    "@types/splitting": "^1.0.6",
     "@tailwindcss/postcss": "^4",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@types/nodemailer": "^7.0.10",
-    "@types/splitting": "^1.0.6",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
