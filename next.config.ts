@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["framer-motion"],
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',

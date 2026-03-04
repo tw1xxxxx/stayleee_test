@@ -184,7 +184,7 @@ export async function POST(request: Request) {
       // Add a timeout to the email sending promise
       const emailPromise = sendEmail(normalizedEmail, subject, html);
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Email sending timed out after 25s')), 25000)
+        setTimeout(() => reject(new Error('Email sending timed out after 35s')), 35000)
       );
 
       await Promise.race([emailPromise, timeoutPromise]);
@@ -192,28 +192,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ 
         success: true, 
         message: "Code sent to email",
-        debugCode: isDev ? code : undefined 
+        debugCode: isDev || process.env.DEBUG_AUTH === 'true' ? code : undefined 
       });
     } catch (emailError) {
       console.error("Email sending failed or timed out:", emailError);
       
-      // If in development, return the code anyway so testing can continue
-      if (isDev) {
+      // If in development or DEBUG_AUTH is true, return the code anyway so testing can continue
+      if (isDev || process.env.DEBUG_AUTH === 'true') {
         return NextResponse.json({ 
           success: true, 
-          message: "Email sending failed, but here is your code (dev mode)", 
-          debugCode: code 
+          message: "Code generation successful (email failed but returning code in debug mode)",
+          code: code 
         });
-      }
-
-      const message = emailError instanceof Error ? emailError.message : "";
-      if (message === "Email configuration missing") {
-        return NextResponse.json({ message: "Server configuration error: Email settings missing" }, { status: 500 });
       }
       
       return NextResponse.json({ 
         message: "Failed to send email. Please check your configuration or try again later.",
-        debugCode: process.env.NODE_ENV !== 'production' ? code : undefined
+        error: String(emailError)
       }, { status: 500 });
     }
 
