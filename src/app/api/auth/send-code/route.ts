@@ -184,7 +184,7 @@ export async function POST(request: Request) {
       // Add a timeout to the email sending promise
       const emailPromise = sendEmail(normalizedEmail, subject, html);
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Email sending timed out')), 15000)
+        setTimeout(() => reject(new Error('Email sending timed out after 25s')), 25000)
       );
 
       await Promise.race([emailPromise, timeoutPromise]);
