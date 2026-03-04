@@ -187,6 +187,9 @@ export async function POST(request: Request) {
         setTimeout(() => reject(new Error('Email sending timed out after 35s')), 35000)
       );
 
+      // Log the code to console so it's visible in Timeweb logs even if email fails
+      console.log(`[AUTH_DEBUG] Verification code for ${normalizedEmail}: ${code}`);
+
       await Promise.race([emailPromise, timeoutPromise]);
 
       return NextResponse.json({ 
@@ -197,17 +200,18 @@ export async function POST(request: Request) {
     } catch (emailError) {
       console.error("Email sending failed or timed out:", emailError);
       
-      // If in development or DEBUG_AUTH is true, return the code anyway so testing can continue
-      if (isDev || process.env.DEBUG_AUTH === 'true') {
+      // If in development or DEBUG_AUTH is true, OR if we want to allow login anyway
+      if (isDev || process.env.DEBUG_AUTH === 'true' || process.env.ALLOW_AUTH_FALLBACK === 'true') {
         return NextResponse.json({ 
           success: true, 
-          message: "Code generation successful (email failed but returning code in debug mode)",
-          code: code 
+          message: "Code generation successful (email failed but returning code in debug/fallback mode)",
+          code: code,
+          debugCode: code // standardizing
         });
       }
       
       return NextResponse.json({ 
-        message: "Failed to send email. Please check your configuration or try again later.",
+        message: "Failed to send email. Please check your configuration or try again later. Code was logged to server console.",
         error: String(emailError)
       }, { status: 500 });
     }
