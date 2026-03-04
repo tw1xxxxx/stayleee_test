@@ -18,8 +18,19 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    
+    // Fix for older Safari/iOS: video might not trigger 'canplay' if already ready or on some power modes
+    const interval = setInterval(() => {
+      if (videoRef.current && videoRef.current.readyState >= 3 && !isReady) {
+        setIsReady(true);
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      clearInterval(interval);
+    };
+  }, [isReady]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -33,10 +44,20 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
     const handleCanPlay = () => {
       setIsReady(true);
       video.play().catch(() => {
-        // Autoplay might be blocked, but we've handled interaction listeners in some cases
-        // or the user will eventually interact with the page.
+        // Autoplay might be blocked
       });
     };
+
+    // Add user interaction listener to force play if autoplay fails
+    const forcePlay = () => {
+      if (video.paused) {
+        video.play().then(() => {
+          setIsReady(true);
+        }).catch(() => {});
+      }
+    };
+    window.addEventListener('touchstart', forcePlay, { once: true });
+    window.addEventListener('click', forcePlay, { once: true });
 
     if (video.readyState >= 3) {
       handleCanPlay();
@@ -61,7 +82,6 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
       >
         <video
           ref={videoRef}
-          src={src}
           autoPlay
           muted
           loop
@@ -70,7 +90,11 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
           preload="auto"
           poster={poster || undefined}
           className="absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu"
-        />
+        >
+          <source src={src} type="video/mp4" />
+          {/* Fallback for older Safari/iOS if mp4 fails or for better compatibility */}
+          <source src={src.replace('.mp4', '.mov')} type="video/quicktime" />
+        </video>
         {/* Затемнение и теплый эффект */}
         <div className="absolute inset-0 bg-black/40 z-10" />
         <div className="absolute inset-0 bg-[#FFD700]/10 mix-blend-soft-light z-20 pointer-events-none" />
