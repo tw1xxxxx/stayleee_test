@@ -17,6 +17,28 @@ const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_
 const useKv = !!kvBaseUrl && !!kvToken;
 const useRedis = isRedisAvailable;
 
+const kvGetJson = async <T,>(key: string): Promise<T | undefined> => {
+  if (!useKv || !kvBaseUrl || !kvToken) {
+    return undefined;
+  }
+  try {
+    const response = await fetch(`${kvBaseUrl}/get/${encodeURIComponent(key)}`, {
+      headers: { Authorization: `Bearer ${kvToken}` },
+    });
+    if (!response.ok) {
+      return undefined;
+    }
+    const data = await response.json();
+    if (data?.result === null || data?.result === undefined) {
+      return undefined;
+    }
+    return JSON.parse(data.result);
+  } catch (error) {
+    console.error('Error reading KV:', error);
+    return undefined;
+  }
+};
+
 const kvSetExJson = async (key: string, seconds: number, value: unknown): Promise<boolean> => {
   if (!useKv || !kvBaseUrl || !kvToken) {
     return false;
@@ -68,11 +90,49 @@ export async function POST(request: Request) {
       }
     }
 
+    // Check if we already sent a code recently (rate limiting)
+    const now = Date.now();
+    let existingOtp = global.otpStore.get(normalizedEmail);
+    
+    // Check KV/Redis for existing OTP if not in memory
+    if (!existingOtp && useKv) {
+      existingOtp = await kvGetJson<{ code: string; expires: number; name?: string }>(`otp:${normalizedEmail}`);
+    }
+    
+    if (!existingOtp && useRedis) {
+      const redisClient = await getRedisClient();
+      if (redisClient) {
+        const redisValue = await redisClient.get(`otp:${normalizedEmail}`);
+        if (redisValue) {
+          try {
+            existingOtp = JSON.parse(redisValue);
+          } catch (e) {
+            console.error('Error parsing OTP from Redis:', e);
+          }
+        }
+      }
+    }
+
+    if (existingOtp) {
+      // expiryMinutes is 30, so created_at = expires - 30 * 60 * 1000
+      const createdAt = existingOtp.expires - 30 * 60 * 1000;
+      const timeSinceLastSend = now - createdAt;
+      
+      if (timeSinceLastSend < 60000) {
+        console.log(`Rate limit hit for ${normalizedEmail}. Last sent ${Math.round(timeSinceLastSend/1000)}s ago.`);
+        // If sent less than 60 seconds ago, return success but don't send another email
+        return NextResponse.json({ 
+          success: true, 
+          message: "Code already sent recently. Please wait before requesting another." 
+        });
+      }
+    }
+
     // Generate 4-digit code
     const code = Math.floor(1000 + Math.random() * 9000).toString();
     const expiryMinutes = 30;
     const expirySeconds = expiryMinutes * 60;
-    const expires = Date.now() + expiryMinutes * 60 * 1000;
+    const expires = now + expiryMinutes * 60 * 1000;
 
     // Store OTP
     let stored = false;
@@ -84,12 +144,12 @@ export async function POST(request: Request) {
       if (redisClient) {
         await redisClient.set(`otp:${normalizedEmail}`, JSON.stringify({ code, expires, name }), { EX: expirySeconds });
         stored = true;
-      } else {
-        global.otpStore.set(normalizedEmail, { code, expires, name });
-        stored = true;
       }
     }
     if (!stored) {
+      global.otpStore.set(normalizedEmail, { code, expires, name });
+    } else {
+      // Still set in memory for local rate limiting on this instance
       global.otpStore.set(normalizedEmail, { code, expires, name });
     }
 
@@ -121,14 +181,21 @@ export async function POST(request: Request) {
     const isDev = process.env.NODE_ENV === 'development';
 
     try {
-      await sendEmail(normalizedEmail, subject, html);
+      // Add a timeout to the email sending promise
+      const emailPromise = sendEmail(normalizedEmail, subject, html);
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Email sending timed out')), 15000)
+      );
+
+      await Promise.race([emailPromise, timeoutPromise]);
+
       return NextResponse.json({ 
         success: true, 
         message: "Code sent to email",
         debugCode: isDev ? code : undefined 
       });
     } catch (emailError) {
-      console.error("Email sending failed:", emailError);
+      console.error("Email sending failed or timed out:", emailError);
       
       // If in development, return the code anyway so testing can continue
       if (isDev) {

@@ -8,6 +8,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const DATA_DIR = join(process.cwd(), 'data');
+
+// Ensure data directory exists
+try {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+} catch (e) {
+  console.warn('Could not create data directory, using in-memory only if KV/Redis not available:', e);
+}
+
 const USERS_FILE = join(DATA_DIR, 'users.json');
 const ORDERS_FILE = join(DATA_DIR, 'orders.json');
 const COLLECTIONS_FILE = join(DATA_DIR, 'collections.json');

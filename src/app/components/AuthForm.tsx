@@ -44,7 +44,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     if (message.includes("Code expired")) return "Срок действия кода истек";
     if (message.includes("Failed to send code") || message.includes("Failed to send verification code")) return "Ошибка отправки кода. Попробуйте позже.";
     if (message.includes("Server configuration error")) return "Ошибка сервера: не настроена почта";
-    if (message.includes("network")) return "Ошибка сети";
+    if (message.includes("network") || message.toLowerCase().includes("load failed")) return "Ошибка сети или загрузки. Попробуйте еще раз.";
     return message;
   };
 
