@@ -672,32 +672,100 @@ export const db = {
 
   // Projects
   getProjects: async (): Promise<Project[]> => {
-    if (useKv) {
-      const projects = await kvGetJson<Project[]>(PROJECTS_KEY);
-      if (Array.isArray(projects) && projects.length > 0) {
-        return projects;
-      }
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(PROJECTS_KEY);
-      if (data) {
-        try {
-          const projects = JSON.parse(data);
-          if (Array.isArray(projects) && projects.length > 0) {
-            return projects;
-          }
-        } catch (error) {
-          console.error('Error parsing projects from Redis:', error);
+    let allProjects: Project[] = [];
+
+    // 1. Try File System first
+    try {
+      if (fs.existsSync(PROJECTS_FILE)) {
+        const data = await fs.promises.readFile(PROJECTS_FILE, 'utf-8');
+        const projects = JSON.parse(data);
+        if (Array.isArray(projects)) {
+          allProjects = projects;
         }
       }
-    }
-    try {
-      const data = await fs.promises.readFile(PROJECTS_FILE, 'utf-8');
-      return JSON.parse(data);
     } catch (error) {
       console.error('Error reading projects file:', error);
-      return [];
+    }
+
+    // 2. Try KV
+    if (useKv) {
+      try {
+        const projects = await kvGetJson<Project[]>(PROJECTS_KEY);
+        if (Array.isArray(projects) && projects.length > 0 && allProjects.length === 0) {
+          allProjects = projects;
+        }
+      } catch (error) {
+        console.error('Error reading KV:', error);
+      }
+    }
+
+    // 3. Try Redis
+    const redisClient = await getRedisClient();
+    if (redisClient) {
+      try {
+        const data = await redisClient.get(PROJECTS_KEY);
+        if (data) {
+          const projects = JSON.parse(data);
+          if (Array.isArray(projects) && projects.length > 0 && allProjects.length === 0) {
+            allProjects = projects;
+          }
+        }
+      } catch (error) {
+        console.error('Error reading Redis:', error);
+      }
+    }
+
+    return allProjects;
+  },
+
+  saveProject: async (project: Project): Promise<void> => {
+    try {
+      const projects = await db.getProjects();
+      const index = projects.findIndex(p => p.id === project.id);
+      
+      if (index >= 0) {
+        projects[index] = project;
+      } else {
+        projects.push(project);
+      }
+
+      await db.saveProjects(projects);
+    } catch (error) {
+      console.error('Error saving project:', error);
+    }
+  },
+
+  saveProjects: async (projects: Project[]): Promise<void> => {
+    try {
+      // 1. Write to File System (Priority for development)
+      try {
+        await fs.promises.writeFile(PROJECTS_FILE, JSON.stringify(projects, null, 2));
+      } catch (fileError) {
+        console.error("Error writing projects file:", fileError);
+      }
+
+      // 2. Write to KV
+      if (useKv) {
+        await kvSetJson(PROJECTS_KEY, projects);
+      }
+
+      // 3. Write to Redis
+      const redisClient = await getRedisClient();
+      if (redisClient) {
+        await redisClient.set(PROJECTS_KEY, JSON.stringify(projects));
+      }
+    } catch (error) {
+      console.error('Error saving projects:', error);
+    }
+  },
+
+  deleteProject: async (id: string): Promise<void> => {
+    try {
+      const projects = await db.getProjects();
+      const filtered = projects.filter(p => p.id !== id);
+      await db.saveProjects(filtered);
+    } catch (error) {
+      console.error('Error deleting project:', error);
     }
   },
 
