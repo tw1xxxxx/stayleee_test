@@ -24,8 +24,11 @@
       "article": "00620000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/simple/1.jpg",
+      "/images/catalog/kitelya/simple/2.jpg",
+      "/images/catalog/kitelya/simple/3.jpg",
+      "/images/catalog/kitelya/simple/4.jpg",
+      "/images/catalog/kitelya/simple/5.jpg"
     ],
     "variants": [
       {
@@ -79,8 +82,9 @@
       "article": "00610000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/popover/1.jpg",
+      "/images/catalog/kitelya/popover/2.jpg",
+      "/images/catalog/kitelya/popover/3.jpg"
     ],
     "variants": [
       {
@@ -134,8 +138,21 @@
       "article": "00430000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/grand/1.JPG",
+      "/images/catalog/kitelya/grand/2.JPG",
+      "/images/catalog/kitelya/grand/3.jpg",
+      "/images/catalog/kitelya/grand/4.JPG",
+      "/images/catalog/kitelya/grand/5.jpg",
+      "/images/catalog/kitelya/grand/6.JPG",
+      "/images/catalog/kitelya/grand/7.jpg",
+      "/images/catalog/kitelya/grand/8.JPG",
+      "/images/catalog/kitelya/grand/9.JPG",
+      "/images/catalog/kitelya/grand/10.jpg",
+      "/images/catalog/kitelya/grand/11.JPG",
+      "/images/catalog/kitelya/grand/12.jpg",
+      "/images/catalog/kitelya/grand/13.jpg",
+      "/images/catalog/kitelya/grand/14.jpg",
+      "/images/catalog/kitelya/grand/15.jpg"
     ],
     "variants": [
       {
@@ -189,8 +206,27 @@
       "article": "00450000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/mono/1.JPG",
+      "/images/catalog/kitelya/mono/2.JPG",
+      "/images/catalog/kitelya/mono/3.JPG",
+      "/images/catalog/kitelya/mono/4.jpg",
+      "/images/catalog/kitelya/mono/5.JPG",
+      "/images/catalog/kitelya/mono/6.JPG",
+      "/images/catalog/kitelya/mono/7.jpg",
+      "/images/catalog/kitelya/mono/8.jpg",
+      "/images/catalog/kitelya/mono/9.jpg",
+      "/images/catalog/kitelya/mono/10.jpg",
+      "/images/catalog/kitelya/mono/11.JPG",
+      "/images/catalog/kitelya/mono/12.jpg",
+      "/images/catalog/kitelya/mono/13.jpg",
+      "/images/catalog/kitelya/mono/14.JPG",
+      "/images/catalog/kitelya/mono/15.JPG",
+      "/images/catalog/kitelya/mono/16.jpg",
+      "/images/catalog/kitelya/mono/17.jpg",
+      "/images/catalog/kitelya/mono/18.jpg",
+      "/images/catalog/kitelya/mono/19.JPG",
+      "/images/catalog/kitelya/mono/20.jpg",
+      "/images/catalog/kitelya/mono/21.jpg"
     ],
     "variants": [
       {
@@ -244,8 +280,15 @@
       "article": "00400000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/downy/1.JPG",
+      "/images/catalog/kitelya/downy/2.JPG",
+      "/images/catalog/kitelya/downy/3.JPG",
+      "/images/catalog/kitelya/downy/4.JPG",
+      "/images/catalog/kitelya/downy/5.jpg",
+      "/images/catalog/kitelya/downy/6.jpg",
+      "/images/catalog/kitelya/downy/7.jpg",
+      "/images/catalog/kitelya/downy/8.jpg",
+      "/images/catalog/kitelya/downy/9.jpg"
     ],
     "variants": [
       {
@@ -299,8 +342,15 @@
       "article": "00110000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/made/1.jpg",
+      "/images/catalog/kitelya/made/2.jpg",
+      "/images/catalog/kitelya/made/3.jpg",
+      "/images/catalog/kitelya/made/4.jpg",
+      "/images/catalog/kitelya/made/5.jpg",
+      "/images/catalog/kitelya/made/6.jpg",
+      "/images/catalog/kitelya/made/7.jpg",
+      "/images/catalog/kitelya/made/8.jpg",
+      "/images/catalog/kitelya/made/9.jpg"
     ],
     "variants": [
       {
@@ -354,8 +404,48 @@
       "article": "01030000"
     },
     "images": [
+      "/images/catalog/kitelya/embody/1.jpg",
+      "/images/catalog/kitelya/embody/2.jpg",
+      "/images/catalog/kitelya/embody/3.jpg",
+      "/images/catalog/kitelya/embody/4.jpg",
+      "/images/catalog/kitelya/embody/5.jpg",
+      "/images/catalog/kitelya/embody/6.jpg",
+      "/images/catalog/kitelya/embody/7.jpg",
+      "/images/catalog/kitelya/embody/8.jpg",
+      "/images/catalog/kitelya/embody/9.jpg",
+      "/images/catalog/kitelya/embody/10.jpg",
+      "/images/catalog/kitelya/embody/11.jpg",
+      "/images/catalog/kitelya/embody/12.JPG",
+      "/images/catalog/kitelya/embody/13.jpg",
+      "/images/catalog/kitelya/embody/14.JPG",
+      "/images/catalog/kitelya/embody/15.JPG",
+      "/images/catalog/kitelya/embody/16.jpg",
+      "/images/catalog/kitelya/embody/17.jpg",
+      "/images/catalog/kitelya/embody/18.jpg",
+      "/images/catalog/kitelya/embody/19.jpg",
+      "/images/catalog/kitelya/embody/20.jpg",
+      "/images/catalog/kitelya/embody/21.JPG",
+      "/images/catalog/kitelya/embody/22.jpg",
+      "/images/catalog/kitelya/embody/23.jpg",
+      "/images/catalog/kitelya/embody/24.jpg",
+      "/images/catalog/kitelya/embody/25.jpg",
+      "/images/catalog/kitelya/embody/26.jpg",
+      "/images/catalog/kitelya/embody/27.jpg",
+      "/images/catalog/kitelya/embody/28.jpg",
+      "/images/catalog/kitelya/embody/29.jpg",
+      "/images/catalog/kitelya/embody/30.jpg",
+      "/images/catalog/kitelya/embody/31.jpg",
+      "/images/catalog/kitelya/embody/32.jpg",
+      "/images/catalog/kitelya/embody/33.jpg",
+      "/images/catalog/kitelya/embody/34.jpg",
+      "/images/catalog/kitelya/embody/35.jpg",
+      "/images/catalog/kitelya/embody/36.jpg",
+      "/images/catalog/kitelya/embody/37.jpg",
+      "/images/catalog/kitelya/embody/38.jpg",
+      "/images/catalog/kitelya/embody/39.jpg",
       "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/embody/41.jpg",
+      "/images/catalog/kitelya/embody/42.jpg"
     ],
     "variants": [
       {
@@ -409,8 +499,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/embody-20/1.JPG",
+      "/images/catalog/kitelya/embody-20/2.JPG",
+      "/images/catalog/kitelya/embody-20/3.jpg",
+      "/images/catalog/kitelya/embody-20/4.jpg",
+      "/images/catalog/kitelya/embody-20/5.jpg",
+      "/images/catalog/kitelya/embody-20/6.jpg",
+      "/images/catalog/kitelya/embody-20/7.jpg"
     ],
     "variants": [
       {
@@ -464,8 +559,46 @@
       "article": "00310000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/seed/1.jpg",
+      "/images/catalog/kitelya/seed/2.jpg",
+      "/images/catalog/kitelya/seed/3.jpg",
+      "/images/catalog/kitelya/seed/4.jpg",
+      "/images/catalog/kitelya/seed/5.jpg",
+      "/images/catalog/kitelya/seed/6.jpg",
+      "/images/catalog/kitelya/seed/7.jpg",
+      "/images/catalog/kitelya/seed/8.jpg",
+      "/images/catalog/kitelya/seed/9.jpg",
+      "/images/catalog/kitelya/seed/10.jpg",
+      "/images/catalog/kitelya/seed/11.jpg",
+      "/images/catalog/kitelya/seed/12.jpg",
+      "/images/catalog/kitelya/seed/13.jpg",
+      "/images/catalog/kitelya/seed/14.jpg",
+      "/images/catalog/kitelya/seed/15.jpg",
+      "/images/catalog/kitelya/seed/16.jpg",
+      "/images/catalog/kitelya/seed/17.jpg",
+      "/images/catalog/kitelya/seed/18.jpg",
+      "/images/catalog/kitelya/seed/19.jpg",
+      "/images/catalog/kitelya/seed/20.jpg",
+      "/images/catalog/kitelya/seed/21.jpg",
+      "/images/catalog/kitelya/seed/22.jpg",
+      "/images/catalog/kitelya/seed/23.jpg",
+      "/images/catalog/kitelya/seed/24.jpg",
+      "/images/catalog/kitelya/seed/25.jpg",
+      "/images/catalog/kitelya/seed/26.jpg",
+      "/images/catalog/kitelya/seed/27.jpg",
+      "/images/catalog/kitelya/seed/28.jpg",
+      "/images/catalog/kitelya/seed/29.jpg",
+      "/images/catalog/kitelya/seed/30.jpg",
+      "/images/catalog/kitelya/seed/31.jpg",
+      "/images/catalog/kitelya/seed/32.jpg",
+      "/images/catalog/kitelya/seed/33.jpg",
+      "/images/catalog/kitelya/seed/34.jpg",
+      "/images/catalog/kitelya/seed/35.jpg",
+      "/images/catalog/kitelya/seed/36.jpg",
+      "/images/catalog/kitelya/seed/37.jpg",
+      "/images/catalog/kitelya/seed/38.jpg",
+      "/images/catalog/kitelya/seed/39.jpg",
+      "/images/catalog/kitelya/seed/40.jpg"
     ],
     "variants": [
       {
@@ -519,8 +652,17 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/heatwear/1.jpg",
+      "/images/catalog/kitelya/heatwear/2.jpg",
+      "/images/catalog/kitelya/heatwear/3.jpg",
+      "/images/catalog/kitelya/heatwear/4.jpg",
+      "/images/catalog/kitelya/heatwear/5.jpg",
+      "/images/catalog/kitelya/heatwear/6.jpg",
+      "/images/catalog/kitelya/heatwear/7.jpg",
+      "/images/catalog/kitelya/heatwear/8.jpg",
+      "/images/catalog/kitelya/heatwear/9.jpg",
+      "/images/catalog/kitelya/heatwear/10.jpg",
+      "/images/catalog/kitelya/heatwear/11.jpg"
     ],
     "variants": [
       {
@@ -574,8 +716,15 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/mono-20/1.jpg",
+      "/images/catalog/kitelya/mono-20/2.jpg",
+      "/images/catalog/kitelya/mono-20/3.jpg",
+      "/images/catalog/kitelya/mono-20/4.jpg",
+      "/images/catalog/kitelya/mono-20/5.jpg",
+      "/images/catalog/kitelya/mono-20/6.jpg",
+      "/images/catalog/kitelya/mono-20/7.jpg",
+      "/images/catalog/kitelya/mono-20/8.jpg",
+      "/images/catalog/kitelya/mono-20/9.jpg"
     ],
     "variants": [
       {
@@ -629,8 +778,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/dubbutton/1.JPG",
+      "/images/catalog/kitelya/dubbutton/2.JPG",
+      "/images/catalog/kitelya/dubbutton/3.JPG",
+      "/images/catalog/kitelya/dubbutton/4.jpg",
+      "/images/catalog/kitelya/dubbutton/5.jpg",
+      "/images/catalog/kitelya/dubbutton/6.jpg",
+      "/images/catalog/kitelya/dubbutton/7.jpg"
     ],
     "variants": [
       {
@@ -684,8 +838,12 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/kosno/1.jpg",
+      "/images/catalog/kitelya/kosno/2.jpg",
+      "/images/catalog/kitelya/kosno/3.jpg",
+      "/images/catalog/kitelya/kosno/4.jpg",
+      "/images/catalog/kitelya/kosno/5.jpg",
+      "/images/catalog/kitelya/kosno/6.jpg"
     ],
     "variants": [
       {
@@ -739,8 +897,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/self/1.JPG",
+      "/images/catalog/kitelya/self/2.JPG",
+      "/images/catalog/kitelya/self/3.jpg",
+      "/images/catalog/kitelya/self/4.jpg",
+      "/images/catalog/kitelya/self/5.jpg",
+      "/images/catalog/kitelya/self/6.JPG",
+      "/images/catalog/kitelya/self/7.jpg"
     ],
     "variants": [
       {
@@ -794,8 +957,12 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/chefwear/1.JPG",
+      "/images/catalog/kitelya/chefwear/2.JPG",
+      "/images/catalog/kitelya/chefwear/3.JPG",
+      "/images/catalog/kitelya/chefwear/4.jpg",
+      "/images/catalog/kitelya/chefwear/5.jpg",
+      "/images/catalog/kitelya/chefwear/6.jpg"
     ],
     "variants": [
       {
@@ -849,8 +1016,7 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/aprons/fartuk-nepromokaemyy/1.jpg"
     ],
     "variants": [
       {
@@ -904,8 +1070,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/embrace/1.JPG",
+      "/images/catalog/kitelya/embrace/2.JPG",
+      "/images/catalog/kitelya/embrace/3.jpg",
+      "/images/catalog/kitelya/embrace/4.jpg",
+      "/images/catalog/kitelya/embrace/5.jpg",
+      "/images/catalog/kitelya/embrace/6.jpg",
+      "/images/catalog/kitelya/embrace/7.jpg"
     ],
     "variants": [
       {
@@ -959,8 +1130,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/embrace-20/1.jpg",
+      "/images/catalog/kitelya/embrace-20/2.jpg",
+      "/images/catalog/kitelya/embrace-20/3.jpg",
+      "/images/catalog/kitelya/embrace-20/4.jpg",
+      "/images/catalog/kitelya/embrace-20/5.jpg",
+      "/images/catalog/kitelya/embrace-20/6.jpg",
+      "/images/catalog/kitelya/embrace-20/7.jpg"
     ],
     "variants": [
       {
@@ -1014,8 +1190,11 @@
       "article": "00620000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/simple/1.jpg",
+      "/images/catalog/kitelya/simple/2.jpg",
+      "/images/catalog/kitelya/simple/3.jpg",
+      "/images/catalog/kitelya/simple/4.jpg",
+      "/images/catalog/kitelya/simple/5.jpg"
     ],
     "variants": [
       {
@@ -1069,8 +1248,9 @@
       "article": "00610000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/popover/1.jpg",
+      "/images/catalog/kitelya/popover/2.jpg",
+      "/images/catalog/kitelya/popover/3.jpg"
     ],
     "variants": [
       {
@@ -1124,8 +1304,21 @@
       "article": "00430000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/grand/1.JPG",
+      "/images/catalog/kitelya/grand/2.JPG",
+      "/images/catalog/kitelya/grand/3.jpg",
+      "/images/catalog/kitelya/grand/4.JPG",
+      "/images/catalog/kitelya/grand/5.jpg",
+      "/images/catalog/kitelya/grand/6.JPG",
+      "/images/catalog/kitelya/grand/7.jpg",
+      "/images/catalog/kitelya/grand/8.JPG",
+      "/images/catalog/kitelya/grand/9.JPG",
+      "/images/catalog/kitelya/grand/10.jpg",
+      "/images/catalog/kitelya/grand/11.JPG",
+      "/images/catalog/kitelya/grand/12.jpg",
+      "/images/catalog/kitelya/grand/13.jpg",
+      "/images/catalog/kitelya/grand/14.jpg",
+      "/images/catalog/kitelya/grand/15.jpg"
     ],
     "variants": [
       {
@@ -1179,8 +1372,27 @@
       "article": "00450000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/mono/1.JPG",
+      "/images/catalog/kitelya/mono/2.JPG",
+      "/images/catalog/kitelya/mono/3.JPG",
+      "/images/catalog/kitelya/mono/4.jpg",
+      "/images/catalog/kitelya/mono/5.JPG",
+      "/images/catalog/kitelya/mono/6.JPG",
+      "/images/catalog/kitelya/mono/7.jpg",
+      "/images/catalog/kitelya/mono/8.jpg",
+      "/images/catalog/kitelya/mono/9.jpg",
+      "/images/catalog/kitelya/mono/10.jpg",
+      "/images/catalog/kitelya/mono/11.JPG",
+      "/images/catalog/kitelya/mono/12.jpg",
+      "/images/catalog/kitelya/mono/13.jpg",
+      "/images/catalog/kitelya/mono/14.JPG",
+      "/images/catalog/kitelya/mono/15.JPG",
+      "/images/catalog/kitelya/mono/16.jpg",
+      "/images/catalog/kitelya/mono/17.jpg",
+      "/images/catalog/kitelya/mono/18.jpg",
+      "/images/catalog/kitelya/mono/19.JPG",
+      "/images/catalog/kitelya/mono/20.jpg",
+      "/images/catalog/kitelya/mono/21.jpg"
     ],
     "variants": [
       {
@@ -1234,8 +1446,15 @@
       "article": "00400000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/downy/1.JPG",
+      "/images/catalog/kitelya/downy/2.JPG",
+      "/images/catalog/kitelya/downy/3.JPG",
+      "/images/catalog/kitelya/downy/4.JPG",
+      "/images/catalog/kitelya/downy/5.jpg",
+      "/images/catalog/kitelya/downy/6.jpg",
+      "/images/catalog/kitelya/downy/7.jpg",
+      "/images/catalog/kitelya/downy/8.jpg",
+      "/images/catalog/kitelya/downy/9.jpg"
     ],
     "variants": [
       {
@@ -1289,8 +1508,15 @@
       "article": "00110000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/made/1.jpg",
+      "/images/catalog/kitelya/made/2.jpg",
+      "/images/catalog/kitelya/made/3.jpg",
+      "/images/catalog/kitelya/made/4.jpg",
+      "/images/catalog/kitelya/made/5.jpg",
+      "/images/catalog/kitelya/made/6.jpg",
+      "/images/catalog/kitelya/made/7.jpg",
+      "/images/catalog/kitelya/made/8.jpg",
+      "/images/catalog/kitelya/made/9.jpg"
     ],
     "variants": [
       {
@@ -1344,8 +1570,48 @@
       "article": "01030000"
     },
     "images": [
+      "/images/catalog/kitelya/embody/1.jpg",
+      "/images/catalog/kitelya/embody/2.jpg",
+      "/images/catalog/kitelya/embody/3.jpg",
+      "/images/catalog/kitelya/embody/4.jpg",
+      "/images/catalog/kitelya/embody/5.jpg",
+      "/images/catalog/kitelya/embody/6.jpg",
+      "/images/catalog/kitelya/embody/7.jpg",
+      "/images/catalog/kitelya/embody/8.jpg",
+      "/images/catalog/kitelya/embody/9.jpg",
+      "/images/catalog/kitelya/embody/10.jpg",
+      "/images/catalog/kitelya/embody/11.jpg",
+      "/images/catalog/kitelya/embody/12.JPG",
+      "/images/catalog/kitelya/embody/13.jpg",
+      "/images/catalog/kitelya/embody/14.JPG",
+      "/images/catalog/kitelya/embody/15.JPG",
+      "/images/catalog/kitelya/embody/16.jpg",
+      "/images/catalog/kitelya/embody/17.jpg",
+      "/images/catalog/kitelya/embody/18.jpg",
+      "/images/catalog/kitelya/embody/19.jpg",
+      "/images/catalog/kitelya/embody/20.jpg",
+      "/images/catalog/kitelya/embody/21.JPG",
+      "/images/catalog/kitelya/embody/22.jpg",
+      "/images/catalog/kitelya/embody/23.jpg",
+      "/images/catalog/kitelya/embody/24.jpg",
+      "/images/catalog/kitelya/embody/25.jpg",
+      "/images/catalog/kitelya/embody/26.jpg",
+      "/images/catalog/kitelya/embody/27.jpg",
+      "/images/catalog/kitelya/embody/28.jpg",
+      "/images/catalog/kitelya/embody/29.jpg",
+      "/images/catalog/kitelya/embody/30.jpg",
+      "/images/catalog/kitelya/embody/31.jpg",
+      "/images/catalog/kitelya/embody/32.jpg",
+      "/images/catalog/kitelya/embody/33.jpg",
+      "/images/catalog/kitelya/embody/34.jpg",
+      "/images/catalog/kitelya/embody/35.jpg",
+      "/images/catalog/kitelya/embody/36.jpg",
+      "/images/catalog/kitelya/embody/37.jpg",
+      "/images/catalog/kitelya/embody/38.jpg",
+      "/images/catalog/kitelya/embody/39.jpg",
       "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/embody/41.jpg",
+      "/images/catalog/kitelya/embody/42.jpg"
     ],
     "variants": [
       {
@@ -1399,8 +1665,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/embody-20/1.JPG",
+      "/images/catalog/kitelya/embody-20/2.JPG",
+      "/images/catalog/kitelya/embody-20/3.jpg",
+      "/images/catalog/kitelya/embody-20/4.jpg",
+      "/images/catalog/kitelya/embody-20/5.jpg",
+      "/images/catalog/kitelya/embody-20/6.jpg",
+      "/images/catalog/kitelya/embody-20/7.jpg"
     ],
     "variants": [
       {
@@ -1454,8 +1725,46 @@
       "article": "00310000"
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/seed/1.jpg",
+      "/images/catalog/kitelya/seed/2.jpg",
+      "/images/catalog/kitelya/seed/3.jpg",
+      "/images/catalog/kitelya/seed/4.jpg",
+      "/images/catalog/kitelya/seed/5.jpg",
+      "/images/catalog/kitelya/seed/6.jpg",
+      "/images/catalog/kitelya/seed/7.jpg",
+      "/images/catalog/kitelya/seed/8.jpg",
+      "/images/catalog/kitelya/seed/9.jpg",
+      "/images/catalog/kitelya/seed/10.jpg",
+      "/images/catalog/kitelya/seed/11.jpg",
+      "/images/catalog/kitelya/seed/12.jpg",
+      "/images/catalog/kitelya/seed/13.jpg",
+      "/images/catalog/kitelya/seed/14.jpg",
+      "/images/catalog/kitelya/seed/15.jpg",
+      "/images/catalog/kitelya/seed/16.jpg",
+      "/images/catalog/kitelya/seed/17.jpg",
+      "/images/catalog/kitelya/seed/18.jpg",
+      "/images/catalog/kitelya/seed/19.jpg",
+      "/images/catalog/kitelya/seed/20.jpg",
+      "/images/catalog/kitelya/seed/21.jpg",
+      "/images/catalog/kitelya/seed/22.jpg",
+      "/images/catalog/kitelya/seed/23.jpg",
+      "/images/catalog/kitelya/seed/24.jpg",
+      "/images/catalog/kitelya/seed/25.jpg",
+      "/images/catalog/kitelya/seed/26.jpg",
+      "/images/catalog/kitelya/seed/27.jpg",
+      "/images/catalog/kitelya/seed/28.jpg",
+      "/images/catalog/kitelya/seed/29.jpg",
+      "/images/catalog/kitelya/seed/30.jpg",
+      "/images/catalog/kitelya/seed/31.jpg",
+      "/images/catalog/kitelya/seed/32.jpg",
+      "/images/catalog/kitelya/seed/33.jpg",
+      "/images/catalog/kitelya/seed/34.jpg",
+      "/images/catalog/kitelya/seed/35.jpg",
+      "/images/catalog/kitelya/seed/36.jpg",
+      "/images/catalog/kitelya/seed/37.jpg",
+      "/images/catalog/kitelya/seed/38.jpg",
+      "/images/catalog/kitelya/seed/39.jpg",
+      "/images/catalog/kitelya/seed/40.jpg"
     ],
     "variants": [
       {
@@ -1509,8 +1818,17 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/heatwear/1.jpg",
+      "/images/catalog/kitelya/heatwear/2.jpg",
+      "/images/catalog/kitelya/heatwear/3.jpg",
+      "/images/catalog/kitelya/heatwear/4.jpg",
+      "/images/catalog/kitelya/heatwear/5.jpg",
+      "/images/catalog/kitelya/heatwear/6.jpg",
+      "/images/catalog/kitelya/heatwear/7.jpg",
+      "/images/catalog/kitelya/heatwear/8.jpg",
+      "/images/catalog/kitelya/heatwear/9.jpg",
+      "/images/catalog/kitelya/heatwear/10.jpg",
+      "/images/catalog/kitelya/heatwear/11.jpg"
     ],
     "variants": [
       {
@@ -1564,8 +1882,15 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/mono-20/1.jpg",
+      "/images/catalog/kitelya/mono-20/2.jpg",
+      "/images/catalog/kitelya/mono-20/3.jpg",
+      "/images/catalog/kitelya/mono-20/4.jpg",
+      "/images/catalog/kitelya/mono-20/5.jpg",
+      "/images/catalog/kitelya/mono-20/6.jpg",
+      "/images/catalog/kitelya/mono-20/7.jpg",
+      "/images/catalog/kitelya/mono-20/8.jpg",
+      "/images/catalog/kitelya/mono-20/9.jpg"
     ],
     "variants": [
       {
@@ -1619,8 +1944,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/dubbutton/1.JPG",
+      "/images/catalog/kitelya/dubbutton/2.JPG",
+      "/images/catalog/kitelya/dubbutton/3.JPG",
+      "/images/catalog/kitelya/dubbutton/4.jpg",
+      "/images/catalog/kitelya/dubbutton/5.jpg",
+      "/images/catalog/kitelya/dubbutton/6.jpg",
+      "/images/catalog/kitelya/dubbutton/7.jpg"
     ],
     "variants": [
       {
@@ -1674,8 +2004,12 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/kosno/1.jpg",
+      "/images/catalog/kitelya/kosno/2.jpg",
+      "/images/catalog/kitelya/kosno/3.jpg",
+      "/images/catalog/kitelya/kosno/4.jpg",
+      "/images/catalog/kitelya/kosno/5.jpg",
+      "/images/catalog/kitelya/kosno/6.jpg"
     ],
     "variants": [
       {
@@ -1729,8 +2063,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/self/1.JPG",
+      "/images/catalog/kitelya/self/2.JPG",
+      "/images/catalog/kitelya/self/3.jpg",
+      "/images/catalog/kitelya/self/4.jpg",
+      "/images/catalog/kitelya/self/5.jpg",
+      "/images/catalog/kitelya/self/6.JPG",
+      "/images/catalog/kitelya/self/7.jpg"
     ],
     "variants": [
       {
@@ -1784,8 +2123,12 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/chefwear/1.JPG",
+      "/images/catalog/kitelya/chefwear/2.JPG",
+      "/images/catalog/kitelya/chefwear/3.JPG",
+      "/images/catalog/kitelya/chefwear/4.jpg",
+      "/images/catalog/kitelya/chefwear/5.jpg",
+      "/images/catalog/kitelya/chefwear/6.jpg"
     ],
     "variants": [
       {
@@ -1839,8 +2182,17 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/chefwear-20/1.jpg",
+      "/images/catalog/kitelya/chefwear-20/2.jpg",
+      "/images/catalog/kitelya/chefwear-20/3.jpg",
+      "/images/catalog/kitelya/chefwear-20/4.jpg",
+      "/images/catalog/kitelya/chefwear-20/5.jpg",
+      "/images/catalog/kitelya/chefwear-20/6.jpg",
+      "/images/catalog/kitelya/chefwear-20/7.jpg",
+      "/images/catalog/kitelya/chefwear-20/8.jpg",
+      "/images/catalog/kitelya/chefwear-20/9.jpg",
+      "/images/catalog/kitelya/chefwear-20/10.jpg",
+      "/images/catalog/kitelya/chefwear-20/11.jpg"
     ],
     "variants": [
       {
@@ -1894,8 +2246,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/embrace/1.JPG",
+      "/images/catalog/kitelya/embrace/2.JPG",
+      "/images/catalog/kitelya/embrace/3.jpg",
+      "/images/catalog/kitelya/embrace/4.jpg",
+      "/images/catalog/kitelya/embrace/5.jpg",
+      "/images/catalog/kitelya/embrace/6.jpg",
+      "/images/catalog/kitelya/embrace/7.jpg"
     ],
     "variants": [
       {
@@ -1949,8 +2306,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/kitelya/embody/40.png",
-      "/images/catalog/kitelya/embody/41.jpg"
+      "/images/catalog/kitelya/embrace-20/1.jpg",
+      "/images/catalog/kitelya/embrace-20/2.jpg",
+      "/images/catalog/kitelya/embrace-20/3.jpg",
+      "/images/catalog/kitelya/embrace-20/4.jpg",
+      "/images/catalog/kitelya/embrace-20/5.jpg",
+      "/images/catalog/kitelya/embrace-20/6.jpg",
+      "/images/catalog/kitelya/embrace-20/7.jpg"
     ],
     "variants": [
       {
@@ -2060,9 +2422,10 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/pants/man/1.jpg",
+      "/images/catalog/pants/man/2.jpg",
+      "/images/catalog/pants/man/3.jpg",
+      "/images/catalog/pants/man/4.jpg"
     ],
     "variants": [
       {
@@ -2117,9 +2480,14 @@
       "article": "00680000"
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/pants/simple/1.JPG",
+      "/images/catalog/pants/simple/2.jpg",
+      "/images/catalog/pants/simple/3.jpg",
+      "/images/catalog/pants/simple/4.jpg",
+      "/images/catalog/pants/simple/5.JPG",
+      "/images/catalog/pants/simple/6.jpg",
+      "/images/catalog/pants/simple/7.jpg",
+      "/images/catalog/pants/simple/8.jpg"
     ],
     "variants": [
       {
@@ -2174,9 +2542,9 @@
       "article": "00690000"
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/pants/wide-20/3.JPG",
+      "/images/catalog/pants/wide-20/1.jpg",
+      "/images/catalog/pants/wide-20/2.jpg"
     ],
     "variants": [
       {
@@ -2231,9 +2599,9 @@
       "article": "00690000"
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/pants/wide/1.jpg",
+      "/images/catalog/pants/wide/2.jpg",
+      "/images/catalog/pants/wide/3.jpg"
     ],
     "variants": [
       {
@@ -2288,9 +2656,10 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/pants/woman/1.jpg",
+      "/images/catalog/pants/woman/2.jpg",
+      "/images/catalog/pants/woman/3.jpg",
+      "/images/catalog/pants/woman/4.jpg"
     ],
     "variants": [
       {
@@ -2345,9 +2714,11 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/pants//1.jpg",
+      "/images/catalog/pants//2.jpg",
+      "/images/catalog/pants//3.jpg",
+      "/images/catalog/pants//4.jpg",
+      "/images/catalog/pants//5.jpg"
     ],
     "variants": [
       {
@@ -2402,9 +2773,12 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/pants//1.jpg",
+      "/images/catalog/pants//2.jpg",
+      "/images/catalog/pants//3.jpg",
+      "/images/catalog/pants//4.jpg",
+      "/images/catalog/pants//5.jpg",
+      "/images/catalog/pants//6.jpg"
     ],
     "variants": [
       {
@@ -2459,9 +2833,10 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/pants//1.JPG",
+      "/images/catalog/pants//2.JPG",
+      "/images/catalog/pants//3.JPG",
+      "/images/catalog/pants//4.JPG"
     ],
     "variants": [
       {
@@ -2516,9 +2891,11 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/pants//1.JPG",
+      "/images/catalog/pants//2.JPG",
+      "/images/catalog/pants//3.JPG",
+      "/images/catalog/pants//4.JPG",
+      "/images/catalog/pants//5.JPG"
     ],
     "variants": [
       {
@@ -2573,6 +2950,19 @@
       "article": "02050000"
     },
     "images": [
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/1.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/2.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/3.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/4.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/5.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/6.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/7.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/8.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/9.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/10.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/11.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/12.jpg",
+      "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/13.jpg",
       "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/14.jpg",
       "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/15.jpg",
       "/images/catalog/aprons/fartuk-inspire-s-angl-vdohnovlyat/16.jpg",
@@ -2631,11 +3021,9 @@
       "article": "00410004"
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg",
-      "/images/catalog/aprons/12.jpg",
-      "/images/catalog/aprons/13.jpg"
+      "/images/catalog/aprons/fartuk-nonna-dzhinsovyy/1.jpg",
+      "/images/catalog/aprons/fartuk-nonna-dzhinsovyy/2.jpg",
+      "/images/catalog/aprons/fartuk-nonna-dzhinsovyy/3.jpg"
     ],
     "variants": [
       {
@@ -2690,11 +3078,13 @@
       "article": "00410005"
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg",
-      "/images/catalog/aprons/12.jpg",
-      "/images/catalog/aprons/13.jpg"
+      "/images/catalog/aprons/fartuk-nonna/1.jpg",
+      "/images/catalog/aprons/fartuk-nonna/2.jpg",
+      "/images/catalog/aprons/fartuk-nonna/3.jpg",
+      "/images/catalog/aprons/fartuk-nonna/4.jpg",
+      "/images/catalog/aprons/fartuk-nonna/5.jpg",
+      "/images/catalog/aprons/fartuk-nonna/6.jpg",
+      "/images/catalog/aprons/fartuk-nonna/7.jpg"
     ],
     "variants": [
       {
@@ -2749,7 +3139,23 @@
       "article": "00410000"
     },
     "images": [
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/1.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/2.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/3.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/4.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/5.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/6.jpg",
       "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/7.png",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/8.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/9.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/10.JPG",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/11.JPG",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/12.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/13.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/14.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/15.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/16.jpg",
+      "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/17.jpg",
       "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/18.jpg",
       "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/19.jpg",
       "/images/catalog/aprons/fartuk-simple-s-angl-klasscheskiy/20.JPG",
@@ -2858,11 +3264,19 @@
       "article": "00410002"
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg",
-      "/images/catalog/aprons/12.jpg",
-      "/images/catalog/aprons/13.jpg"
+      "/images/catalog/aprons/fartuk-industrial/1.jpg",
+      "/images/catalog/aprons/fartuk-industrial/2.jpg",
+      "/images/catalog/aprons/fartuk-industrial/3.jpg",
+      "/images/catalog/aprons/fartuk-industrial/4.jpg",
+      "/images/catalog/aprons/fartuk-industrial/5.jpg",
+      "/images/catalog/aprons/fartuk-industrial/6.jpg",
+      "/images/catalog/aprons/fartuk-industrial/7.jpg",
+      "/images/catalog/aprons/fartuk-industrial/8.jpg",
+      "/images/catalog/aprons/fartuk-industrial/9.jpg",
+      "/images/catalog/aprons/fartuk-industrial/10.jpg",
+      "/images/catalog/aprons/fartuk-industrial/11.jpg",
+      "/images/catalog/aprons/fartuk-industrial/12.jpg",
+      "/images/catalog/aprons/fartuk-industrial/13.jpg"
     ],
     "variants": [
       {
@@ -2972,11 +3386,13 @@
       "article": "00410003"
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg",
-      "/images/catalog/aprons/12.jpg",
-      "/images/catalog/aprons/13.jpg"
+      "/images/catalog/aprons/fartuk-plisse/1.jpg",
+      "/images/catalog/aprons/fartuk-plisse/2.jpg",
+      "/images/catalog/aprons/fartuk-plisse/3.jpg",
+      "/images/catalog/aprons/fartuk-plisse/4.jpg",
+      "/images/catalog/aprons/fartuk-plisse/5.jpg",
+      "/images/catalog/aprons/fartuk-plisse/6.jpg",
+      "/images/catalog/aprons/fartuk-plisse/7.jpg"
     ],
     "variants": [
       {
@@ -3031,11 +3447,12 @@
       "article": "00410001"
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg",
-      "/images/catalog/aprons/12.jpg",
-      "/images/catalog/aprons/13.jpg"
+      "/images/catalog/aprons/fartuk-poyasnoy/1.jpg",
+      "/images/catalog/aprons/fartuk-poyasnoy/2.jpg",
+      "/images/catalog/aprons/fartuk-poyasnoy/3.jpg",
+      "/images/catalog/aprons/fartuk-poyasnoy/4.jpg",
+      "/images/catalog/aprons/fartuk-poyasnoy/5.jpg",
+      "/images/catalog/aprons/fartuk-poyasnoy/6.jpg"
     ],
     "variants": [
       {
@@ -3087,9 +3504,11 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/headwear/kolpak-povarskoy/1.jpg",
+      "/images/catalog/headwear/kolpak-povarskoy/2.jpg",
+      "/images/catalog/headwear/kolpak-povarskoy/3.jpg",
+      "/images/catalog/headwear/kolpak-povarskoy/4.jpg",
+      "/images/catalog/headwear/kolpak-povarskoy/5.jpg"
     ],
     "variants": [
       {
@@ -3123,9 +3542,9 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/headwear/simple/1.JPG",
+      "/images/catalog/headwear/simple/2.jpg",
+      "/images/catalog/headwear/simple/3.jpg"
     ],
     "variants": [
       {
@@ -3159,9 +3578,11 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/headwear/morskoy-uzel/1.jpg",
+      "/images/catalog/headwear/morskoy-uzel/2.jpg",
+      "/images/catalog/headwear/morskoy-uzel/3.jpg",
+      "/images/catalog/headwear/morskoy-uzel/4.jpg",
+      "/images/catalog/headwear/morskoy-uzel/5.jpg"
     ],
     "variants": [
       {
@@ -3195,9 +3616,13 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/headwear/shapka-bandana/1.jpg",
+      "/images/catalog/headwear/shapka-bandana/2.jpg",
+      "/images/catalog/headwear/shapka-bandana/3.jpg",
+      "/images/catalog/headwear/shapka-bandana/4.jpg",
+      "/images/catalog/headwear/shapka-bandana/5.jpg",
+      "/images/catalog/headwear/shapka-bandana/6.jpg",
+      "/images/catalog/headwear/shapka-bandana/7.jpg"
     ],
     "variants": [
       {
@@ -3231,9 +3656,11 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/headwear/doker/1.jpg",
+      "/images/catalog/headwear/doker/2.jpg",
+      "/images/catalog/headwear/doker/3.jpg",
+      "/images/catalog/headwear/doker/4.jpg",
+      "/images/catalog/headwear/doker/5.jpg"
     ],
     "variants": [
       {
@@ -3267,9 +3694,9 @@
       "article": ""
     },
     "images": [
-      "/images/catalog/aprons/1.jpg",
-      "/images/catalog/aprons/10.jpg",
-      "/images/catalog/aprons/11.jpg"
+      "/images/catalog/headwear/kolpak-shtormovoy/1.JPG",
+      "/images/catalog/headwear/kolpak-shtormovoy/2.JPG",
+      "/images/catalog/headwear/kolpak-shtormovoy/3.JPG"
     ],
     "variants": [
       {
