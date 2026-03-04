@@ -28,6 +28,22 @@ export async function POST(request: Request) {
 
     // Create payment in YooKassa
     console.log(`Creating payment for order ${orderId}, amount: ${amount}`);
+    
+    // Format phone for YooKassa (must be digits only, starting with +)
+    const rawPhone = finalCustomer?.phone || '';
+    const digits = rawPhone.replace(/\D/g, '');
+    let formattedPhone = undefined;
+    
+    if (digits) {
+      if (digits.length === 11 && (digits.startsWith('7') || digits.startsWith('8'))) {
+        formattedPhone = `+7${digits.substring(1)}`;
+      } else if (digits.length === 10) {
+        formattedPhone = `+7${digits}`;
+      } else {
+        formattedPhone = `+${digits}`;
+      }
+    }
+
     const payment = await createYooKassaPayment({
       amount: {
         value: amount.toFixed(2),
@@ -46,7 +62,7 @@ export async function POST(request: Request) {
         receipt: {
           customer: {
             email: finalCustomer.email,
-            phone: finalCustomer.phone,
+            phone: formattedPhone,
           },
           items: finalItems.map((item: { name: string; price: number; quantity: number }) => ({
             description: item.name,
