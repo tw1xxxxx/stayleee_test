@@ -36,11 +36,11 @@ export async function POST(request: Request) {
     
     if (digits) {
       if (digits.length === 11 && (digits.startsWith('7') || digits.startsWith('8'))) {
-        formattedPhone = `+7${digits.substring(1)}`;
+        formattedPhone = `7${digits.substring(1)}`;
       } else if (digits.length === 10) {
-        formattedPhone = `+7${digits}`;
+        formattedPhone = `7${digits}`;
       } else {
-        formattedPhone = `+${digits}`;
+        formattedPhone = digits;
       }
     }
 
