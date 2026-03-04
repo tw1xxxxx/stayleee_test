@@ -672,27 +672,25 @@ export const db = {
 
   // Projects
   getProjects: async (): Promise<Project[]> => {
-    let allProjects: Project[] = [];
-
-    // 1. Try File System first
+    // 1. Try File System first (most reliable on VPS/local)
     try {
       if (fs.existsSync(PROJECTS_FILE)) {
         const data = await fs.promises.readFile(PROJECTS_FILE, 'utf-8');
         const projects = JSON.parse(data);
         if (Array.isArray(projects)) {
-          allProjects = projects;
+          return projects;
         }
       }
     } catch (error) {
       console.error('Error reading projects file:', error);
     }
 
-    // 2. Try KV
+    // 2. Try KV (Vercel/Cloudflare/Upstash)
     if (useKv) {
       try {
         const projects = await kvGetJson<Project[]>(PROJECTS_KEY);
-        if (Array.isArray(projects) && projects.length > 0 && allProjects.length === 0) {
-          allProjects = projects;
+        if (Array.isArray(projects)) {
+          return projects;
         }
       } catch (error) {
         console.error('Error reading KV:', error);
@@ -706,8 +704,8 @@ export const db = {
         const data = await redisClient.get(PROJECTS_KEY);
         if (data) {
           const projects = JSON.parse(data);
-          if (Array.isArray(projects) && projects.length > 0 && allProjects.length === 0) {
-            allProjects = projects;
+          if (Array.isArray(projects)) {
+            return projects;
           }
         }
       } catch (error) {
@@ -715,7 +713,7 @@ export const db = {
       }
     }
 
-    return allProjects;
+    return [];
   },
 
   saveProject: async (project: Project): Promise<void> => {

@@ -6,44 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    let projects = await db.getProjects();
-
-    if (projects.length === 0) {
-      const dummyProjects: Project[] = [
-        {
-          id: 'portfolio-1',
-          type: 'portfolio',
-          title: "Клод моне",
-          image: "/images/470750.jpg",
-          order: 0
-        },
-        {
-          id: 'promo-2',
-          type: 'promo',
-          text: "Плюшки",
-          order: 1
-        },
-        {
-          id: 'portfolio-2',
-          type: 'portfolio',
-          title: "Название",
-          image: "/images/470750.jpg",
-          order: 2
-        },
-        {
-          id: 'promo-1',
-          type: 'promo',
-          text: "Закажите от 300к и вам в подарок брендирование",
-          order: 3
-        }
-      ];
-
-      for (const p of dummyProjects) {
-        await db.saveProject(p);
-      }
-      projects = await db.getProjects();
-    }
-
+    const projects = await db.getProjects();
     return NextResponse.json(projects);
   } catch (error) {
     console.error('Error fetching projects:', error);
