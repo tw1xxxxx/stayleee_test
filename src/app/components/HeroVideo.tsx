@@ -91,9 +91,17 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
           poster={poster || undefined}
           className="absolute inset-0 w-full h-full object-cover pointer-events-none transform-gpu"
         >
-          <source src={src} type="video/mp4" />
-          {/* Fallback for older Safari/iOS if mp4 fails or for better compatibility */}
-          <source src={src.replace('.mp4', '.mov')} type="video/quicktime" />
+          {src.endsWith('.MOV') || src.endsWith('.mov') ? (
+            <>
+              <source src={src} type="video/quicktime" />
+              <source src={src.replace(/\.mov$/i, '.mp4')} type="video/mp4" />
+            </>
+          ) : (
+            <>
+              <source src={src} type="video/mp4" />
+              <source src={src.replace(/\.mp4$/i, '.mov')} type="video/quicktime" />
+            </>
+          )}
         </video>
         {/* Затемнение и теплый эффект */}
         <div className="absolute inset-0 bg-black/40 z-10" />
