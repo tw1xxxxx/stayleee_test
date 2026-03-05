@@ -255,6 +255,7 @@ export const db = {
     }
 
     // 3. Try File System last (and migrate to Redis/KV if found)
+    /*
     try {
       if (fs.existsSync(USERS_FILE)) {
         const data = await fs.promises.readFile(USERS_FILE, 'utf-8');
@@ -270,6 +271,7 @@ export const db = {
     } catch (error) {
       console.error('Error reading users file:', error);
     }
+    */
     
     return [];
   },
@@ -300,6 +302,7 @@ export const db = {
     }
 
     // 3. Try File System (and migrate)
+    /*
     try {
       if (fs.existsSync(ORDERS_FILE)) {
         const data = await fs.promises.readFile(ORDERS_FILE, 'utf-8');
@@ -315,6 +318,7 @@ export const db = {
     } catch (error) {
       console.error('Error reading orders file:', error);
     }
+    */
 
     return [];
   },
@@ -356,12 +360,14 @@ export const db = {
         }
       }
 
-      // 3. Write to File System (Optional/Background fallback)
+      // 3. Write to File System (Disabled for production/host)
+      /*
       try {
         await fs.promises.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
       } catch (fileError) {
         console.warn("Could not write users file (expected in production):", fileError);
       }
+      */
     } catch (error) {
       console.error('Error in createUser:', error);
     }
@@ -387,13 +393,15 @@ export const db = {
         console.log(`Order saved to Redis: ${order.id}`);
       }
 
-      // 3. Write to File System (Optional/Background)
+      // 3. Write to File System (Disabled)
+      /*
       try {
         await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
         console.log(`Order saved to File System (fallback): ${order.id}`);
       } catch (fileError) {
         console.warn('Could not write orders file:', fileError);
       }
+      */
     } catch (error) {
       console.error('Error creating order:', error);
     }
@@ -415,12 +423,14 @@ export const db = {
         await redisClient.set(ORDERS_KEY, JSON.stringify(filtered));
       }
 
-      // 3. Write to File System (Optional)
+      // 3. Write to File System (Disabled)
+      /*
       try {
         await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(filtered, null, 2));
       } catch (fileError) {
         console.warn('Could not write orders file:', fileError);
       }
+      */
     } catch (error) {
       console.error('Error deleting order:', error);
     }
@@ -444,12 +454,14 @@ export const db = {
           await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
         }
 
-        // 3. Write to File System (Optional)
+        // 3. Write to File System (Disabled)
+        /*
         try {
           await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
         } catch (fileError) {
           console.warn('Could not write orders file:', fileError);
         }
+        */
       }
     } catch (error) {
       console.error('Error updating order:', error);
@@ -499,6 +511,7 @@ export const db = {
     }
 
     // 3. Try File System last (and migrate)
+    /*
     try {
       if (fs.existsSync(COLLECTIONS_FILE)) {
         const data = await fs.promises.readFile(COLLECTIONS_FILE, 'utf-8');
@@ -514,6 +527,7 @@ export const db = {
     } catch (error) {
       console.error('Error reading collections file:', error);
     }
+    */
 
     return [];
   },
@@ -548,12 +562,14 @@ export const db = {
         await redisClient.set(COLLECTIONS_KEY, JSON.stringify(collections));
       }
 
-      // 3. Write to File System (Optional/Background)
+      // 3. Write to File System (Disabled)
+      /*
       try {
         await fs.promises.writeFile(COLLECTIONS_FILE, JSON.stringify(collections, null, 2));
       } catch (fileError) {
         console.warn("Could not write collections file (expected in production):", fileError);
       }
+      */
     } catch (error) {
       console.error('Error saving collections:', error);
     }
@@ -607,6 +623,7 @@ export const db = {
     }
 
     // 3. Try File System last (and migrate)
+    /*
     try {
       console.log('Trying File System at:', PRODUCTS_FILE);
       if (fs.existsSync(PRODUCTS_FILE)) {
@@ -631,6 +648,7 @@ export const db = {
     } catch (error) {
       console.error('Error reading products file:', error);
     }
+    */
 
     console.log('No products found in any storage');
     return [];
@@ -649,12 +667,14 @@ export const db = {
         await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
       }
 
-      // 3. Write to File System (Optional)
+      // 3. Write to File System (Disabled)
+      /*
       try {
         await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
       } catch (fileError) {
         console.warn("Could not write products file:", fileError);
       }
+      */
     } catch (error) { 
       console.error('Error saving products:', error);
     }
@@ -692,10 +712,12 @@ export const db = {
         await redisClient.set(PRODUCTS_KEY, JSON.stringify(filtered));
       }
       
-      // 3. Write to File System (Optional)
+      // 3. Write to File System (Disabled)
+      /*
       try {
         await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(filtered, null, 2));
       } catch (e) {}
+      */
     } catch (error) {
       console.error('Error deleting product:', error);
     }
@@ -732,6 +754,7 @@ export const db = {
     }
 
     // 3. Try File System last (and migrate)
+    /*
     try {
       if (fs.existsSync(PROJECTS_FILE)) {
         const data = await fs.promises.readFile(PROJECTS_FILE, 'utf-8');
@@ -747,6 +770,7 @@ export const db = {
     } catch (error) {
       console.error('Error reading projects file:', error);
     }
+    */
 
     return [];
   },
@@ -784,12 +808,14 @@ export const db = {
         await redisClient.set(PROJECTS_KEY, JSON.stringify(projects));
       }
 
-      // 3. Write to File System (Optional/Background)
+      // 3. Write to File System (Disabled)
+      /*
       try {
         await fs.promises.writeFile(PROJECTS_FILE, JSON.stringify(projects, null, 2));
       } catch (fileError) {
         console.warn("Could not write projects file:", fileError);
       }
+      */
     } catch (error) {
       console.error('Error saving projects:', error);
     }
@@ -878,10 +904,13 @@ export const db = {
         await redisClient.set(FILTERS_KEY, JSON.stringify(filters));
       }
       
+      // 3. Write to File System (Disabled)
+      /*
       // Optional write
       try {
         await fs.promises.writeFile(FILTERS_FILE, JSON.stringify(filters, null, 2));
       } catch (e) {}
+      */
     } catch (error) {
       console.error('Error saving filter:', error);
     }
@@ -903,10 +932,13 @@ export const db = {
         await redisClient.set(FILTERS_KEY, JSON.stringify(filtered));
       }
       
+      // 3. Write to File System (Disabled)
+      /*
       // 3. Optional write
       try {
         await fs.promises.writeFile(FILTERS_FILE, JSON.stringify(filtered, null, 2));
       } catch (e) {}
+      */
     } catch (error) {
       console.error('Error deleting filter:', error);
     }
@@ -973,10 +1005,13 @@ export const db = {
         await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
       }
       
+      // 3. Write to File System (Disabled)
+      /*
       // 3. Optional write
       try {
         await fs.promises.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2));
       } catch (e) {}
+      */
     } catch (error) {
       console.error('Error creating transaction:', error);
     }
@@ -1001,10 +1036,13 @@ export const db = {
           await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
         }
         
+        // 3. Write to File System (Disabled)
+        /*
         // 3. Optional write
         try {
           await fs.promises.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2));
         } catch (e) {}
+        */
       }
     } catch (error) {
       console.error('Error updating transaction:', error);
@@ -1069,10 +1107,13 @@ export const db = {
         await redisClient.set(GIFTS_KEY, JSON.stringify(gifts));
       }
       
+      // 3. Write to File System (Disabled)
+      /*
       // 3. Optional write
       try {
         await fs.promises.writeFile(GIFTS_FILE, JSON.stringify(gifts, null, 2));
       } catch (e) {}
+      */
     } catch (error) {
       console.error('Error saving gifts:', error);
     }

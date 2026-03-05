@@ -21,10 +21,11 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
     
     // Fix for older Safari/iOS: video might not trigger 'canplay' if already ready or on some power modes
     const interval = setInterval(() => {
-      if (videoRef.current && videoRef.current.readyState >= 3 && !isReady) {
+      if (videoRef.current && videoRef.current.readyState >= 2 && !isReady) {
         setIsReady(true);
+        videoRef.current.play().catch(() => {});
       }
-    }, 1000);
+    }, 500);
 
     return () => {
       window.removeEventListener("resize", checkMobile);
@@ -59,7 +60,7 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
     window.addEventListener('touchstart', forcePlay, { once: true });
     window.addEventListener('click', forcePlay, { once: true });
 
-    if (video.readyState >= 3) {
+    if (video.readyState >= 2) {
       handleCanPlay();
     } else {
       video.addEventListener("canplay", handleCanPlay);

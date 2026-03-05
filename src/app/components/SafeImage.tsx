@@ -13,19 +13,24 @@ const SafeImage: React.FC<SafeImageProps> = ({
   alt, 
   ...props 
 }) => {
-  const [imgSrc, setImgSrc] = useState<string | import("next/dist/shared/lib/get-img-props").StaticImport>(src);
+  const [hasError, setHasError] = useState(false);
+  const [imgSrc, setImgSrc] = useState<string | any>(src || fallbackSrc);
 
   useEffect(() => {
-    setImgSrc(src);
-  }, [src]);
+    setHasError(false);
+    setImgSrc(src || fallbackSrc);
+  }, [src, fallbackSrc]);
 
   return (
     <Image
       {...props}
-      src={imgSrc || fallbackSrc}
+      src={hasError ? fallbackSrc : imgSrc}
       alt={alt || ""}
       onError={() => {
-        setImgSrc(fallbackSrc);
+        if (!hasError) {
+          setHasError(true);
+          setImgSrc(fallbackSrc);
+        }
       }}
     />
   );

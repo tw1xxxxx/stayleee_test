@@ -46,7 +46,7 @@ export default function HeroWrapper() {
       ref={containerRef}
       className="fixed inset-0 w-full h-full z-0 transition-opacity duration-500 opacity-100 visible"
     >
-      <HeroVideo src="/videos/IMG_1953.MOV" />
+      <HeroVideo src="/videos/IMG_1953.mp4" />
       <HeroContent />
     </div>
   );

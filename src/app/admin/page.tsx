@@ -1834,10 +1834,14 @@ function CatalogTab() {
     }
 
     if (newImages.length > 0) {
-      setCurrentProduct(prev => ({
-        ...prev,
-        images: [...(prev.images || []), ...newImages]
-      }));
+      setCurrentProduct(prev => {
+        const nextImages = [...(prev.images || []), ...newImages];
+        return {
+          ...prev,
+          images: nextImages,
+          image: nextImages[0] || prev.image || ""
+        };
+      });
     }
   };
 
@@ -1859,10 +1863,15 @@ function CatalogTab() {
       ...currentProduct,
       price: Number(currentProduct.price || 0),
       images: (currentProduct.images || []).filter(Boolean),
+      image: (currentProduct.images || []).filter(Boolean)[0] || "",
       filterIds: currentProduct.filterIds || [],
       tags: currentProduct.tags || [],
       sizes: currentProduct.sizes || [],
-      colors: currentProduct.colors || [],
+      colors: (currentProduct.colors || []).map(c => ({
+        ...c,
+        images: (c.images || []).filter(Boolean),
+        sizes: (c.sizes || []).filter(Boolean)
+      })),
       details: currentProduct.details || {},
       variants: currentProduct.variants || []
     };
@@ -2054,18 +2063,26 @@ function CatalogTab() {
   const addImage = () => {
     const value = imageInput.trim();
     if (!value) return;
-    setCurrentProduct(prev => ({
-      ...prev,
-      images: [...(prev.images || []), value]
-    }));
+    setCurrentProduct(prev => {
+      const nextImages = [...(prev.images || []), value];
+      return {
+        ...prev,
+        images: nextImages,
+        image: nextImages[0] || prev.image || ""
+      };
+    });
     setImageInput("");
   };
 
   const removeImage = (index: number) => {
-    setCurrentProduct(prev => ({
-      ...prev,
-      images: (prev.images || []).filter((_, i) => i !== index)
-    }));
+    setCurrentProduct(prev => {
+      const nextImages = (prev.images || []).filter((_, i) => i !== index);
+      return {
+        ...prev,
+        images: nextImages,
+        image: nextImages[0] || ""
+      };
+    });
   };
 
   const moveImage = (index: number, direction: number) => {
@@ -2074,7 +2091,11 @@ function CatalogTab() {
       const target = index + direction;
       if (target < 0 || target >= images.length) return prev;
       [images[index], images[target]] = [images[target], images[index]];
-      return { ...prev, images };
+      return { 
+        ...prev, 
+        images,
+        image: images[0] || ""
+      };
     });
   };
 
@@ -2937,6 +2958,11 @@ function CatalogTab() {
                            const activeColor = previewColorIndex !== null ? currentProduct.colors?.[previewColorIndex] : null;
                            const displayImages = (activeColor?.images?.length ? activeColor.images : (currentProduct.images?.length ? currentProduct.images : []));
                            const currentImage = displayImages[previewImageIndex] || displayImages[0];
+                           
+                           // Reset preview image index if it's out of bounds for the current displayImages
+                           if (previewImageIndex >= displayImages.length && displayImages.length > 0) {
+                              setPreviewImageIndex(0);
+                           }
                            
                            return displayImages.length > 0 ? (
                             <>

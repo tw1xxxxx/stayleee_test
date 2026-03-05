@@ -64,7 +64,7 @@ export default function AboutPage() {
                 {/* Left Column - Image (Bottom) */}
                 <FadeIn direction="right" delay={0.2} className="relative h-[500px] md:h-[600px] w-full order-2 md:order-1 rounded-2xl overflow-hidden shadow-xl">
                     <Image 
-                      src="/images/DSC08794-600x900.jpg" 
+                      src="/images/DSC09422.JPG" 
                       alt="Анастасия Костюренко" 
                       fill 
                       className="object-cover hover:scale-105 transition-transform duration-700" 
