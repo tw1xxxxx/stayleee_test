@@ -2,7 +2,8 @@ import type { NextConfig } from "next";
 import path from 'path';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* Trigger redeploy - Optimization: disable source maps to save memory */
+  productionBrowserSourceMaps: false,
   typescript: {
     ignoreBuildErrors: true, // Skip type checking during build
   },
