@@ -226,39 +226,19 @@ export interface Gift {
 
 export const db = {
   getUsers: async (): Promise<User[]> => {
-    let allUsers: User[] = [];
-    
-    // Try File System
-    try {
-      if (fs.existsSync(USERS_FILE)) {
-        const data = await fs.promises.readFile(USERS_FILE, 'utf-8');
-        const users = JSON.parse(data);
-        if (Array.isArray(users)) {
-          allUsers = [...users];
-        }
-      }
-    } catch (error) {
-      console.error('Error reading users file:', error);
-    }
-
-    // Try KV
+    // 1. Try KV first
     if (useKv) {
       try {
         const users = await kvGetJson<User[]>(USERS_KEY);
         if (Array.isArray(users) && users.length > 0) {
-          // Merge users from KV if not already in allUsers
-          for (const user of users) {
-            if (!allUsers.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
-              allUsers.push(user);
-            }
-          }
+          return users;
         }
       } catch (error) {
         console.error('Error reading KV:', error);
       }
     }
 
-    // Try Redis
+    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
       try {
@@ -266,53 +246,76 @@ export const db = {
         if (data) {
           const users = JSON.parse(data);
           if (Array.isArray(users) && users.length > 0) {
-            // Merge users from Redis if not already in allUsers
-            for (const user of users) {
-              if (!allUsers.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
-                allUsers.push(user);
-              }
-            }
+            return users;
           }
         }
       } catch (error) {
         console.error('Error reading Redis:', error);
       }
     }
+
+    // 3. Try File System last (and migrate to Redis/KV if found)
+    try {
+      if (fs.existsSync(USERS_FILE)) {
+        const data = await fs.promises.readFile(USERS_FILE, 'utf-8');
+        const users = JSON.parse(data);
+        if (Array.isArray(users) && users.length > 0) {
+          // Migration to Redis/KV
+          if (useKv) await kvSetJson(USERS_KEY, users);
+          if (redisClient) await redisClient.set(USERS_KEY, JSON.stringify(users));
+          console.log('Migrated users from files to Redis/KV');
+          return users;
+        }
+      }
+    } catch (error) {
+      console.error('Error reading users file:', error);
+    }
     
-    return allUsers;
+    return [];
   },
 
   getOrders: async (): Promise<Order[]> => {
-    try {
-      const data = await fs.promises.readFile(ORDERS_FILE, 'utf-8');
-      const orders = JSON.parse(data);
-      if (Array.isArray(orders)) {
-        return orders;
-      }
-    } catch (error) {
-      console.error('Error reading orders file:', error);
-    }
-
+    // 1. Try KV
     if (useKv) {
       const orders = await kvGetJson<Order[]>(ORDERS_KEY);
       if (Array.isArray(orders) && orders.length > 0) {
         return orders;
       }
     }
+
+    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      const data = await redisClient.get(ORDERS_KEY);
-      if (data) {
-        try {
+      try {
+        const data = await redisClient.get(ORDERS_KEY);
+        if (data) {
           const orders = JSON.parse(data);
           if (Array.isArray(orders) && orders.length > 0) {
             return orders;
           }
-        } catch (error) {
-          console.error('Error parsing orders from Redis:', error);
         }
+      } catch (error) {
+        console.error('Error reading Redis:', error);
       }
     }
+
+    // 3. Try File System (and migrate)
+    try {
+      if (fs.existsSync(ORDERS_FILE)) {
+        const data = await fs.promises.readFile(ORDERS_FILE, 'utf-8');
+        const orders = JSON.parse(data);
+        if (Array.isArray(orders) && orders.length > 0) {
+          // Migration
+          if (useKv) await kvSetJson(ORDERS_KEY, orders);
+          if (redisClient) await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
+          console.log('Migrated orders from files to Redis/KV');
+          return orders;
+        }
+      }
+    } catch (error) {
+      console.error('Error reading orders file:', error);
+    }
+
     return [];
   },
 
@@ -332,30 +335,32 @@ export const db = {
         users.push(user);
       }
 
-      // 1. Write to File System (Priority for local testing)
-      try {
-        await fs.promises.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
-      } catch (fileError) {
-        console.error("Error writing to users file:", fileError);
-      }
-
-      // 2. Write to KV (Priority for Vercel)
+      // 1. Write to KV (Priority for Vercel)
       if (useKv) {
         try {
           await kvSetJson(USERS_KEY, users);
+          console.log(`User ${user.email} saved to KV`);
         } catch (kvError) {
           console.error("Error writing users to KV:", kvError);
         }
       }
 
-      // 3. Write to Redis
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         try {
           await redisClient.set(USERS_KEY, JSON.stringify(users));
+          console.log(`User ${user.email} saved to Redis`);
         } catch (redisError) {
           console.error("Error writing users to Redis:", redisError);
         }
+      }
+
+      // 3. Write to File System (Optional/Background fallback)
+      try {
+        await fs.promises.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+      } catch (fileError) {
+        console.warn("Could not write users file (expected in production):", fileError);
       }
     } catch (error) {
       console.error('Error in createUser:', error);
@@ -367,15 +372,7 @@ export const db = {
       const orders = await db.getOrders();
       orders.push(order);
       
-      // Always write to File System first
-      try {
-        await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
-        console.log(`Order created in File System: ${order.id}`);
-      } catch (fileError) {
-        console.error('Error writing to orders file:', fileError);
-      }
-      
-      // Also write to KV/Redis if available
+      // 1. Write to KV
       if (useKv) {
         const saved = await kvSetJson(ORDERS_KEY, orders);
         if (saved) {
@@ -383,38 +380,46 @@ export const db = {
         }
       }
       
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
         console.log(`Order saved to Redis: ${order.id}`);
+      }
+
+      // 3. Write to File System (Optional/Background)
+      try {
+        await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
+        console.log(`Order saved to File System (fallback): ${order.id}`);
+      } catch (fileError) {
+        console.warn('Could not write orders file:', fileError);
       }
     } catch (error) {
       console.error('Error creating order:', error);
     }
   },
 
-
-
   deleteOrder: async (id: string): Promise<void> => {
     try {
       const orders = await db.getOrders();
       const filtered = orders.filter(o => o.id !== id);
       
-      // Always write to File System first
-      try {
-        await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(filtered, null, 2));
-        console.log(`Order deleted in File System: ${id}`);
-      } catch (fileError) {
-        console.error('Error writing to orders file:', fileError);
-      }
-      
-      // Also write to KV/Redis if available
+      // 1. Write to KV
       if (useKv) {
         await kvSetJson(ORDERS_KEY, filtered);
       }
+
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(ORDERS_KEY, JSON.stringify(filtered));
+      }
+
+      // 3. Write to File System (Optional)
+      try {
+        await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(filtered, null, 2));
+      } catch (fileError) {
+        console.warn('Could not write orders file:', fileError);
       }
     } catch (error) {
       console.error('Error deleting order:', error);
@@ -428,21 +433,22 @@ export const db = {
       if (index !== -1) {
         orders[index] = order;
         
-        // Always write to File System first
-        try {
-          await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
-          console.log(`Order updated in File System: ${order.id}`);
-        } catch (fileError) {
-          console.error('Error writing to orders file:', fileError);
-        }
-        
-        // Also write to KV/Redis if available
+        // 1. Write to KV
         if (useKv) {
           await kvSetJson(ORDERS_KEY, orders);
         }
+
+        // 2. Write to Redis
         const redisClient = await getRedisClient();
         if (redisClient) {
           await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
+        }
+
+        // 3. Write to File System (Optional)
+        try {
+          await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
+        } catch (fileError) {
+          console.warn('Could not write orders file:', fileError);
         }
       }
     } catch (error) {
@@ -461,54 +467,52 @@ export const db = {
 
   // Collections
   getCollections: async (): Promise<Collection[]> => {
-    let allCollections: Collection[] = [];
-    
-    // 1. Try File System first (Primary for development)
-    try {
-      if (fs.existsSync(COLLECTIONS_FILE)) {
-        const data = await fs.promises.readFile(COLLECTIONS_FILE, 'utf-8');
-        const collections = JSON.parse(data);
-        if (Array.isArray(collections)) {
-          allCollections = collections;
-        }
-      }
-    } catch (error) {
-      console.error('Error reading collections file:', error);
-    }
-
-    // 2. Try KV
+    // 1. Try KV first (Priority for Vercel/Production)
     if (useKv) {
       try {
         const collections = await kvGetJson<Collection[]>(COLLECTIONS_KEY);
         if (Array.isArray(collections) && collections.length > 0) {
-          // Merge or replace depending on logic, but for collections we usually want to sync
-          // If local is empty, use KV
-          if (allCollections.length === 0) {
-            allCollections = collections;
-          }
+          return collections;
         }
       } catch (error) {
         console.error('Error reading KV:', error);
       }
     }
 
-    // 3. Try Redis
+    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
       try {
         const data = await redisClient.get(COLLECTIONS_KEY);
         if (data) {
           const collections = JSON.parse(data);
-          if (Array.isArray(collections) && collections.length > 0 && allCollections.length === 0) {
-            allCollections = collections;
+          if (Array.isArray(collections) && collections.length > 0) {
+            return collections;
           }
         }
       } catch (error) {
         console.error('Error reading Redis:', error);
       }
     }
+
+    // 3. Try File System last (Fallback for development or initial state)
+    try {
+      if (fs.existsSync(COLLECTIONS_FILE)) {
+        const data = await fs.promises.readFile(COLLECTIONS_FILE, 'utf-8');
+        const collections = JSON.parse(data);
+        if (Array.isArray(collections) && collections.length > 0) {
+          // Migration to Redis/KV
+          if (useKv) await kvSetJson(COLLECTIONS_KEY, collections);
+          if (redisClient) await redisClient.set(COLLECTIONS_KEY, JSON.stringify(collections));
+          console.log('Migrated collections from files to Redis/KV');
+          return collections;
+        }
+      }
+    } catch (error) {
+      console.error('Error reading collections file:', error);
+    }
     
-    return allCollections;
+    return [];
   },
 
   saveCollection: async (collection: Collection): Promise<void> => {
@@ -530,22 +534,22 @@ export const db = {
 
   saveCollections: async (collections: Collection[]): Promise<void> => {
     try {
-      // 1. Write to File System (Priority for development)
-      try {
-        await fs.promises.writeFile(COLLECTIONS_FILE, JSON.stringify(collections, null, 2));
-      } catch (fileError) {
-        console.error("Error writing collections file:", fileError);
-      }
-
-      // 2. Write to KV
+      // 1. Write to KV
       if (useKv) {
         await kvSetJson(COLLECTIONS_KEY, collections);
       }
 
-      // 3. Write to Redis
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(COLLECTIONS_KEY, JSON.stringify(collections));
+      }
+
+      // 3. Write to File System (Optional/Background)
+      try {
+        await fs.promises.writeFile(COLLECTIONS_FILE, JSON.stringify(collections, null, 2));
+      } catch (fileError) {
+        console.warn("Could not write collections file (expected in production):", fileError);
       }
     } catch (error) {
       console.error('Error saving collections:', error);
@@ -564,42 +568,27 @@ export const db = {
 
   // Products
   getProducts: async (): Promise<Product[]> => {
-    let allProducts: Product[] = [];
-
-    // 1. Try File System first
-    try {
-      if (fs.existsSync(PRODUCTS_FILE)) {
-        const data = await fs.promises.readFile(PRODUCTS_FILE, 'utf-8');
-        const products = JSON.parse(data);
-        if (Array.isArray(products)) {
-          allProducts = products;
-        }
-      }
-    } catch (error) {
-      console.error('Error reading products file:', error);
-    }
-
-    // 2. Try KV
+    // 1. Try KV first
     if (useKv) {
       try {
         const products = await kvGetJson<Product[]>(PRODUCTS_KEY);
-        if (Array.isArray(products) && products.length > 0 && allProducts.length === 0) {
-          allProducts = products;
+        if (Array.isArray(products) && products.length > 0) {
+          return products;
         }
       } catch (error) {
         console.error('Error reading KV:', error);
       }
     }
 
-    // 3. Try Redis
+    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
       try {
         const data = await redisClient.get(PRODUCTS_KEY);
         if (data) {
           const products = JSON.parse(data);
-          if (Array.isArray(products) && products.length > 0 && allProducts.length === 0) {
-            allProducts = products;
+          if (Array.isArray(products) && products.length > 0) {
+            return products;
           }
         }
       } catch (error) {
@@ -607,27 +596,44 @@ export const db = {
       }
     }
 
-    return allProducts;
+    // 3. Try File System last (and migrate)
+    try {
+      if (fs.existsSync(PRODUCTS_FILE)) {
+        const data = await fs.promises.readFile(PRODUCTS_FILE, 'utf-8');
+        const products = JSON.parse(data);
+        if (Array.isArray(products) && products.length > 0) {
+          // Migration to Redis/KV
+          if (useKv) await kvSetJson(PRODUCTS_KEY, products);
+          if (redisClient) await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
+          console.log('Migrated products from files to Redis/KV');
+          return products;
+        }
+      }
+    } catch (error) {
+      console.error('Error reading products file:', error);
+    }
+
+    return [];
   },
 
   saveProducts: async (products: Product[]): Promise<void> => {
     try {
-      // 1. Write to File System
-      try {
-        await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
-      } catch (fileError) {
-        console.error("Error writing products file:", fileError);
-      }
-
-      // 2. Write to KV
+      // 1. Write to KV
       if (useKv) {
         await kvSetJson(PRODUCTS_KEY, products);
       }
 
-      // 3. Write to Redis
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
+      }
+
+      // 3. Write to File System (Optional)
+      try {
+        await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
+      } catch (fileError) {
+        console.warn("Could not write products file:", fileError);
       }
     } catch (error) { 
       console.error('Error saving products:', error);
@@ -655,16 +661,21 @@ export const db = {
       const products = await db.getProducts();
       const filtered = products.filter(p => p.id !== id);
 
+      // 1. Write to KV
       if (useKv) {
-        const saved = await kvSetJson(PRODUCTS_KEY, filtered);
-        if (saved) return;
+        await kvSetJson(PRODUCTS_KEY, filtered);
       }
+
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(PRODUCTS_KEY, JSON.stringify(filtered));
-        return;
       }
-      await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(filtered, null, 2));
+      
+      // 3. Write to File System (Optional)
+      try {
+        await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(filtered, null, 2));
+      } catch (e) {}
     } catch (error) {
       console.error('Error deleting product:', error);
     }
@@ -672,45 +683,49 @@ export const db = {
 
   // Projects
   getProjects: async (): Promise<Project[]> => {
-    // 1. Try File System first (most reliable on VPS/local)
-    try {
-      if (fs.existsSync(PROJECTS_FILE)) {
-        const data = await fs.promises.readFile(PROJECTS_FILE, 'utf-8');
-        const projects = JSON.parse(data);
-        if (Array.isArray(projects)) {
-          return projects;
-        }
-      }
-    } catch (error) {
-      console.error('Error reading projects file:', error);
-    }
-
-    // 2. Try KV (Vercel/Cloudflare/Upstash)
+    // 1. Try KV first
     if (useKv) {
       try {
         const projects = await kvGetJson<Project[]>(PROJECTS_KEY);
-        if (Array.isArray(projects)) {
-          return projects;
+        if (Array.isArray(projects) && projects.length > 0) {
+          return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
         }
       } catch (error) {
         console.error('Error reading KV:', error);
       }
     }
 
-    // 3. Try Redis
+    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
       try {
         const data = await redisClient.get(PROJECTS_KEY);
         if (data) {
           const projects = JSON.parse(data);
-          if (Array.isArray(projects)) {
-            return projects;
+          if (Array.isArray(projects) && projects.length > 0) {
+            return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
           }
         }
       } catch (error) {
         console.error('Error reading Redis:', error);
       }
+    }
+
+    // 3. Try File System last (and migrate)
+    try {
+      if (fs.existsSync(PROJECTS_FILE)) {
+        const data = await fs.promises.readFile(PROJECTS_FILE, 'utf-8');
+        const projects = JSON.parse(data);
+        if (Array.isArray(projects) && projects.length > 0) {
+          // Migration
+          if (useKv) await kvSetJson(PROJECTS_KEY, projects);
+          if (redisClient) await redisClient.set(PROJECTS_KEY, JSON.stringify(projects));
+          console.log('Migrated projects from files to Redis/KV');
+          return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
+        }
+      }
+    } catch (error) {
+      console.error('Error reading projects file:', error);
     }
 
     return [];
@@ -738,22 +753,22 @@ export const db = {
 
   saveProjects: async (projects: Project[]): Promise<void> => {
     try {
-      // 1. Write to File System (Priority for development)
-      try {
-        await fs.promises.writeFile(PROJECTS_FILE, JSON.stringify(projects, null, 2));
-      } catch (fileError) {
-        console.error("Error writing projects file:", fileError);
-      }
-
-      // 2. Write to KV
+      // 1. Write to KV
       if (useKv) {
         await kvSetJson(PROJECTS_KEY, projects);
       }
 
-      // 3. Write to Redis
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(PROJECTS_KEY, JSON.stringify(projects));
+      }
+
+      // 3. Write to File System (Optional/Background)
+      try {
+        await fs.promises.writeFile(PROJECTS_FILE, JSON.stringify(projects, null, 2));
+      } catch (fileError) {
+        console.warn("Could not write projects file:", fileError);
       }
     } catch (error) {
       console.error('Error saving projects:', error);
@@ -772,33 +787,47 @@ export const db = {
 
   // Filters
   getFilters: async (): Promise<Filter[]> => {
+    // 1. Try KV
     if (useKv) {
       const filters = await kvGetJson<Filter[]>(FILTERS_KEY);
       if (Array.isArray(filters) && filters.length > 0) {
         return filters;
       }
     }
+
+    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      const data = await redisClient.get(FILTERS_KEY);
-      if (data) {
-        try {
+      try {
+        const data = await redisClient.get(FILTERS_KEY);
+        if (data) {
           const filters = JSON.parse(data);
           if (Array.isArray(filters) && filters.length > 0) {
             return filters;
           }
-        } catch (error) {
-          console.error('Error parsing filters from Redis:', error);
         }
+      } catch (error) {
+        console.error('Error reading Redis:', error);
       }
     }
+
+    // 3. Try File System (and migrate)
     try {
-      const data = await fs.promises.readFile(FILTERS_FILE, 'utf-8');
-      return JSON.parse(data);
+      if (fs.existsSync(FILTERS_FILE)) {
+        const data = await fs.promises.readFile(FILTERS_FILE, 'utf-8');
+        const filters = JSON.parse(data);
+        if (Array.isArray(filters) && filters.length > 0) {
+          // Migration
+          if (useKv) await kvSetJson(FILTERS_KEY, filters);
+          if (redisClient) await redisClient.set(FILTERS_KEY, JSON.stringify(filters));
+          console.log('Migrated filters from files to Redis/KV');
+          return filters;
+        }
+      }
     } catch (error) {
       console.error('Error reading filters file:', error);
-      return [];
     }
+    return [];
   },
 
   saveFilter: async (filter: Filter): Promise<void> => {
@@ -812,16 +841,19 @@ export const db = {
         filters.push(filter);
       }
 
+      // Priority write: KV -> Redis -> File System
       if (useKv) {
-        const saved = await kvSetJson(FILTERS_KEY, filters);
-        if (saved) return;
+        await kvSetJson(FILTERS_KEY, filters);
       }
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(FILTERS_KEY, JSON.stringify(filters));
-        return;
       }
-      await fs.promises.writeFile(FILTERS_FILE, JSON.stringify(filters, null, 2));
+      
+      // Optional write
+      try {
+        await fs.promises.writeFile(FILTERS_FILE, JSON.stringify(filters, null, 2));
+      } catch (e) {}
     } catch (error) {
       console.error('Error saving filter:', error);
     }
@@ -832,16 +864,21 @@ export const db = {
       const filters = await db.getFilters();
       const filtered = filters.filter(f => f.id !== id);
 
+      // 1. Write to KV
       if (useKv) {
-        const saved = await kvSetJson(FILTERS_KEY, filtered);
-        if (saved) return;
+        await kvSetJson(FILTERS_KEY, filtered);
       }
+
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(FILTERS_KEY, JSON.stringify(filtered));
-        return;
       }
-      await fs.promises.writeFile(FILTERS_FILE, JSON.stringify(filtered, null, 2));
+      
+      // 3. Optional write
+      try {
+        await fs.promises.writeFile(FILTERS_FILE, JSON.stringify(filtered, null, 2));
+      } catch (e) {}
     } catch (error) {
       console.error('Error deleting filter:', error);
     }
@@ -849,34 +886,47 @@ export const db = {
 
   // Transactions
   getTransactions: async (): Promise<Transaction[]> => {
+    // 1. Try KV
     if (useKv) {
       const transactions = await kvGetJson<Transaction[]>(TRANSACTIONS_KEY);
       if (Array.isArray(transactions) && transactions.length > 0) {
         return transactions;
       }
     }
+
+    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      const data = await redisClient.get(TRANSACTIONS_KEY);
-      if (data) {
-        try {
+      try {
+        const data = await redisClient.get(TRANSACTIONS_KEY);
+        if (data) {
           const transactions = JSON.parse(data);
           if (Array.isArray(transactions) && transactions.length > 0) {
             return transactions;
           }
-        } catch (error) {
-          console.error('Error parsing transactions from Redis:', error);
         }
+      } catch (error) {
+        console.error('Error reading Redis:', error);
       }
     }
+
+    // 3. Try File System (and migrate)
     try {
-      const data = await fs.promises.readFile(TRANSACTIONS_FILE, 'utf-8');
-      return JSON.parse(data);
+      if (fs.existsSync(TRANSACTIONS_FILE)) {
+        const data = await fs.promises.readFile(TRANSACTIONS_FILE, 'utf-8');
+        const transactions = JSON.parse(data);
+        if (Array.isArray(transactions) && transactions.length > 0) {
+          // Migration
+          if (useKv) await kvSetJson(TRANSACTIONS_KEY, transactions);
+          if (redisClient) await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
+          console.log('Migrated transactions from files to Redis/KV');
+          return transactions;
+        }
+      }
     } catch (error) {
-      // If file doesn't exist yet (first run), return empty
       console.error('Error reading transactions file:', error);
-      return [];
     }
+    return [];
   },
 
   createTransaction: async (transaction: Transaction): Promise<void> => {
@@ -884,16 +934,21 @@ export const db = {
       const transactions = await db.getTransactions();
       transactions.push(transaction);
 
+      // 1. Write to KV
       if (useKv) {
-        const saved = await kvSetJson(TRANSACTIONS_KEY, transactions);
-        if (saved) return;
+        await kvSetJson(TRANSACTIONS_KEY, transactions);
       }
+
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
-        return;
       }
-      await fs.promises.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2));
+      
+      // 3. Optional write
+      try {
+        await fs.promises.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2));
+      } catch (e) {}
     } catch (error) {
       console.error('Error creating transaction:', error);
     }
@@ -907,16 +962,21 @@ export const db = {
       if (index >= 0) {
         transactions[index] = transaction;
         
+        // 1. Write to KV
         if (useKv) {
-          const saved = await kvSetJson(TRANSACTIONS_KEY, transactions);
-          if (saved) return;
+          await kvSetJson(TRANSACTIONS_KEY, transactions);
         }
+
+        // 2. Write to Redis
         const redisClient = await getRedisClient();
         if (redisClient) {
           await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
-          return;
         }
-        await fs.promises.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2));
+        
+        // 3. Optional write
+        try {
+          await fs.promises.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2));
+        } catch (e) {}
       }
     } catch (error) {
       console.error('Error updating transaction:', error);
@@ -925,47 +985,66 @@ export const db = {
 
   // Gifts
   getGifts: async (): Promise<Gift[]> => {
+    // 1. Try KV
     if (useKv) {
       const gifts = await kvGetJson<Gift[]>(GIFTS_KEY);
       if (Array.isArray(gifts) && gifts.length > 0) {
         return gifts;
       }
     }
+
+    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      const data = await redisClient.get(GIFTS_KEY);
-      if (data) {
-        try {
+      try {
+        const data = await redisClient.get(GIFTS_KEY);
+        if (data) {
           const gifts = JSON.parse(data);
           if (Array.isArray(gifts) && gifts.length > 0) {
             return gifts;
           }
-        } catch (error) {
-          console.error('Error parsing gifts from Redis:', error);
         }
+      } catch (error) {
+        console.error('Error reading Redis:', error);
       }
     }
+
+    // 3. Try File System (and migrate)
     try {
-      const data = await fs.promises.readFile(GIFTS_FILE, 'utf-8');
-      return JSON.parse(data);
+      if (fs.existsSync(GIFTS_FILE)) {
+        const data = await fs.promises.readFile(GIFTS_FILE, 'utf-8');
+        const gifts = JSON.parse(data);
+        if (Array.isArray(gifts) && gifts.length > 0) {
+          // Migration
+          if (useKv) await kvSetJson(GIFTS_KEY, gifts);
+          if (redisClient) await redisClient.set(GIFTS_KEY, JSON.stringify(gifts));
+          console.log('Migrated gifts from files to Redis/KV');
+          return gifts;
+        }
+      }
     } catch (error) {
       console.error('Error reading gifts file:', error);
-      return [];
     }
+    return [];
   },
 
   saveGifts: async (gifts: Gift[]): Promise<void> => {
     try {
+      // 1. Write to KV
       if (useKv) {
-        const saved = await kvSetJson(GIFTS_KEY, gifts);
-        if (saved) return;
+        await kvSetJson(GIFTS_KEY, gifts);
       }
+
+      // 2. Write to Redis
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(GIFTS_KEY, JSON.stringify(gifts));
-        return;
       }
-      await fs.promises.writeFile(GIFTS_FILE, JSON.stringify(gifts, null, 2));
+      
+      // 3. Optional write
+      try {
+        await fs.promises.writeFile(GIFTS_FILE, JSON.stringify(gifts, null, 2));
+      } catch (e) {}
     } catch (error) {
       console.error('Error saving gifts:', error);
     }
