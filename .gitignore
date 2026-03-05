@@ -60,9 +60,6 @@ next-env.d.ts
 /font
 /logo
 # Dynamic/Sensitive data
-/data/users.json
-/data/orders.json
-/data/transactions.json
+/data/*.json
+/data/
 
-# Other data is included by default unless explicitly ignored above
-# (we removed the broad /data ignore)
