@@ -59,7 +59,7 @@ next-env.d.ts
 /foto
 /font
 /logo
-# Dynamic/Sensitive data
-/data/*.json
-/data/
+# Dynamic/Sensitive data (temporarily unignored for migration)
+# /data/*.json
+# /data/
 
