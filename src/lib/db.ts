@@ -727,6 +727,9 @@ export const db = {
         projects.push(project);
       }
 
+      // Sort by order
+      projects.sort((a, b) => a.order - b.order);
+
       await db.saveProjects(projects);
     } catch (error) {
       console.error('Error saving project:', error);
@@ -920,43 +923,6 @@ export const db = {
     }
   },
 
-  saveProject: async (project: Project): Promise<void> => {
-    try {
-      const projects = await db.getProjects();
-      const index = projects.findIndex(p => p.id === project.id);
-      
-      if (index >= 0) {
-        projects[index] = project;
-      } else {
-        projects.push(project);
-      }
-
-      // Sort by order
-      projects.sort((a, b) => a.order - b.order);
-
-      await db.saveProjects(projects);
-    } catch (error) {
-      console.error('Error saving project:', error);
-    }
-  },
-
-  saveProjects: async (projects: Project[]): Promise<void> => {
-    try {
-      if (useKv) {
-        const saved = await kvSetJson(PROJECTS_KEY, projects);
-        if (saved) return;
-      }
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(PROJECTS_KEY, JSON.stringify(projects));
-        return;
-      }
-      await fs.promises.writeFile(PROJECTS_FILE, JSON.stringify(projects, null, 2));
-    } catch (error) {
-      console.error('Error saving projects:', error);
-    }
-  },
-
   // Gifts
   getGifts: async (): Promise<Gift[]> => {
     if (useKv) {
@@ -1002,26 +968,6 @@ export const db = {
       await fs.promises.writeFile(GIFTS_FILE, JSON.stringify(gifts, null, 2));
     } catch (error) {
       console.error('Error saving gifts:', error);
-    }
-  },
-
-  deleteProject: async (id: string): Promise<void> => {
-    try {
-      const projects = await db.getProjects();
-      const filtered = projects.filter(p => p.id !== id);
-
-      if (useKv) {
-        const saved = await kvSetJson(PROJECTS_KEY, filtered);
-        if (saved) return;
-      }
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(PROJECTS_KEY, JSON.stringify(filtered));
-        return;
-      }
-      await fs.promises.writeFile(PROJECTS_FILE, JSON.stringify(filtered, null, 2));
-    } catch (error) {
-      console.error('Error deleting project:', error);
     }
   }
 };
