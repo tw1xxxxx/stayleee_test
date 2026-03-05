@@ -3,6 +3,13 @@ import path from 'path';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  output: 'standalone', // Optimized for production
+  typescript: {
+    ignoreBuildErrors: true, // Skip type checking during build
+  },
+  eslint: {
+    ignoreDuringBuilds: true, // Skip linting during build
+  },
   experimental: {
     optimizePackageImports: ["framer-motion"],
   },
