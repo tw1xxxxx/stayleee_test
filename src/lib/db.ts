@@ -467,11 +467,13 @@ export const db = {
 
   // Collections
   getCollections: async (): Promise<Collection[]> => {
-    // 1. Try KV first (Priority for Vercel/Production)
+    console.log('getCollections called');
+    // 1. Try KV first
     if (useKv) {
       try {
         const collections = await kvGetJson<Collection[]>(COLLECTIONS_KEY);
         if (Array.isArray(collections) && collections.length > 0) {
+          console.log('Got collections from KV');
           return collections;
         }
       } catch (error) {
@@ -487,6 +489,7 @@ export const db = {
         if (data) {
           const collections = JSON.parse(data);
           if (Array.isArray(collections) && collections.length > 0) {
+            console.log('Got collections from Redis');
             return collections;
           }
         }
@@ -495,7 +498,7 @@ export const db = {
       }
     }
 
-    // 3. Try File System last (Fallback for development or initial state)
+    // 3. Try File System last (and migrate)
     try {
       if (fs.existsSync(COLLECTIONS_FILE)) {
         const data = await fs.promises.readFile(COLLECTIONS_FILE, 'utf-8');
@@ -511,7 +514,7 @@ export const db = {
     } catch (error) {
       console.error('Error reading collections file:', error);
     }
-    
+
     return [];
   },
 
@@ -568,13 +571,16 @@ export const db = {
 
   // Products
   getProducts: async (): Promise<Product[]> => {
+    console.log('getProducts called, useKv:', useKv, 'useRedis:', useRedis);
     // 1. Try KV first
     if (useKv) {
       try {
         const products = await kvGetJson<Product[]>(PRODUCTS_KEY);
         if (Array.isArray(products) && products.length > 0) {
+          console.log('Got products from KV, count:', products.length);
           return products;
         }
+        console.log('KV products empty or not found');
       } catch (error) {
         console.error('Error reading KV:', error);
       }
@@ -588,8 +594,12 @@ export const db = {
         if (data) {
           const products = JSON.parse(data);
           if (Array.isArray(products) && products.length > 0) {
+            console.log('Got products from Redis, count:', products.length);
             return products;
           }
+          console.log('Redis products empty or invalid');
+        } else {
+          console.log('Redis products key not found');
         }
       } catch (error) {
         console.error('Error reading Redis:', error);
@@ -598,21 +608,31 @@ export const db = {
 
     // 3. Try File System last (and migrate)
     try {
+      console.log('Trying File System at:', PRODUCTS_FILE);
       if (fs.existsSync(PRODUCTS_FILE)) {
         const data = await fs.promises.readFile(PRODUCTS_FILE, 'utf-8');
         const products = JSON.parse(data);
+        console.log('Read products from file, count:', products.length);
         if (Array.isArray(products) && products.length > 0) {
           // Migration to Redis/KV
-          if (useKv) await kvSetJson(PRODUCTS_KEY, products);
-          if (redisClient) await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
-          console.log('Migrated products from files to Redis/KV');
+          if (useKv) {
+            await kvSetJson(PRODUCTS_KEY, products);
+            console.log('Migrated products to KV');
+          }
+          if (redisClient) {
+            await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
+            console.log('Migrated products to Redis');
+          }
           return products;
         }
+      } else {
+        console.log('Products file not found at:', PRODUCTS_FILE);
       }
     } catch (error) {
       console.error('Error reading products file:', error);
     }
 
+    console.log('No products found in any storage');
     return [];
   },
 
@@ -787,11 +807,17 @@ export const db = {
 
   // Filters
   getFilters: async (): Promise<Filter[]> => {
-    // 1. Try KV
+    console.log('getFilters called');
+    // 1. Try KV first
     if (useKv) {
-      const filters = await kvGetJson<Filter[]>(FILTERS_KEY);
-      if (Array.isArray(filters) && filters.length > 0) {
-        return filters;
+      try {
+        const filters = await kvGetJson<Filter[]>(FILTERS_KEY);
+        if (Array.isArray(filters) && filters.length > 0) {
+          console.log('Got filters from KV');
+          return filters;
+        }
+      } catch (error) {
+        console.error('Error reading KV:', error);
       }
     }
 
@@ -803,6 +829,7 @@ export const db = {
         if (data) {
           const filters = JSON.parse(data);
           if (Array.isArray(filters) && filters.length > 0) {
+            console.log('Got filters from Redis');
             return filters;
           }
         }
@@ -811,13 +838,13 @@ export const db = {
       }
     }
 
-    // 3. Try File System (and migrate)
+    // 3. Try File System last (and migrate)
     try {
       if (fs.existsSync(FILTERS_FILE)) {
         const data = await fs.promises.readFile(FILTERS_FILE, 'utf-8');
         const filters = JSON.parse(data);
         if (Array.isArray(filters) && filters.length > 0) {
-          // Migration
+          // Migration to Redis/KV
           if (useKv) await kvSetJson(FILTERS_KEY, filters);
           if (redisClient) await redisClient.set(FILTERS_KEY, JSON.stringify(filters));
           console.log('Migrated filters from files to Redis/KV');
@@ -827,6 +854,7 @@ export const db = {
     } catch (error) {
       console.error('Error reading filters file:', error);
     }
+
     return [];
   },
 
