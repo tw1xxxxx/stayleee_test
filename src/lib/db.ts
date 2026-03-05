@@ -47,15 +47,47 @@ export const getRedisClient = async (): Promise<RedisClient | null> => {
   if (!useRedis || !redisUrl) {
     return null;
   }
-  if (!redisClientPromise) {
-    const client = createClient({ url: redisUrl });
-    redisClientPromise = client.connect()
-      .then(() => client)
-      .catch((error) => {
-        console.error('Error connecting Redis:', error);
-        return null;
-      });
+  
+  // If we already have a promise, return it
+  if (redisClientPromise) {
+    return redisClientPromise;
   }
+
+  // Create a new promise for the client
+  redisClientPromise = (async () => {
+    try {
+      console.log('Connecting to Redis:', redisUrl.replace(/:[^:@]+@/, ':***@'));
+      const client = createClient({ 
+        url: redisUrl,
+        socket: {
+          connectTimeout: 3000, // Short timeout for local dev
+          reconnectStrategy: (retries) => {
+            if (retries > 2) {
+              console.log('Redis reconnect failed, falling back to local files');
+              return false;
+            }
+            return 1000;
+          }
+        }
+      });
+      
+      client.on('error', (err) => {
+        // Only log if it's not a socket closed error to avoid spam
+        if (!err.message.includes('Socket closed')) {
+          console.error('Redis Client Error:', err.message);
+        }
+      });
+      
+      await client.connect();
+      console.log('Redis connected successfully');
+      return client;
+    } catch (error: any) {
+      console.warn('Redis connection failed:', error.message, '- Using local files as fallback');
+      redisClientPromise = null; // Allow retry on next call if needed
+      return null;
+    }
+  })();
+
   return redisClientPromise;
 };
 
@@ -255,7 +287,6 @@ export const db = {
     }
 
     // 3. Try File System last (and migrate to Redis/KV if found)
-    /*
     try {
       if (fs.existsSync(USERS_FILE)) {
         const data = await fs.promises.readFile(USERS_FILE, 'utf-8');
@@ -263,7 +294,8 @@ export const db = {
         if (Array.isArray(users) && users.length > 0) {
           // Migration to Redis/KV
           if (useKv) await kvSetJson(USERS_KEY, users);
-          if (redisClient) await redisClient.set(USERS_KEY, JSON.stringify(users));
+          const redisClientForMigration = await getRedisClient();
+          if (redisClientForMigration) await redisClientForMigration.set(USERS_KEY, JSON.stringify(users));
           console.log('Migrated users from files to Redis/KV');
           return users;
         }
@@ -271,7 +303,6 @@ export const db = {
     } catch (error) {
       console.error('Error reading users file:', error);
     }
-    */
     
     return [];
   },
@@ -302,7 +333,6 @@ export const db = {
     }
 
     // 3. Try File System (and migrate)
-    /*
     try {
       if (fs.existsSync(ORDERS_FILE)) {
         const data = await fs.promises.readFile(ORDERS_FILE, 'utf-8');
@@ -310,7 +340,8 @@ export const db = {
         if (Array.isArray(orders) && orders.length > 0) {
           // Migration
           if (useKv) await kvSetJson(ORDERS_KEY, orders);
-          if (redisClient) await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
+          const redisClientForMigration = await getRedisClient();
+          if (redisClientForMigration) await redisClientForMigration.set(ORDERS_KEY, JSON.stringify(orders));
           console.log('Migrated orders from files to Redis/KV');
           return orders;
         }
@@ -318,7 +349,6 @@ export const db = {
     } catch (error) {
       console.error('Error reading orders file:', error);
     }
-    */
 
     return [];
   },
@@ -511,7 +541,6 @@ export const db = {
     }
 
     // 3. Try File System last (and migrate)
-    /*
     try {
       if (fs.existsSync(COLLECTIONS_FILE)) {
         const data = await fs.promises.readFile(COLLECTIONS_FILE, 'utf-8');
@@ -519,7 +548,8 @@ export const db = {
         if (Array.isArray(collections) && collections.length > 0) {
           // Migration to Redis/KV
           if (useKv) await kvSetJson(COLLECTIONS_KEY, collections);
-          if (redisClient) await redisClient.set(COLLECTIONS_KEY, JSON.stringify(collections));
+          const redisClientForMigration = await getRedisClient();
+          if (redisClientForMigration) await redisClientForMigration.set(COLLECTIONS_KEY, JSON.stringify(collections));
           console.log('Migrated collections from files to Redis/KV');
           return collections;
         }
@@ -527,7 +557,6 @@ export const db = {
     } catch (error) {
       console.error('Error reading collections file:', error);
     }
-    */
 
     return [];
   },
@@ -623,7 +652,6 @@ export const db = {
     }
 
     // 3. Try File System last (and migrate)
-    /*
     try {
       console.log('Trying File System at:', PRODUCTS_FILE);
       if (fs.existsSync(PRODUCTS_FILE)) {
@@ -636,8 +664,9 @@ export const db = {
             await kvSetJson(PRODUCTS_KEY, products);
             console.log('Migrated products to KV');
           }
-          if (redisClient) {
-            await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
+          const redisClientForMigration = await getRedisClient();
+          if (redisClientForMigration) {
+            await redisClientForMigration.set(PRODUCTS_KEY, JSON.stringify(products));
             console.log('Migrated products to Redis');
           }
           return products;
@@ -648,7 +677,6 @@ export const db = {
     } catch (error) {
       console.error('Error reading products file:', error);
     }
-    */
 
     console.log('No products found in any storage');
     return [];
@@ -754,7 +782,6 @@ export const db = {
     }
 
     // 3. Try File System last (and migrate)
-    /*
     try {
       if (fs.existsSync(PROJECTS_FILE)) {
         const data = await fs.promises.readFile(PROJECTS_FILE, 'utf-8');
@@ -762,7 +789,8 @@ export const db = {
         if (Array.isArray(projects) && projects.length > 0) {
           // Migration
           if (useKv) await kvSetJson(PROJECTS_KEY, projects);
-          if (redisClient) await redisClient.set(PROJECTS_KEY, JSON.stringify(projects));
+          const redisClientForMigration = await getRedisClient();
+          if (redisClientForMigration) await redisClientForMigration.set(PROJECTS_KEY, JSON.stringify(projects));
           console.log('Migrated projects from files to Redis/KV');
           return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
         }
@@ -770,7 +798,6 @@ export const db = {
     } catch (error) {
       console.error('Error reading projects file:', error);
     }
-    */
 
     return [];
   },
