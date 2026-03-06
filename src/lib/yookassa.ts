@@ -1,40 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
 const YOOKASSA_API_URL = 'https://api.yookassa.ru/v3';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Manually load .env if not loaded by Next.js
-// Try both the relative path and process.cwd()
-const loadEnv = () => {
-    const rootPath = process.cwd();
-    const possibleEnvPaths = [
-        path.join(rootPath, '.env'),
-        path.join(__dirname, '../../.env')
-    ];
-
-    for (const envPath of possibleEnvPaths) {
-        if (fs.existsSync(envPath)) {
-            const envContent = fs.readFileSync(envPath, 'utf-8');
-            envContent.split('\n').forEach(line => {
-                const [key, ...value] = line.split('=');
-                if (key && value.length > 0) {
-                    const trimmedKey = key.trim();
-                    if (!process.env[trimmedKey]) {
-                        process.env[trimmedKey] = value.join('=').trim();
-                    }
-                }
-            });
-            break;
-        }
-    }
-};
-
-loadEnv();
 
 const getShopId = () => process.env.YOOKASSA_SHOP_ID;
 const getSecretKey = () => process.env.YOOKASSA_SECRET_KEY;

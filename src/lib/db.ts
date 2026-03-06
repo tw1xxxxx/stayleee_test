@@ -1,31 +1,5 @@
-
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 import { createClient } from 'redis';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const DATA_DIR = join(process.cwd(), 'data');
-
-// Ensure data directory exists
-try {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-} catch (e) {
-  console.warn('Could not create data directory, using in-memory only if KV/Redis not available:', e);
-}
-
-const USERS_FILE = join(DATA_DIR, 'users.json');
-const ORDERS_FILE = join(DATA_DIR, 'orders.json');
-const COLLECTIONS_FILE = join(DATA_DIR, 'collections.json');
-const PRODUCTS_FILE = join(DATA_DIR, 'products.json');
-const FILTERS_FILE = join(DATA_DIR, 'filters.json');
-const PROJECTS_FILE = join(DATA_DIR, 'projects.json');
-const GIFTS_FILE = join(DATA_DIR, 'gifts.json');
-const TRANSACTIONS_FILE = join(DATA_DIR, 'transactions.json');
 const USERS_KEY = 'users';
 const ORDERS_KEY = 'orders';
 const COLLECTIONS_KEY = 'collections';
@@ -34,6 +8,7 @@ const FILTERS_KEY = 'filters';
 const PROJECTS_KEY = 'projects';
 const GIFTS_KEY = 'gifts';
 const TRANSACTIONS_KEY = 'transactions';
+
 const kvBaseUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const useKv = !!kvBaseUrl && !!kvToken;
@@ -48,31 +23,28 @@ export const getRedisClient = async (): Promise<RedisClient | null> => {
     return null;
   }
   
-  // If we already have a promise, return it
   if (redisClientPromise) {
     return redisClientPromise;
   }
 
-  // Create a new promise for the client
   redisClientPromise = (async () => {
     try {
       console.log('Connecting to Redis:', redisUrl.replace(/:[^:@]+@/, ':***@'));
       const client = createClient({ 
         url: redisUrl,
         socket: {
-          connectTimeout: 3000, // Short timeout for local dev
+          connectTimeout: 5000,
           reconnectStrategy: (retries) => {
-            if (retries > 2) {
-              console.log('Redis reconnect failed, falling back to local files');
+            if (retries > 5) {
+              console.error('Redis reconnect failed');
               return false;
             }
-            return 1000;
+            return Math.min(retries * 500, 2000);
           }
         }
       });
       
       client.on('error', (err) => {
-        // Only log if it's not a socket closed error to avoid spam
         if (!err.message.includes('Socket closed')) {
           console.error('Redis Client Error:', err.message);
         }
@@ -82,8 +54,8 @@ export const getRedisClient = async (): Promise<RedisClient | null> => {
       console.log('Redis connected successfully');
       return client;
     } catch (error: any) {
-      console.warn('Redis connection failed:', error.message, '- Using local files as fallback');
-      redisClientPromise = null; // Allow retry on next call if needed
+      console.warn('Redis connection failed:', error.message);
+      redisClientPromise = null;
       return null;
     }
   })();
@@ -176,7 +148,6 @@ export interface Transaction {
   type: 'payment';
 }
 
-
 export interface ProductColor {
   name: string;
   value: string;
@@ -254,247 +225,79 @@ export interface Gift {
   price: number;
 }
 
-
-
 export const db = {
   getUsers: async (): Promise<User[]> => {
-    // 1. Try KV first
     if (useKv) {
-      try {
-        const users = await kvGetJson<User[]>(USERS_KEY);
-        if (Array.isArray(users) && users.length > 0) {
-          return users;
-        }
-      } catch (error) {
-        console.error('Error reading KV:', error);
-      }
+      const users = await kvGetJson<User[]>(USERS_KEY);
+      if (Array.isArray(users)) return users;
     }
-
-    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      try {
-        const data = await redisClient.get(USERS_KEY);
-        if (data) {
-          const users = JSON.parse(data);
-          if (Array.isArray(users) && users.length > 0) {
-            return users;
-          }
-        }
-      } catch (error) {
-        console.error('Error reading Redis:', error);
-      }
-    }
-
-    // 3. Try File System last (and migrate to Redis/KV if found)
-    try {
-      if (fs.existsSync(USERS_FILE)) {
-        const data = await fs.promises.readFile(USERS_FILE, 'utf-8');
+      const data = await redisClient.get(USERS_KEY);
+      if (data) {
         const users = JSON.parse(data);
-        if (Array.isArray(users) && users.length > 0) {
-          // Migration to Redis/KV
-          if (useKv) await kvSetJson(USERS_KEY, users);
-          const redisClientForMigration = await getRedisClient();
-          if (redisClientForMigration) await redisClientForMigration.set(USERS_KEY, JSON.stringify(users));
-          console.log('Migrated users from files to Redis/KV');
-          return users;
-        }
+        if (Array.isArray(users)) return users;
       }
-    } catch (error) {
-      console.error('Error reading users file:', error);
     }
-    
     return [];
   },
 
   getOrders: async (): Promise<Order[]> => {
-    // 1. Try KV
     if (useKv) {
       const orders = await kvGetJson<Order[]>(ORDERS_KEY);
-      if (Array.isArray(orders) && orders.length > 0) {
-        return orders;
-      }
+      if (Array.isArray(orders)) return orders;
     }
-
-    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      try {
-        const data = await redisClient.get(ORDERS_KEY);
-        if (data) {
-          const orders = JSON.parse(data);
-          if (Array.isArray(orders) && orders.length > 0) {
-            return orders;
-          }
-        }
-      } catch (error) {
-        console.error('Error reading Redis:', error);
-      }
-    }
-
-    // 3. Try File System (and migrate)
-    try {
-      if (fs.existsSync(ORDERS_FILE)) {
-        const data = await fs.promises.readFile(ORDERS_FILE, 'utf-8');
+      const data = await redisClient.get(ORDERS_KEY);
+      if (data) {
         const orders = JSON.parse(data);
-        if (Array.isArray(orders) && orders.length > 0) {
-          // Migration
-          if (useKv) await kvSetJson(ORDERS_KEY, orders);
-          const redisClientForMigration = await getRedisClient();
-          if (redisClientForMigration) await redisClientForMigration.set(ORDERS_KEY, JSON.stringify(orders));
-          console.log('Migrated orders from files to Redis/KV');
-          return orders;
-        }
+        if (Array.isArray(orders)) return orders;
       }
-    } catch (error) {
-      console.error('Error reading orders file:', error);
     }
-
     return [];
   },
 
   getUserByEmail: async (email: string): Promise<User | undefined> => {
     const users = await db.getUsers();
     const normalizedEmail = email.trim().toLowerCase();
-    const user = users.find(u => u.email.toLowerCase() === normalizedEmail);
-    return user;
+    return users.find(u => u.email.toLowerCase() === normalizedEmail);
   },
 
   createUser: async (user: User): Promise<void> => {
-    try {
-      const users = await db.getUsers();
-      
-      // Update local array
-      if (!users.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
-        users.push(user);
-      }
-
-      // 1. Write to KV (Priority for Vercel)
-      if (useKv) {
-        try {
-          await kvSetJson(USERS_KEY, users);
-          console.log(`User ${user.email} saved to KV`);
-        } catch (kvError) {
-          console.error("Error writing users to KV:", kvError);
-        }
-      }
-
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        try {
-          await redisClient.set(USERS_KEY, JSON.stringify(users));
-          console.log(`User ${user.email} saved to Redis`);
-        } catch (redisError) {
-          console.error("Error writing users to Redis:", redisError);
-        }
-      }
-
-      // 3. Write to File System (Disabled for production/host)
-      /*
-      try {
-        await fs.promises.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
-      } catch (fileError) {
-        console.warn("Could not write users file (expected in production):", fileError);
-      }
-      */
-    } catch (error) {
-      console.error('Error in createUser:', error);
+    const users = await db.getUsers();
+    if (!users.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
+      users.push(user);
     }
+    if (useKv) await kvSetJson(USERS_KEY, users);
+    const redisClient = await getRedisClient();
+    if (redisClient) await redisClient.set(USERS_KEY, JSON.stringify(users));
   },
 
   createOrder: async (order: Order): Promise<void> => {
-    try {
-      const orders = await db.getOrders();
-      orders.push(order);
-      
-      // 1. Write to KV
-      if (useKv) {
-        const saved = await kvSetJson(ORDERS_KEY, orders);
-        if (saved) {
-          console.log(`Order saved to KV: ${order.id}`);
-        }
-      }
-      
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
-        console.log(`Order saved to Redis: ${order.id}`);
-      }
-
-      // 3. Write to File System (Disabled)
-      /*
-      try {
-        await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
-        console.log(`Order saved to File System (fallback): ${order.id}`);
-      } catch (fileError) {
-        console.warn('Could not write orders file:', fileError);
-      }
-      */
-    } catch (error) {
-      console.error('Error creating order:', error);
-    }
+    const orders = await db.getOrders();
+    orders.push(order);
+    if (useKv) await kvSetJson(ORDERS_KEY, orders);
+    const redisClient = await getRedisClient();
+    if (redisClient) await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
   },
 
   deleteOrder: async (id: string): Promise<void> => {
-    try {
-      const orders = await db.getOrders();
-      const filtered = orders.filter(o => o.id !== id);
-      
-      // 1. Write to KV
-      if (useKv) {
-        await kvSetJson(ORDERS_KEY, filtered);
-      }
-
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(ORDERS_KEY, JSON.stringify(filtered));
-      }
-
-      // 3. Write to File System (Disabled)
-      /*
-      try {
-        await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(filtered, null, 2));
-      } catch (fileError) {
-        console.warn('Could not write orders file:', fileError);
-      }
-      */
-    } catch (error) {
-      console.error('Error deleting order:', error);
-    }
+    const orders = await db.getOrders();
+    const filtered = orders.filter(o => o.id !== id);
+    if (useKv) await kvSetJson(ORDERS_KEY, filtered);
+    const redisClient = await getRedisClient();
+    if (redisClient) await redisClient.set(ORDERS_KEY, JSON.stringify(filtered));
   },
 
   updateOrder: async (order: Order): Promise<void> => {
-    try {
-      const orders = await db.getOrders();
-      const index = orders.findIndex(o => o.id === order.id);
-      if (index !== -1) {
-        orders[index] = order;
-        
-        // 1. Write to KV
-        if (useKv) {
-          await kvSetJson(ORDERS_KEY, orders);
-        }
-
-        // 2. Write to Redis
-        const redisClient = await getRedisClient();
-        if (redisClient) {
-          await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
-        }
-
-        // 3. Write to File System (Disabled)
-        /*
-        try {
-          await fs.promises.writeFile(ORDERS_FILE, JSON.stringify(orders, null, 2));
-        } catch (fileError) {
-          console.warn('Could not write orders file:', fileError);
-        }
-        */
-      }
-    } catch (error) {
-      console.error('Error updating order:', error);
+    const orders = await db.getOrders();
+    const index = orders.findIndex(o => o.id === order.id);
+    if (index !== -1) {
+      orders[index] = order;
+      if (useKv) await kvSetJson(ORDERS_KEY, orders);
+      const redisClient = await getRedisClient();
+      if (redisClient) await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
     }
   },
   
@@ -507,642 +310,227 @@ export const db = {
     return !!(await db.getUserByEmail(email));
   },
 
-  // Collections
   getCollections: async (): Promise<Collection[]> => {
-    console.log('getCollections called');
-    // 1. Try KV first
     if (useKv) {
-      try {
-        const collections = await kvGetJson<Collection[]>(COLLECTIONS_KEY);
-        if (Array.isArray(collections) && collections.length > 0) {
-          console.log('Got collections from KV');
-          return collections;
-        }
-      } catch (error) {
-        console.error('Error reading KV:', error);
-      }
+      const collections = await kvGetJson<Collection[]>(COLLECTIONS_KEY);
+      if (Array.isArray(collections)) return collections;
     }
-
-    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      try {
-        const data = await redisClient.get(COLLECTIONS_KEY);
-        if (data) {
-          const collections = JSON.parse(data);
-          if (Array.isArray(collections) && collections.length > 0) {
-            console.log('Got collections from Redis');
-            return collections;
-          }
-        }
-      } catch (error) {
-        console.error('Error reading Redis:', error);
-      }
-    }
-
-    // 3. Try File System last (and migrate)
-    try {
-      if (fs.existsSync(COLLECTIONS_FILE)) {
-        const data = await fs.promises.readFile(COLLECTIONS_FILE, 'utf-8');
+      const data = await redisClient.get(COLLECTIONS_KEY);
+      if (data) {
         const collections = JSON.parse(data);
-        if (Array.isArray(collections) && collections.length > 0) {
-          // Migration to Redis/KV
-          if (useKv) await kvSetJson(COLLECTIONS_KEY, collections);
-          const redisClientForMigration = await getRedisClient();
-          if (redisClientForMigration) await redisClientForMigration.set(COLLECTIONS_KEY, JSON.stringify(collections));
-          console.log('Migrated collections from files to Redis/KV');
-          return collections;
-        }
+        if (Array.isArray(collections)) return collections;
       }
-    } catch (error) {
-      console.error('Error reading collections file:', error);
     }
-
     return [];
   },
 
-  saveCollection: async (collection: Collection): Promise<void> => {
-    try {
-      const collections = await db.getCollections();
-      const index = collections.findIndex(c => c.id === collection.id);
-      
-      if (index >= 0) {
-        collections[index] = collection;
-      } else {
-        collections.push(collection);
-      }
-
-      await db.saveCollections(collections);
-    } catch (error) {
-      console.error('Error saving collection:', error);
-    }
+  saveCollections: async (collections: Collection[]): Promise<void> => {
+    if (useKv) await kvSetJson(COLLECTIONS_KEY, collections);
+    const redisClient = await getRedisClient();
+    if (redisClient) await redisClient.set(COLLECTIONS_KEY, JSON.stringify(collections));
   },
 
-  saveCollections: async (collections: Collection[]): Promise<void> => {
-    try {
-      // 1. Write to KV
-      if (useKv) {
-        await kvSetJson(COLLECTIONS_KEY, collections);
-      }
-
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(COLLECTIONS_KEY, JSON.stringify(collections));
-      }
-
-      // 3. Write to File System (Disabled)
-      /*
-      try {
-        await fs.promises.writeFile(COLLECTIONS_FILE, JSON.stringify(collections, null, 2));
-      } catch (fileError) {
-        console.warn("Could not write collections file (expected in production):", fileError);
-      }
-      */
-    } catch (error) {
-      console.error('Error saving collections:', error);
-    }
+  saveCollection: async (collection: Collection): Promise<void> => {
+    const collections = await db.getCollections();
+    const index = collections.findIndex(c => c.id === collection.id);
+    if (index >= 0) collections[index] = collection;
+    else collections.push(collection);
+    await db.saveCollections(collections);
   },
 
   deleteCollection: async (id: string): Promise<void> => {
-    try {
-      const collections = await db.getCollections();
-      const filtered = collections.filter(c => c.id !== id);
-      await db.saveCollections(filtered);
-    } catch (error) {
-      console.error('Error deleting collection:', error);
-    }
+    const collections = await db.getCollections();
+    const filtered = collections.filter(c => c.id !== id);
+    await db.saveCollections(filtered);
   },
 
-  // Products
   getProducts: async (): Promise<Product[]> => {
-    console.log('getProducts called, useKv:', useKv, 'useRedis:', useRedis);
-    // 1. Try KV first
-    if (useKv) {
-      try {
+    try {
+      if (useKv) {
         const products = await kvGetJson<Product[]>(PRODUCTS_KEY);
-        if (Array.isArray(products) && products.length > 0) {
-          console.log('Got products from KV, count:', products.length);
-          return products;
-        }
-        console.log('KV products empty or not found');
-      } catch (error) {
-        console.error('Error reading KV:', error);
+        if (Array.isArray(products)) return products;
       }
-    }
-
-    // 2. Try Redis
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      try {
+      const redisClient = await getRedisClient();
+      if (redisClient) {
         const data = await redisClient.get(PRODUCTS_KEY);
         if (data) {
+          // If data is already an object (some Redis clients do this automatically)
+          if (typeof data === 'object') return Array.isArray(data) ? data : [];
+          
           const products = JSON.parse(data);
-          if (Array.isArray(products) && products.length > 0) {
-            console.log('Got products from Redis, count:', products.length);
-            return products;
-          }
-          console.log('Redis products empty or invalid');
-        } else {
-          console.log('Redis products key not found');
+          if (Array.isArray(products)) return products;
         }
-      } catch (error) {
-        console.error('Error reading Redis:', error);
-      }
-    }
-
-    // 3. Try File System last (and migrate)
-    try {
-      console.log('Trying File System at:', PRODUCTS_FILE);
-      if (fs.existsSync(PRODUCTS_FILE)) {
-        const data = await fs.promises.readFile(PRODUCTS_FILE, 'utf-8');
-        const products = JSON.parse(data);
-        console.log('Read products from file, count:', products.length);
-        if (Array.isArray(products) && products.length > 0) {
-          // Migration to Redis/KV
-          if (useKv) {
-            await kvSetJson(PRODUCTS_KEY, products);
-            console.log('Migrated products to KV');
-          }
-          const redisClientForMigration = await getRedisClient();
-          if (redisClientForMigration) {
-            await redisClientForMigration.set(PRODUCTS_KEY, JSON.stringify(products));
-            console.log('Migrated products to Redis');
-          }
-          return products;
-        }
-      } else {
-        console.log('Products file not found at:', PRODUCTS_FILE);
       }
     } catch (error) {
-      console.error('Error reading products file:', error);
+      console.error('CRITICAL ERROR reading products from Redis:', error);
     }
-
-    console.log('No products found in any storage');
     return [];
   },
 
   saveProducts: async (products: Product[]): Promise<void> => {
-    try {
-      // 1. Write to KV
-      if (useKv) {
-        await kvSetJson(PRODUCTS_KEY, products);
-      }
+    // Ensure all products have properly formatted images arrays before saving
+    const sanitizedProducts = products.map(p => ({
+      ...p,
+      images: Array.isArray(p.images) ? p.images.filter(Boolean) : (p.image ? [p.image] : []),
+      colors: Array.isArray(p.colors) ? p.colors.map(c => ({
+        ...c,
+        images: Array.isArray(c.images) ? c.images.filter(Boolean) : []
+      })) : []
+    }));
 
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(PRODUCTS_KEY, JSON.stringify(products));
-      }
-
-      // 3. Write to File System (Disabled)
-      /*
+    if (useKv) await kvSetJson(PRODUCTS_KEY, sanitizedProducts);
+    const redisClient = await getRedisClient();
+    if (redisClient) {
       try {
-        await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(products, null, 2));
-      } catch (fileError) {
-        console.warn("Could not write products file:", fileError);
+        await redisClient.set(PRODUCTS_KEY, JSON.stringify(sanitizedProducts));
+      } catch (error) {
+        console.error('Redis save error:', error);
+        throw error;
       }
-      */
-    } catch (error) { 
-      console.error('Error saving products:', error);
     }
   },
   
   saveProduct: async (product: Product): Promise<void> => {
-    try {
-      const products = await db.getProducts();
-      const index = products.findIndex(p => p.id === product.id);
-      
-      if (index >= 0) {
-        products[index] = product;
-      } else {
-        products.push(product);
-      }
-
-      await db.saveProducts(products);
-    } catch (error) {
-      console.error('Error saving product:', error);
-    }
+    const products = await db.getProducts();
+    const index = products.findIndex(p => p.id === product.id);
+    if (index >= 0) products[index] = product;
+    else products.push(product);
+    await db.saveProducts(products);
   },
+
   deleteProduct: async (id: string): Promise<void> => {
-    try {
-      const products = await db.getProducts();
-      const filtered = products.filter(p => p.id !== id);
-
-      // 1. Write to KV
-      if (useKv) {
-        await kvSetJson(PRODUCTS_KEY, filtered);
-      }
-
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(PRODUCTS_KEY, JSON.stringify(filtered));
-      }
-      
-      // 3. Write to File System (Disabled)
-      /*
-      try {
-        await fs.promises.writeFile(PRODUCTS_FILE, JSON.stringify(filtered, null, 2));
-      } catch (e) {}
-      */
-    } catch (error) {
-      console.error('Error deleting product:', error);
-    }
+    const products = await db.getProducts();
+    const filtered = products.filter(p => p.id !== id);
+    await db.saveProducts(filtered);
   },
 
-  // Projects
   getProjects: async (): Promise<Project[]> => {
-    // 1. Try KV first
     if (useKv) {
-      try {
-        const projects = await kvGetJson<Project[]>(PROJECTS_KEY);
-        if (Array.isArray(projects) && projects.length > 0) {
-          return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
-        }
-      } catch (error) {
-        console.error('Error reading KV:', error);
-      }
+      const projects = await kvGetJson<Project[]>(PROJECTS_KEY);
+      if (Array.isArray(projects)) return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
     }
-
-    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      try {
-        const data = await redisClient.get(PROJECTS_KEY);
-        if (data) {
-          const projects = JSON.parse(data);
-          if (Array.isArray(projects) && projects.length > 0) {
-            return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
-          }
-        }
-      } catch (error) {
-        console.error('Error reading Redis:', error);
-      }
-    }
-
-    // 3. Try File System last (and migrate)
-    try {
-      if (fs.existsSync(PROJECTS_FILE)) {
-        const data = await fs.promises.readFile(PROJECTS_FILE, 'utf-8');
+      const data = await redisClient.get(PROJECTS_KEY);
+      if (data) {
         const projects = JSON.parse(data);
-        if (Array.isArray(projects) && projects.length > 0) {
-          // Migration
-          if (useKv) await kvSetJson(PROJECTS_KEY, projects);
-          const redisClientForMigration = await getRedisClient();
-          if (redisClientForMigration) await redisClientForMigration.set(PROJECTS_KEY, JSON.stringify(projects));
-          console.log('Migrated projects from files to Redis/KV');
-          return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
-        }
+        if (Array.isArray(projects)) return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
       }
-    } catch (error) {
-      console.error('Error reading projects file:', error);
     }
-
     return [];
   },
 
-  saveProject: async (project: Project): Promise<void> => {
-    try {
-      const projects = await db.getProjects();
-      const index = projects.findIndex(p => p.id === project.id);
-      
-      if (index >= 0) {
-        projects[index] = project;
-      } else {
-        projects.push(project);
-      }
-
-      // Sort by order
-      projects.sort((a, b) => a.order - b.order);
-
-      await db.saveProjects(projects);
-    } catch (error) {
-      console.error('Error saving project:', error);
-    }
+  saveProjects: async (projects: Project[]): Promise<void> => {
+    if (useKv) await kvSetJson(PROJECTS_KEY, projects);
+    const redisClient = await getRedisClient();
+    if (redisClient) await redisClient.set(PROJECTS_KEY, JSON.stringify(projects));
   },
 
-  saveProjects: async (projects: Project[]): Promise<void> => {
-    try {
-      // 1. Write to KV
-      if (useKv) {
-        await kvSetJson(PROJECTS_KEY, projects);
-      }
-
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(PROJECTS_KEY, JSON.stringify(projects));
-      }
-
-      // 3. Write to File System (Disabled)
-      /*
-      try {
-        await fs.promises.writeFile(PROJECTS_FILE, JSON.stringify(projects, null, 2));
-      } catch (fileError) {
-        console.warn("Could not write projects file:", fileError);
-      }
-      */
-    } catch (error) {
-      console.error('Error saving projects:', error);
-    }
+  saveProject: async (project: Project): Promise<void> => {
+    const projects = await db.getProjects();
+    const index = projects.findIndex(p => p.id === project.id);
+    if (index >= 0) projects[index] = project;
+    else projects.push(project);
+    projects.sort((a, b) => a.order - b.order);
+    await db.saveProjects(projects);
   },
 
   deleteProject: async (id: string): Promise<void> => {
-    try {
-      const projects = await db.getProjects();
-      const filtered = projects.filter(p => p.id !== id);
-      await db.saveProjects(filtered);
-    } catch (error) {
-      console.error('Error deleting project:', error);
-    }
+    const projects = await db.getProjects();
+    const filtered = projects.filter(p => p.id !== id);
+    await db.saveProjects(filtered);
   },
 
-  // Filters
   getFilters: async (): Promise<Filter[]> => {
-    console.log('getFilters called');
-    // 1. Try KV first
     if (useKv) {
-      try {
-        const filters = await kvGetJson<Filter[]>(FILTERS_KEY);
-        if (Array.isArray(filters) && filters.length > 0) {
-          console.log('Got filters from KV');
-          return filters;
-        }
-      } catch (error) {
-        console.error('Error reading KV:', error);
-      }
+      const filters = await kvGetJson<Filter[]>(FILTERS_KEY);
+      if (Array.isArray(filters)) return filters;
     }
-
-    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      try {
-        const data = await redisClient.get(FILTERS_KEY);
-        if (data) {
-          const filters = JSON.parse(data);
-          if (Array.isArray(filters) && filters.length > 0) {
-            console.log('Got filters from Redis');
-            return filters;
-          }
-        }
-      } catch (error) {
-        console.error('Error reading Redis:', error);
-      }
-    }
-
-    // 3. Try File System last (and migrate)
-    try {
-      if (fs.existsSync(FILTERS_FILE)) {
-        const data = await fs.promises.readFile(FILTERS_FILE, 'utf-8');
+      const data = await redisClient.get(FILTERS_KEY);
+      if (data) {
         const filters = JSON.parse(data);
-        if (Array.isArray(filters) && filters.length > 0) {
-          // Migration to Redis/KV
-          if (useKv) await kvSetJson(FILTERS_KEY, filters);
-          if (redisClient) await redisClient.set(FILTERS_KEY, JSON.stringify(filters));
-          console.log('Migrated filters from files to Redis/KV');
-          return filters;
-        }
+        if (Array.isArray(filters)) return filters;
       }
-    } catch (error) {
-      console.error('Error reading filters file:', error);
     }
-
     return [];
   },
 
   saveFilter: async (filter: Filter): Promise<void> => {
-    try {
-      const filters = await db.getFilters();
-      const index = filters.findIndex(f => f.id === filter.id);
-
-      if (index >= 0) {
-        filters[index] = filter;
-      } else {
-        filters.push(filter);
-      }
-
-      // Priority write: KV -> Redis -> File System
-      if (useKv) {
-        await kvSetJson(FILTERS_KEY, filters);
-      }
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(FILTERS_KEY, JSON.stringify(filters));
-      }
-      
-      // 3. Write to File System (Disabled)
-      /*
-      // Optional write
-      try {
-        await fs.promises.writeFile(FILTERS_FILE, JSON.stringify(filters, null, 2));
-      } catch (e) {}
-      */
-    } catch (error) {
-      console.error('Error saving filter:', error);
-    }
+    const filters = await db.getFilters();
+    const index = filters.findIndex(f => f.id === filter.id);
+    if (index >= 0) filters[index] = filter;
+    else filters.push(filter);
+    if (useKv) await kvSetJson(FILTERS_KEY, filters);
+    const redisClient = await getRedisClient();
+    if (redisClient) await redisClient.set(FILTERS_KEY, JSON.stringify(filters));
   },
 
   deleteFilter: async (id: string): Promise<void> => {
-    try {
-      const filters = await db.getFilters();
-      const filtered = filters.filter(f => f.id !== id);
-
-      // 1. Write to KV
-      if (useKv) {
-        await kvSetJson(FILTERS_KEY, filtered);
-      }
-
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(FILTERS_KEY, JSON.stringify(filtered));
-      }
-      
-      // 3. Write to File System (Disabled)
-      /*
-      // 3. Optional write
-      try {
-        await fs.promises.writeFile(FILTERS_FILE, JSON.stringify(filtered, null, 2));
-      } catch (e) {}
-      */
-    } catch (error) {
-      console.error('Error deleting filter:', error);
-    }
+    const filters = await db.getFilters();
+    const filtered = filters.filter(f => f.id !== id);
+    if (useKv) await kvSetJson(FILTERS_KEY, filtered);
+    const redisClient = await getRedisClient();
+    if (redisClient) await redisClient.set(FILTERS_KEY, JSON.stringify(filtered));
   },
 
-  // Transactions
   getTransactions: async (): Promise<Transaction[]> => {
-    // 1. Try KV
     if (useKv) {
       const transactions = await kvGetJson<Transaction[]>(TRANSACTIONS_KEY);
-      if (Array.isArray(transactions) && transactions.length > 0) {
-        return transactions;
-      }
+      if (Array.isArray(transactions)) return transactions;
     }
-
-    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      try {
-        const data = await redisClient.get(TRANSACTIONS_KEY);
-        if (data) {
-          const transactions = JSON.parse(data);
-          if (Array.isArray(transactions) && transactions.length > 0) {
-            return transactions;
-          }
-        }
-      } catch (error) {
-        console.error('Error reading Redis:', error);
-      }
-    }
-
-    // 3. Try File System (and migrate)
-    try {
-      if (fs.existsSync(TRANSACTIONS_FILE)) {
-        const data = await fs.promises.readFile(TRANSACTIONS_FILE, 'utf-8');
+      const data = await redisClient.get(TRANSACTIONS_KEY);
+      if (data) {
         const transactions = JSON.parse(data);
-        if (Array.isArray(transactions) && transactions.length > 0) {
-          // Migration
-          if (useKv) await kvSetJson(TRANSACTIONS_KEY, transactions);
-          if (redisClient) await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
-          console.log('Migrated transactions from files to Redis/KV');
-          return transactions;
-        }
+        if (Array.isArray(transactions)) return transactions;
       }
-    } catch (error) {
-      console.error('Error reading transactions file:', error);
     }
     return [];
   },
 
   createTransaction: async (transaction: Transaction): Promise<void> => {
-    try {
-      const transactions = await db.getTransactions();
-      transactions.push(transaction);
-
-      // 1. Write to KV
-      if (useKv) {
-        await kvSetJson(TRANSACTIONS_KEY, transactions);
-      }
-
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
-      }
-      
-      // 3. Write to File System (Disabled)
-      /*
-      // 3. Optional write
-      try {
-        await fs.promises.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2));
-      } catch (e) {}
-      */
-    } catch (error) {
-      console.error('Error creating transaction:', error);
-    }
+    const transactions = await db.getTransactions();
+    transactions.push(transaction);
+    if (useKv) await kvSetJson(TRANSACTIONS_KEY, transactions);
+    const redisClient = await getRedisClient();
+    if (redisClient) await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
   },
 
   updateTransaction: async (transaction: Transaction): Promise<void> => {
-    try {
-      const transactions = await db.getTransactions();
-      const index = transactions.findIndex(t => t.id === transaction.id);
-      
-      if (index >= 0) {
-        transactions[index] = transaction;
-        
-        // 1. Write to KV
-        if (useKv) {
-          await kvSetJson(TRANSACTIONS_KEY, transactions);
-        }
-
-        // 2. Write to Redis
-        const redisClient = await getRedisClient();
-        if (redisClient) {
-          await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
-        }
-        
-        // 3. Write to File System (Disabled)
-        /*
-        // 3. Optional write
-        try {
-          await fs.promises.writeFile(TRANSACTIONS_FILE, JSON.stringify(transactions, null, 2));
-        } catch (e) {}
-        */
-      }
-    } catch (error) {
-      console.error('Error updating transaction:', error);
+    const transactions = await db.getTransactions();
+    const index = transactions.findIndex(t => t.id === transaction.id);
+    if (index >= 0) {
+      transactions[index] = transaction;
+      if (useKv) await kvSetJson(TRANSACTIONS_KEY, transactions);
+      const redisClient = await getRedisClient();
+      if (redisClient) await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
     }
   },
 
-  // Gifts
   getGifts: async (): Promise<Gift[]> => {
-    // 1. Try KV
     if (useKv) {
       const gifts = await kvGetJson<Gift[]>(GIFTS_KEY);
-      if (Array.isArray(gifts) && gifts.length > 0) {
-        return gifts;
-      }
+      if (Array.isArray(gifts)) return gifts;
     }
-
-    // 2. Try Redis
     const redisClient = await getRedisClient();
     if (redisClient) {
-      try {
-        const data = await redisClient.get(GIFTS_KEY);
-        if (data) {
-          const gifts = JSON.parse(data);
-          if (Array.isArray(gifts) && gifts.length > 0) {
-            return gifts;
-          }
-        }
-      } catch (error) {
-        console.error('Error reading Redis:', error);
-      }
-    }
-
-    // 3. Try File System (and migrate)
-    try {
-      if (fs.existsSync(GIFTS_FILE)) {
-        const data = await fs.promises.readFile(GIFTS_FILE, 'utf-8');
+      const data = await redisClient.get(GIFTS_KEY);
+      if (data) {
         const gifts = JSON.parse(data);
-        if (Array.isArray(gifts) && gifts.length > 0) {
-          // Migration
-          if (useKv) await kvSetJson(GIFTS_KEY, gifts);
-          if (redisClient) await redisClient.set(GIFTS_KEY, JSON.stringify(gifts));
-          console.log('Migrated gifts from files to Redis/KV');
-          return gifts;
-        }
+        if (Array.isArray(gifts)) return gifts;
       }
-    } catch (error) {
-      console.error('Error reading gifts file:', error);
     }
     return [];
   },
 
   saveGifts: async (gifts: Gift[]): Promise<void> => {
-    try {
-      // 1. Write to KV
-      if (useKv) {
-        await kvSetJson(GIFTS_KEY, gifts);
-      }
-
-      // 2. Write to Redis
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        await redisClient.set(GIFTS_KEY, JSON.stringify(gifts));
-      }
-      
-      // 3. Write to File System (Disabled)
-      /*
-      // 3. Optional write
-      try {
-        await fs.promises.writeFile(GIFTS_FILE, JSON.stringify(gifts, null, 2));
-      } catch (e) {}
-      */
-    } catch (error) {
-      console.error('Error saving gifts:', error);
-    }
+    if (useKv) await kvSetJson(GIFTS_KEY, gifts);
+    const redisClient = await getRedisClient();
+    if (redisClient) await redisClient.set(GIFTS_KEY, JSON.stringify(gifts));
   }
 };

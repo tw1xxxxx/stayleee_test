@@ -1836,6 +1836,14 @@ function CatalogTab() {
     if (newImages.length > 0) {
       setCurrentProduct(prev => {
         const nextImages = [...(prev.images || []), ...newImages];
+        const nextIndex = (prev.images || []).length;
+        
+        // Use a small timeout to ensure state update is processed before switching preview
+        setTimeout(() => {
+          setPreviewColorIndex(null);
+          setPreviewImageIndex(nextIndex);
+        }, 10);
+
         return {
           ...prev,
           images: nextImages,
@@ -1859,11 +1867,12 @@ function CatalogTab() {
     const method = (currentProduct.id && !isDraft) ? "PUT" : "POST";
     
     // Clean up payload
+    const finalImages = (currentProduct.images || []).filter(Boolean);
     const payload: Partial<CatalogProduct> = {
       ...currentProduct,
       price: Number(currentProduct.price || 0),
-      images: (currentProduct.images || []).filter(Boolean),
-      image: (currentProduct.images || []).filter(Boolean)[0] || "",
+      images: finalImages,
+      image: finalImages[0] || "",
       filterIds: currentProduct.filterIds || [],
       tags: currentProduct.tags || [],
       sizes: currentProduct.sizes || [],
@@ -1875,6 +1884,8 @@ function CatalogTab() {
       details: currentProduct.details || {},
       variants: currentProduct.variants || []
     };
+
+    console.log("Saving product with payload:", JSON.stringify(payload, null, 2));
 
     // Remove draft ID for new products
     if (isDraft) {
@@ -2065,6 +2076,14 @@ function CatalogTab() {
     if (!value) return;
     setCurrentProduct(prev => {
       const nextImages = [...(prev.images || []), value];
+      const nextIndex = (prev.images || []).length;
+
+      // Use a small timeout to ensure state update is processed before switching preview
+      setTimeout(() => {
+        setPreviewColorIndex(null);
+        setPreviewImageIndex(nextIndex);
+      }, 10);
+
       return {
         ...prev,
         images: nextImages,
@@ -2077,6 +2096,16 @@ function CatalogTab() {
   const removeImage = (index: number) => {
     setCurrentProduct(prev => {
       const nextImages = (prev.images || []).filter((_, i) => i !== index);
+      
+      // Update preview index if needed
+      if (previewColorIndex === null) {
+        setPreviewImageIndex(prevIdx => {
+          if (nextImages.length === 0) return 0;
+          if (prevIdx >= nextImages.length) return nextImages.length - 1;
+          return prevIdx;
+        });
+      }
+
       return {
         ...prev,
         images: nextImages,
@@ -2090,7 +2119,16 @@ function CatalogTab() {
       const images = [...(prev.images || [])];
       const target = index + direction;
       if (target < 0 || target >= images.length) return prev;
+      
       [images[index], images[target]] = [images[target], images[index]];
+      
+      // Update preview index if the moved image was being previewed
+      if (previewColorIndex === null && previewImageIndex === index) {
+        setPreviewImageIndex(target);
+      } else if (previewColorIndex === null && previewImageIndex === target) {
+        setPreviewImageIndex(index);
+      }
+
       return { 
         ...prev, 
         images,
@@ -2131,7 +2169,16 @@ function CatalogTab() {
       setCurrentProduct(prev => {
         const colors = [...(prev.colors || [])];
         const color = colors[colorIndex];
-        colors[colorIndex] = { ...color, images: [...(color.images || []), ...newImages] };
+        const existingImages = color.images || [];
+        const nextImages = [...existingImages, ...newImages];
+        colors[colorIndex] = { ...color, images: nextImages };
+        
+        // Use a small timeout to ensure state update is processed before switching preview
+        setTimeout(() => {
+          setPreviewColorIndex(colorIndex);
+          setPreviewImageIndex(existingImages.length);
+        }, 10);
+        
         return { ...prev, colors };
       });
     }
@@ -2536,9 +2583,20 @@ function CatalogTab() {
               {currentProduct.images && currentProduct.images.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
                   {currentProduct.images.map((img, index) => (
-                    <div key={`${img}-${index}`} className="relative group aspect-square rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+                    <div 
+                      key={`${img}-${index}`} 
+                      onClick={() => {
+                        setPreviewColorIndex(null);
+                        setPreviewImageIndex(index);
+                      }}
+                      className={`relative group aspect-square rounded-xl overflow-hidden border transition-all cursor-pointer ${
+                        previewColorIndex === null && previewImageIndex === index 
+                          ? 'ring-2 ring-brand-brown border-brand-brown shadow-md scale-[1.02]' 
+                          : 'border-gray-200 bg-gray-50 hover:border-brand-brown/50'
+                      }`}
+                    >
                       <Image src={img} alt="" fill className="object-cover" />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2" onClick={(e) => e.stopPropagation()}>
                         <button 
                           onClick={() => moveImage(index, -1)} 
                           disabled={index === 0}
@@ -2563,6 +2621,11 @@ function CatalogTab() {
                       <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[10px] px-2 py-1 truncate opacity-0 group-hover:opacity-100 transition-opacity">
                         {index === 0 ? "Главное" : `Фото ${index + 1}`}
                       </div>
+                      {previewColorIndex === null && previewImageIndex === index && (
+                        <div className="absolute top-1 left-1 bg-brand-brown text-white p-1 rounded-full shadow-sm">
+                          <Eye size={10} />
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -2703,10 +2766,24 @@ function CatalogTab() {
                           
                           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
                             {(color.images || []).map((img, imgIdx) => (
-                              <div key={imgIdx} className="relative aspect-square rounded-lg overflow-hidden group border border-gray-200 bg-gray-50">
+                              <div 
+                                key={imgIdx} 
+                                onClick={() => {
+                                  setPreviewColorIndex(index);
+                                  setPreviewImageIndex(imgIdx);
+                                }}
+                                className={`relative aspect-square rounded-lg overflow-hidden group border transition-all cursor-pointer ${
+                                  previewColorIndex === index && previewImageIndex === imgIdx 
+                                    ? 'ring-2 ring-brand-brown border-brand-brown shadow-md scale-[1.02]' 
+                                    : 'border-gray-200 bg-gray-50 hover:border-brand-brown/50'
+                                }`}
+                              >
                                 <Image src={img} alt="" fill className="object-cover" />
                                 <button 
-                                  onClick={() => removeColorImage(index, imgIdx)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeColorImage(index, imgIdx);
+                                  }}
                                   className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:scale-110"
                                 >
                                   <X size={10} />
@@ -2715,6 +2792,11 @@ function CatalogTab() {
                                 {imgIdx === 0 && (
                                   <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-[9px] text-center py-0.5">
                                     Главное
+                                  </div>
+                                )}
+                                {previewColorIndex === index && previewImageIndex === imgIdx && (
+                                  <div className="absolute top-1 left-1 bg-brand-brown text-white p-1 rounded-full shadow-sm">
+                                    <Eye size={10} />
                                   </div>
                                 )}
                               </div>
@@ -2957,12 +3039,8 @@ function CatalogTab() {
                          {(() => {
                            const activeColor = previewColorIndex !== null ? currentProduct.colors?.[previewColorIndex] : null;
                            const displayImages = (activeColor?.images?.length ? activeColor.images : (currentProduct.images?.length ? currentProduct.images : []));
-                           const currentImage = displayImages[previewImageIndex] || displayImages[0];
-                           
-                           // Reset preview image index if it's out of bounds for the current displayImages
-                           if (previewImageIndex >= displayImages.length && displayImages.length > 0) {
-                              setPreviewImageIndex(0);
-                           }
+                           const safeIndex = Math.min(previewImageIndex, Math.max(0, displayImages.length - 1));
+                           const currentImage = displayImages[safeIndex] || displayImages[0];
                            
                            return displayImages.length > 0 ? (
                             <>
@@ -2979,7 +3057,10 @@ function CatalogTab() {
                                      <button 
                                         onClick={(e) => {
                                            e.stopPropagation();
-                                           setPreviewImageIndex(prev => prev === 0 ? displayImages.length - 1 : prev - 1);
+                                           setPreviewImageIndex(prev => {
+                                              const currentIdx = Math.min(prev, Math.max(0, displayImages.length - 1));
+                                              return currentIdx === 0 ? displayImages.length - 1 : currentIdx - 1;
+                                           });
                                         }}
                                         className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full text-gray-800 shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white"
                                      >
@@ -2988,7 +3069,10 @@ function CatalogTab() {
                                      <button 
                                         onClick={(e) => {
                                            e.stopPropagation();
-                                           setPreviewImageIndex(prev => prev === displayImages.length - 1 ? 0 : prev + 1);
+                                           setPreviewImageIndex(prev => {
+                                              const currentIdx = Math.min(prev, Math.max(0, displayImages.length - 1));
+                                              return currentIdx === displayImages.length - 1 ? 0 : currentIdx + 1;
+                                           });
                                         }}
                                         className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full text-gray-800 shadow-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white"
                                      >
@@ -3000,12 +3084,16 @@ function CatalogTab() {
                                {/* Color Indicator Dots */}
                                {displayImages.length > 1 && (
                                  <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-                                   {displayImages.map((_, idx) => (
-                                     <div 
-                                       key={idx}
-                                       className={`w-1.5 h-1.5 rounded-full shadow-sm ${idx === previewImageIndex ? 'bg-white' : 'bg-white/50'}`}
-                                     />
-                                   ))}
+                                     {displayImages.map((_, idx) => (
+                                       <button 
+                                         key={idx}
+                                         onClick={(e) => {
+                                           e.stopPropagation();
+                                           setPreviewImageIndex(idx);
+                                         }}
+                                         className={`w-1.5 h-1.5 rounded-full shadow-sm transition-all ${idx === safeIndex ? 'bg-white scale-125' : 'bg-white/50 hover:bg-white/80'}`}
+                                       />
+                                     ))}
                                  </div>
                                )}
                             </>
