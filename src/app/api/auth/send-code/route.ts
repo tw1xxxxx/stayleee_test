@@ -97,7 +97,12 @@ export async function POST(request: Request) {
     const now = Date.now();
     let existingOtp = global.otpStore.get(normalizedEmail);
     
-    // Check KV/Redis for existing OTP if not in memory
+    // Check file-based DB for existing OTP if not in memory
+    if (!existingOtp) {
+      existingOtp = await db.getOtp(normalizedEmail);
+    }
+    
+    // Check KV/Redis for existing OTP if not in memory/file
     if (!existingOtp && useKv) {
       existingOtp = await kvGetJson<{ code: string; expires: number; name?: string }>(`otp:${normalizedEmail}`);
     }
@@ -139,22 +144,23 @@ export async function POST(request: Request) {
 
     // Store OTP
     let stored = false;
+    
+    // Always store in file-based DB first (shared across PM2 instances)
+    await db.saveOtp(normalizedEmail, { code, expires, name });
+    stored = true; // File DB is our primary source now
+
     if (useKv) {
-      stored = await kvSetExJson(`otp:${normalizedEmail}`, expirySeconds, { code, expires, name });
+      await kvSetExJson(`otp:${normalizedEmail}`, expirySeconds, { code, expires, name });
     }
-    if (!stored && useRedis) {
+    if (useRedis) {
       const redisClient = await getRedisClient();
       if (redisClient) {
         await redisClient.set(`otp:${normalizedEmail}`, JSON.stringify({ code, expires, name }), { EX: expirySeconds });
-        stored = true;
       }
     }
-    if (!stored) {
-      global.otpStore.set(normalizedEmail, { code, expires, name });
-    } else {
-      // Still set in memory for local rate limiting on this instance
-      global.otpStore.set(normalizedEmail, { code, expires, name });
-    }
+    
+    // Still set in memory for local rate limiting on this instance
+    global.otpStore.set(normalizedEmail, { code, expires, name });
 
     // Send email
     const subject = "Ваш код подтверждения StaySee";

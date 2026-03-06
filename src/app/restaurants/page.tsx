@@ -37,28 +37,28 @@ const STAGES = [
     id: 'concept',
     number: '01',
     title: 'Концепция',
-    image: '/IMG_2203.PNG',
+    image: '/images/restaurants/IMG_2203.PNG',
     text: 'Мы обсуждаем Ваши идеи и создаём образ будущего изделия — его стиль, характер и настроение'
   },
   {
     id: 'construction',
     number: '02',
     title: 'Конструкция',
-    image: '/IMG_2204.PNG',
+    image: '/images/restaurants/IMG_2204.PNG',
     text: 'Разрабатываем индивидуальную конструкцию с учётом особенностей фигуры для идеальной посадки'
   },
   {
     id: 'fabric',
     number: '03',
     title: 'Ткань',
-    image: '/IMG_2205.PNG',
+    image: '/images/restaurants/IMG_2205.PNG',
     text: 'Подбираем материалы, которые подчеркнут концепцию и будут комфортны в носке'
   },
   {
     id: 'fitting',
     number: '04',
     title: 'Примерки\nи финал',
-    image: '/IMG_2206.PNG',
+    image: '/images/restaurants/IMG_2206.PNG',
     text: 'На примерках оттачиваем детали и доводим изделие до совершенства. В результате Вы получаете уникальную вещь, созданную специально для Вас'
   }
 ];
@@ -183,46 +183,185 @@ export default function RestaurantsPage() {
       <div className="px-4 flex flex-col gap-6 max-w-[1400px] mx-auto w-full">
         {/* Stages of Work */}
         <FadeIn delay={0.1}>
-          <section className="pt-8">
-            <h2 className="text-xl md:text-2xl font-medium mb-6 uppercase tracking-wider">Этапы работы</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
-              {STAGES.map((stage) => (
-                <FadeIn key={stage.id} delay={0.1}>
-                  <div className="group relative bg-white rounded-3xl p-6 h-full border border-brand-brown/5 transition-all duration-300 hover:shadow-xl hover:border-brand-brown/10">
-                    {/* Number & Image Header */}
-                    <div className="flex flex-col gap-4 mb-6">
-                      <div className="flex items-start justify-between">
-                        <span className="text-4xl font-bold text-brand-brown/10 font-mono tracking-tighter">
-                          {stage.number}
-                        </span>
-                      </div>
-                      <div className="w-full aspect-video relative rounded-2xl overflow-hidden shadow-sm">
+          <section className="py-12">
+            <div className="px-8">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div className="space-y-2">
+                  <span className="text-xs font-bold uppercase tracking-[0.3em] text-brand-brown/40">Процесс создания</span>
+                  <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tight text-brand-brown">Этапы работы</h2>
+                </div>
+                <div className="hidden md:block w-1/3 h-[1px] bg-brand-brown/10 mb-4"></div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+                {STAGES.map((stage, index) => (
+                  <FadeIn key={stage.id} delay={0.1 * (index + 1)}>
+                    <div className="group relative bg-white rounded-[2.5rem] h-full border border-brand-brown/5 transition-all duration-500 hover:shadow-2xl hover:border-brand-brown/10 flex flex-col overflow-hidden">
+                      {/* Image Container - Full width to edges */}
+                      <div className="relative w-full aspect-[4/5] overflow-hidden">
                         <Image 
                           src={stage.image} 
                           alt={stage.title.replace('\n', ' ')}
                           fill 
-                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          className="object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
                         />
+                        {/* Subtle Overlay */}
+                        <div className="absolute inset-0 bg-brand-brown/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                      </div>
+
+                      {/* Content - Padded below image */}
+                      <div className="p-8 pt-7 relative z-10 flex flex-col flex-grow">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-8 h-[1px] bg-brand-brown/20 group-hover:w-12 group-hover:bg-brand-brown transition-all duration-500" />
+                          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-brown/40 group-hover:text-brand-brown transition-colors duration-500">Шаг {stage.number}</span>
+                        </div>
+                        
+                        <h3 className="text-xl font-bold uppercase tracking-wider text-brand-brown leading-[1.1] mb-4 whitespace-pre-line group-hover:translate-x-1 transition-transform duration-500">
+                          {stage.title}
+                        </h3>
+                        
+                        <p className="text-sm leading-relaxed text-brand-brown/60 font-medium group-hover:text-brand-brown/80 transition-colors duration-500">
+                          {stage.text}
+                        </p>
                       </div>
                     </div>
+                  </FadeIn>
+                ))}
+              </div>
+            </div>
+          </section>
+        </FadeIn>
 
-                    {/* Content */}
-                    <div className="space-y-3">
-                      <h3 className="text-lg font-bold uppercase tracking-widest text-brand-brown leading-tight">
-                        {stage.title}
-                      </h3>
-                      <p className="text-sm leading-relaxed text-brand-brown/60 font-medium">
-                        {stage.text}
-                      </p>
+        {/* Benefits and Privileges Section */}
+        <FadeIn delay={0.2}>
+          <section className="py-8">
+            <div className="bg-white rounded-[2.5rem] p-6 md:p-10 border border-brand-brown/5 shadow-sm overflow-hidden relative">
+              {/* Decorative Background Elements */}
+              <div className="absolute top-0 right-0 w-48 h-48 bg-brand-beige/40 rounded-full -mr-24 -mt-24 blur-3xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-beige/20 rounded-full -ml-32 -mb-32 blur-3xl pointer-events-none" />
+              
+              <div className="relative z-10 max-w-5xl mx-auto">
+                <div className="text-center mb-10 space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-brand-brown/30">Premium Service</span>
+                  <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-brand-brown">
+                    Бонусы и привилегии
+                  </h2>
+                  <p className="text-sm text-brand-brown/60 max-w-xl mx-auto leading-relaxed font-medium">
+                    Комплексное сопровождение проектов — от дизайна до финальной съёмки.
+                  </p>
+                </div>
+
+                {/* Main Steps List - Single Column */}
+                <div className="space-y-6 mb-10">
+                  {/* Step 1: Orders */}
+                  <div className="bg-brand-beige/10 rounded-3xl p-8 border border-brand-brown/5 flex flex-col md:flex-row md:items-center gap-8 group hover:bg-white hover:shadow-xl transition-all duration-500">
+                    <div className="flex items-center gap-6 shrink-0 md:w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-brown/40 mb-2">Этап 1</span>
+                        <h3 className="text-lg font-bold uppercase tracking-widest text-brand-brown leading-tight">При заказе формы и текстиля</h3>
+                      </div>
                     </div>
-
-                    {/* Bottom accent line */}
-                    <div className="absolute bottom-0 left-6 right-6 h-1 bg-brand-brown/5 rounded-full overflow-hidden">
-                      <div className="h-full w-0 bg-brand-brown group-hover:w-full transition-all duration-700 ease-out" />
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow border-t md:border-t-0 md:border-l border-brand-brown/10 pt-6 md:pt-0 md:pl-8">
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-brown/40">От 40 единиц</span>
+                        <div className="text-xs text-brand-brown/70 font-medium space-y-1">
+                          <p>• Отрисовка вышивки логотипа в подарок</p>
+                          <p>• Бесплатная доставка</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-brown/40">От 50 единиц</span>
+                        <div className="text-xs text-brand-brown/70 font-medium">
+                          <p>• Вышивка бесплатно</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-brown/40">От 300 000 ₽</span>
+                        <div className="text-xs text-brand-brown/70 font-medium space-y-1">
+                          <p>• Разработка дизайна в подарок</p>
+                          <p>• Бесплатная доставка</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </FadeIn>
-              ))}
+
+                  {/* Step 2: Opening */}
+                  <div className="bg-brand-beige/10 rounded-3xl p-8 border border-brand-brown/5 flex flex-col md:flex-row md:items-center gap-8 group hover:bg-white hover:shadow-xl transition-all duration-500">
+                    <div className="flex items-center gap-6 shrink-0 md:w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-brown/40 mb-2">Этап 2</span>
+                        <h3 className="text-lg font-bold uppercase tracking-widest text-brand-brown leading-tight">При открытии проекта</h3>
+                      </div>
+                    </div>
+                    <div className="flex-grow border-t md:border-t-0 md:border-l border-brand-brown/10 pt-6 md:pt-0 md:pl-8">
+                      <p className="text-sm leading-relaxed text-brand-brown/70 font-medium">
+                        Для всего проекта — индивидуальный пошив костюма для управляющего <span className="text-brand-brown font-bold">в подарок</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 3: Completion */}
+                  <div className="bg-brand-beige/10 rounded-3xl p-8 border border-brand-brown/5 flex flex-col md:flex-row md:items-center gap-8 group hover:bg-white hover:shadow-xl transition-all duration-500">
+                    <div className="flex items-center gap-6 shrink-0 md:w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-brown/40 mb-2">Этап 3</span>
+                        <h3 className="text-lg font-bold uppercase tracking-widest text-brand-brown leading-tight">Завершение проекта</h3>
+                      </div>
+                    </div>
+                    <div className="flex-grow border-t md:border-t-0 md:border-l border-brand-brown/10 pt-6 md:pt-0 md:pl-8 flex flex-col md:flex-row justify-between gap-6">
+                      <p className="text-sm leading-relaxed text-brand-brown/70 font-medium max-w-md">
+                        Выезд и съёмка имиджевого видео для вашего бренда
+                      </p>
+                      <div className="space-y-2 shrink-0">
+                        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-brand-brown/40">
+                          <div className="w-1.5 h-1.5 rounded-full bg-brand-brown/30" />
+                          <span>Замеры — бесплатно (МКАД)</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-brand-brown/40">
+                          <div className="w-1.5 h-1.5 rounded-full bg-brand-brown/30" />
+                          <span>-10% на прачечную WEWASH</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Gifts List - Single Column */}
+                <div className="space-y-4">
+                  <div className="px-2 mb-4 flex items-center justify-between">
+                    <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-brown/60">Подарки при заказе</h3>
+                    <span className="text-[10px] font-bold text-brand-brown/40 uppercase">Автоматически в корзине</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-4">
+                    {[
+                      { amount: '15 000 ₽', gift: 'Фирменный карандаш', icon: '✏️' },
+                      { amount: '20 000 ₽', gift: 'Набор стикеров', icon: '🏷️' },
+                      { amount: '25 000 ₽', gift: 'Поварской фартук', icon: '🧑‍🍳' },
+                      { amount: '35 000 ₽', gift: 'Персональная вышивка', icon: '🪡' }
+                    ].map((item, i) => (
+                      <div key={i} className="bg-brand-beige/10 rounded-2xl p-6 border border-brand-brown/5 flex items-center justify-between group hover:bg-white hover:shadow-xl transition-all duration-500">
+                        <div className="flex items-center gap-6">
+                          <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-3xl shadow-sm group-hover:scale-110 transition-transform duration-300">
+                            {item.icon}
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-bold text-brand-brown/40 uppercase tracking-widest block mb-1">Подарок {i + 1}</span>
+                            <h4 className="text-base font-bold uppercase tracking-wider text-brand-brown leading-tight">{item.gift}</h4>
+                            <p className="text-xs font-medium text-brand-brown/60 mt-1">При заказе от {item.amount}</p>
+                          </div>
+                        </div>
+                        <div className="hidden md:block">
+                          <div className="px-6 py-2.5 rounded-full border border-brand-brown/10 text-[10px] font-bold uppercase tracking-widest text-brand-brown/40 group-hover:bg-brand-brown group-hover:text-white group-hover:border-brand-brown transition-all duration-300">
+                            Автоматически
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
         </FadeIn>
@@ -267,23 +406,32 @@ export default function RestaurantsPage() {
             interleavedItems.map((item, index) => (
               <FadeIn key={item.id} delay={0.2 + (index % 3) * 0.1} className="h-full">
                 {isPromo(item) ? (
-                  <div className="group relative w-full h-full min-h-[280px] flex flex-col justify-center bg-white rounded-[2rem] p-8 border border-brand-brown/5 transition-all duration-300 hover:shadow-xl hover:border-brand-brown/10">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-3xl">{item.icon}</span>
+                  <div className="group relative w-full h-full min-h-[280px] flex flex-col justify-center bg-white rounded-[2rem] p-8 border border-brand-brown/5 transition-all duration-300 hover:shadow-xl hover:border-brand-brown/10 overflow-hidden">
+                    {/* Background Accent */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-brand-brown/[0.02] rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150" />
+                    
+                    <div className="flex items-center gap-3 mb-6 relative z-10">
+                      <div className="w-10 h-10 rounded-full bg-brand-brown/5 flex items-center justify-center text-xl">
+                        {item.icon || '✨'}
+                      </div>
                       <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-brand-brown/40">
                         Специальное предложение
                       </span>
                     </div>
-                    <div className="pl-4 border-l-2 border-brand-brown/30">
-                      <h3 className="text-lg font-bold uppercase tracking-widest text-brand-brown leading-tight mb-2">
-                        {item.title}
-                      </h3>
-                      <p className="text-sm leading-relaxed text-brand-brown/60 font-medium">
+                    
+                    <div className="pl-6 border-l-2 border-brand-brown/20 relative z-10">
+                      {item.title && (
+                        <h3 className="text-xl font-bold uppercase tracking-widest text-brand-brown leading-tight mb-3">
+                          {item.title}
+                        </h3>
+                      )}
+                      <div className="text-sm leading-relaxed text-brand-brown/70 font-medium whitespace-pre-line">
                         {item.text}
-                      </p>
+                      </div>
                     </div>
+
                     {/* Bottom accent line */}
-                    <div className="absolute bottom-0 left-6 right-6 h-1 bg-brand-brown/5 rounded-full overflow-hidden">
+                    <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-brand-brown/5">
                       <div className="h-full w-0 bg-brand-brown group-hover:w-full transition-all duration-700 ease-out" />
                     </div>
                   </div>

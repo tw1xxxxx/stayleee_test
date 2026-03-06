@@ -4,22 +4,9 @@ import FadeIn from "./FadeIn";
 export default function AboutSection() {
   return (
     <section className="bg-brand-beige pt-24 pb-6 md:pb-8 px-6 md:px-12">
-      <div className="w-full max-w-5xl mx-auto flex flex-col items-start gap-12">
-        {/* Logo */}
-        <FadeIn direction="down" delay={0.1} priority={true} className="w-64 mb-6">
-          <Image
-            src="/images/logo/StaySee_Logo_chocolate_v1-0.png"
-            alt="Логотип StaySee"
-            width={300}
-            height={120}
-            className="w-full h-auto"
-            sizes="(max-width: 768px) 100vw, 300px"
-          />
-        </FadeIn>
-
+      <div className="w-full max-w-5xl mx-auto flex flex-col items-start gap-8">
         {/* Tagline */}
-        <FadeIn direction="left" delay={0.2} priority={true} className="flex items-center gap-6">
-          <div className="w-0.5 h-12 bg-brand-brown"></div>
+        <FadeIn direction="left" delay={0.2} priority={true} className="flex items-center">
           <p className="text-2xl md:text-3xl italic text-brand-brown font-medium">
              — остановись и посмотри.
           </p>

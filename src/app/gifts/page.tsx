@@ -123,7 +123,7 @@ export default function GiftsPage() {
           </p>
         </FadeIn>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-12 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 gap-8 md:gap-10 max-w-4xl mx-auto">
           {gifts.map((gift, idx) => {
             const isEarned = isMounted ? total >= gift.threshold : false;
             const cartItem = items.find(item => item.id.toString() === gift.id);
@@ -132,15 +132,15 @@ export default function GiftsPage() {
             return (
               <FadeIn key={gift.id} delay={idx * 0.1}>
                 <div className="bg-white/40 backdrop-blur-sm rounded-3xl overflow-hidden border border-brand-brown/5 shadow-sm hover:shadow-xl transition-all duration-500 group">
-                  <div className="flex flex-col md:flex-row min-h-[400px]">
+                  <div className="flex flex-col md:flex-row min-h-[300px]">
                     {/* Image Section */}
-                    <div className="relative w-full md:w-2/5 aspect-[4/5] md:aspect-auto overflow-hidden">
+                    <div className="relative w-full md:w-1/3 aspect-[4/5] md:aspect-auto min-h-[300px] overflow-hidden">
                       <Image 
                         src={gift.image} 
                         alt={gift.title} 
                         fill 
                         className="object-cover group-hover:scale-105 transition-transform duration-700"
-                        sizes="(max-width: 768px) 100vw, 30vw"
+                        sizes="(max-width: 768px) 100vw, 33vw"
                       />
                       {isMounted && isEarned && (
                         <div className="absolute top-4 left-4 z-10">
@@ -152,18 +152,23 @@ export default function GiftsPage() {
                     </div>
 
                     {/* Content Section */}
-                    <div className="p-6 md:p-8 flex flex-col justify-between flex-1">
-                      <div>
+                    <div className="p-6 md:p-12 flex flex-col justify-center flex-1">
+                      <div className="mb-8">
                         <div className="flex justify-between items-start mb-4">
-                          <h3 className="text-xl md:text-2xl font-bold uppercase tracking-wider leading-tight">
-                            {gift.title}
-                          </h3>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-bold text-brand-brown/40 uppercase tracking-[0.2em] mb-2">Ваша привилегия {idx + 1}</span>
+                            <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-wider leading-tight">
+                              {gift.title}
+                            </h3>
+                          </div>
                         </div>
-                        <p className="text-brand-brown/70 text-sm md:text-base leading-relaxed mb-6">
+                        <p className="text-brand-brown/70 text-sm md:text-base leading-relaxed max-w-xl">
                           {gift.description}
                         </p>
-                        
-                        <div className="space-y-4 mb-8">
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t border-brand-brown/10 pt-8">
+                        <div className="space-y-4">
                           <div className="flex flex-col gap-1">
                             <span className="text-[10px] uppercase tracking-widest text-brand-brown/40 font-bold">
                               Условие получения
@@ -178,49 +183,51 @@ export default function GiftsPage() {
                             </div>
                           </div>
                         </div>
+
+                        <div className="flex flex-col gap-3">
+                          {quantity > 0 && cartItem ? (
+                            <div className="flex items-center gap-4 bg-brand-brown text-white rounded-xl overflow-hidden h-[52px]">
+                              <button 
+                                onClick={() => {
+                                  if (quantity > 1) {
+                                    updateQuantity(cartItem.cartId, quantity - 1);
+                                  } else {
+                                    removeFromCart(cartItem.cartId);
+                                  }
+                                }}
+                                className="flex-1 h-full flex items-center justify-center hover:bg-white/10 transition-colors text-xl font-light"
+                              >
+                                –
+                              </button>
+                              <span className="w-8 text-center font-bold text-sm">{quantity}</span>
+                              <button 
+                                onClick={() => updateQuantity(cartItem.cartId, quantity + 1)}
+                                className="flex-1 h-full flex items-center justify-center hover:bg-white/10 transition-colors text-xl font-light"
+                              >
+                                +
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => handleAddToCart(gift)}
+                              disabled={!isMounted}
+                              className="w-full py-4 bg-brand-brown text-white rounded-xl uppercase tracking-[0.2em] text-xs font-bold transition-all duration-300 hover:bg-brand-brown/90 shadow-md"
+                            >
+                              {isMounted 
+                                ? `Добавить за ${formatPrice(gift.price)} ₽`
+                                : 'Загрузка...'}
+                            </button>
+                          )}
+
+                          {isMounted && isEarned && (
+                            <div className="p-2 bg-brand-red/10 border border-brand-red/20 rounded-xl text-center">
+                              <p className="text-brand-red text-[10px] font-bold uppercase tracking-wider">
+                                Бесплатно при оформлении!
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </div>
-
-                      {quantity > 0 && cartItem ? (
-                        <div className="flex items-center gap-4 bg-brand-brown text-white rounded-xl overflow-hidden h-[52px]">
-                          <button 
-                            onClick={() => {
-                              if (quantity > 1) {
-                                updateQuantity(cartItem.cartId, quantity - 1);
-                              } else {
-                                removeFromCart(cartItem.cartId);
-                              }
-                            }}
-                            className="flex-1 h-full flex items-center justify-center hover:bg-white/10 transition-colors text-xl font-light"
-                          >
-                            –
-                          </button>
-                          <span className="w-8 text-center font-bold text-sm">{quantity}</span>
-                          <button 
-                            onClick={() => updateQuantity(cartItem.cartId, quantity + 1)}
-                            className="flex-1 h-full flex items-center justify-center hover:bg-white/10 transition-colors text-xl font-light"
-                          >
-                            +
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => handleAddToCart(gift)}
-                          disabled={!isMounted}
-                          className="w-full py-4 bg-brand-brown text-white rounded-xl uppercase tracking-[0.2em] text-xs font-bold transition-all duration-300 hover:bg-brand-brown/90"
-                        >
-                          {isMounted 
-                            ? `Добавить за ${formatPrice(gift.price)} ₽`
-                            : 'Загрузка...'}
-                        </button>
-                      )}
-
-                      {isMounted && isEarned && (
-                        <div className="mt-4 p-3 bg-brand-red/10 border border-brand-red/20 rounded-xl text-center">
-                          <p className="text-brand-red text-[11px] font-bold uppercase tracking-wider">
-                            Вы получите 1 шт. бесплатно при оформлении!
-                          </p>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>

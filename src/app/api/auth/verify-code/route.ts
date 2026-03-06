@@ -69,6 +69,12 @@ export async function POST(request: Request) {
     let storedOtp = useKv
       ? await kvGetJson<{ code: string; expires: number; name?: string }>(`otp:${normalizedEmail}`)
       : undefined;
+
+    // Check file-based DB if not in KV
+    if (!storedOtp) {
+      storedOtp = await db.getOtp(normalizedEmail);
+    }
+
     if (!storedOtp && useRedis) {
       const redisClient = await getRedisClient();
       if (redisClient) {
@@ -91,6 +97,7 @@ export async function POST(request: Request) {
     }
 
     if (Date.now() > storedOtp.expires) {
+      await db.deleteOtp(normalizedEmail);
       if (useKv) {
         await kvDel(`otp:${normalizedEmail}`);
       } else if (useRedis) {
@@ -111,6 +118,7 @@ export async function POST(request: Request) {
     }
 
     // Code verified successfully
+    await db.deleteOtp(normalizedEmail);
     if (useKv) {
       await kvDel(`otp:${normalizedEmail}`);
     } else if (useRedis) {

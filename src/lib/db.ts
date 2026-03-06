@@ -41,6 +41,13 @@ const FILTERS_KEY = 'filters';
 const PROJECTS_KEY = 'projects';
 const GIFTS_KEY = 'gifts';
 const TRANSACTIONS_KEY = 'transactions';
+const OTP_KEY_PREFIX = 'otp_';
+
+export interface OtpData {
+  code: string;
+  expires: number;
+  name?: string;
+}
 
 export interface User {
   id: string;
@@ -339,5 +346,27 @@ export const db = {
 
   saveGifts: async (gifts: Gift[]): Promise<void> => {
     await writeJsonFile(GIFTS_KEY, gifts);
+  },
+
+  getOtp: async (email: string): Promise<OtpData | undefined> => {
+    const key = `${OTP_KEY_PREFIX}${email.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    return await readJsonFile<OtpData>(key);
+  },
+
+  saveOtp: async (email: string, otpData: OtpData): Promise<void> => {
+    const key = `${OTP_KEY_PREFIX}${email.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    await writeJsonFile(key, otpData);
+  },
+
+  deleteOtp: async (email: string): Promise<void> => {
+    const key = `${OTP_KEY_PREFIX}${email.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    const filePath = getFilePath(key);
+    if (fs.existsSync(filePath)) {
+      try {
+        await fs.promises.unlink(filePath);
+      } catch (error) {
+        console.error(`Error deleting OTP file for ${email}:`, error);
+      }
+    }
   }
 };

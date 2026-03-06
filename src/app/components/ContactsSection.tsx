@@ -217,7 +217,7 @@ export default function ContactsSection({ showMap = true }: ContactsSectionProps
               <div className="space-y-6 text-center md:text-left">
                 <h3 className="text-sm uppercase tracking-[0.3em] opacity-50 mb-4">Контакты</h3>
                 <p className="text-xl md:text-2xl font-light">
-                  Переведеновский пер. 13 с.13
+                  Переведеновский пер., 13, стр. 13, Москва
                 </p>
                 <div className="space-y-2">
                   <a href="mailto:shop.stay.see@yandex.ru" className="block text-xl md:text-2xl font-light hover:opacity-60 transition-opacity">

@@ -368,13 +368,12 @@ export default function CartPage() {
                 {/* Optimized: Removed heavy blur effect */}
                 <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-white/5 rounded-full"></div>
 
-                <div className="relative w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center shrink-0 p-1.5">
+                <div className="relative w-12 h-12 bg-white/10 rounded-lg overflow-hidden shrink-0">
                     <Image
                     src={gift.image}
                     alt={gift.title}
-                    width={32}
-                    height={32}
-                    className="object-contain"
+                    fill
+                    className="object-cover"
                   />
                 </div>
                 

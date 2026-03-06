@@ -21,6 +21,25 @@ export default function CheckoutPage() {
     phone: "",
     comment: ""
   });
+
+  // Load draft from localStorage on mount
+  useEffect(() => {
+    const draft = localStorage.getItem("checkout_draft");
+    if (draft) {
+      try {
+        const parsed = JSON.parse(draft);
+        setFormData(prev => ({ ...prev, ...parsed }));
+      } catch (e) {
+        console.error("Failed to parse checkout draft", e);
+      }
+    }
+  }, []);
+
+  // Save draft to localStorage on change
+  useEffect(() => {
+    localStorage.setItem("checkout_draft", JSON.stringify(formData));
+  }, [formData]);
+
   const [isAgreed, setIsAgreed] = useState(false);
   const [isCheckoutVisible, setIsCheckoutVisible] = useState(true);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -239,6 +258,9 @@ export default function CheckoutPage() {
       });
       
       if (order) {
+        // Clear draft after successful order
+        localStorage.removeItem("checkout_draft");
+        
         // Create payment
         try {
           const response = await fetch('/api/payment/create', {

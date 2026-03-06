@@ -94,7 +94,7 @@ export default function ClientsSection() {
   }, []);
 
   const handleShowMore = () => {
-    setVisibleCount(prev => Math.min(prev + increment, allLogos.length));
+    setVisibleCount(prev => Math.min(prev + increment, allLogos.length - 12));
   };
 
   return (
@@ -103,8 +103,8 @@ export default function ClientsSection() {
         Нам доверяют
       </h2>
       <div className="w-full max-w-7xl mx-auto">
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-10 lg:gap-14 items-center justify-items-center">
-          {allLogos.slice(0, visibleCount).map((logo, index) => (
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-8 gap-y-12 md:gap-x-12 md:gap-y-16 lg:gap-x-16 lg:gap-y-20 items-center justify-items-center">
+          {allLogos.slice(12, 12 + visibleCount).map((logo, index) => (
             <FadeIn 
               key={`${logo.src}-${index}`} 
               delay={(index % 6) * 0.05} 
@@ -112,9 +112,7 @@ export default function ClientsSection() {
               priority={true}
             >
               <div 
-                className={`w-full h-16 md:h-20 lg:h-24 relative block transition-all duration-500 hover:scale-110 ${
-                  logo.type === 'partner' ? 'grayscale hover:grayscale-0' : ''
-                }`}
+                className="w-full h-12 md:h-16 lg:h-20 relative block transition-all duration-700 hover:scale-110 opacity-90 hover:opacity-100"
               >
                  <Image
                    src={logo.src}
@@ -128,7 +126,7 @@ export default function ClientsSection() {
           ))}
         </div>
 
-        {visibleCount < allLogos.length && (
+        {visibleCount < allLogos.length - 12 && (
           <div className="mt-16 flex justify-center">
             <button
               onClick={handleShowMore}
