@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/email';
-import { db, getRedisClient, isRedisAvailable } from '@/lib/db';
+import { db } from '@/lib/db';
+
+const isRedisAvailable = false;
+const getRedisClient = async () => null;
 
 // In-memory store for OTPs (for demo purposes only)
 // In a real app, use Redis or a database
@@ -173,45 +176,47 @@ export async function POST(request: Request) {
         
         <div style="text-align: center; margin-top: 30px;">
           <p style="font-size: 12px; color: #B0A9A2;">© ${new Date().getFullYear()} StaySee. Все права защищены.</p>
+          <p style="font-size: 10px; color: #D1CDC7; margin-top: 10px;">Это автоматическое сообщение, на него не нужно отвечать.</p>
         </div>
       </div>
     `;
 
     // In development or if email sending fails, we can return the code in the response
     const isDev = process.env.NODE_ENV === 'development';
+    const isDebug = process.env.DEBUG_AUTH === 'true';
+
+    // Log the code to console so it's visible in server logs
+    console.log(`[AUTH_DEBUG] Verification code for ${normalizedEmail}: ${code}`);
 
     try {
       // Add a timeout to the email sending promise
       const emailPromise = sendEmail(normalizedEmail, subject, html);
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Email sending timed out after 35s')), 35000)
+        setTimeout(() => reject(new Error('Email sending timed out after 15s')), 15000)
       );
-
-      // Log the code to console so it's visible in Timeweb logs even if email fails
-      console.log(`[AUTH_DEBUG] Verification code for ${normalizedEmail}: ${code}`);
 
       await Promise.race([emailPromise, timeoutPromise]);
 
       return NextResponse.json({ 
         success: true, 
-        message: "Code sent to email",
-        debugCode: isDev || process.env.DEBUG_AUTH === 'true' ? code : undefined 
+        message: "Code sent successfully",
+        debugCode: isDev || isDebug ? code : undefined 
       });
     } catch (emailError) {
       console.error("Email sending failed or timed out:", emailError);
       
-      // If in development or DEBUG_AUTH is true, OR if we want to allow login anyway
-      if (isDev || process.env.DEBUG_AUTH === 'true' || process.env.ALLOW_AUTH_FALLBACK === 'true') {
+      // STRICT: No more fallback to allowing login if email fails
+      // unless we are in explicit development/debug mode
+      if (isDev || isDebug) {
         return NextResponse.json({ 
           success: true, 
-          message: "Code generation successful (email failed but returning code in debug/fallback mode)",
-          code: code,
-          debugCode: code // standardizing
+          message: "Code generated (email failed but debug allowed)",
+          debugCode: code
         });
       }
       
       return NextResponse.json({ 
-        message: "Failed to send email. Please check your configuration or try again later. Code was logged to server console.",
+        message: "Не удалось отправить код на почту. Пожалуйста, попробуйте позже или проверьте правильность email.",
         error: String(emailError)
       }, { status: 500 });
     }

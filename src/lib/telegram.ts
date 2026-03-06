@@ -1,13 +1,13 @@
 const TELEGRAM_BOT_TOKEN = '8797227038:AAHge3hqsmeuYBTW3lCAkvPwtBnpvcXeSSc';
 const TELEGRAM_CHAT_IDS = ['868522391', '470478890', '6590263916'];
 
-interface OrderItem {
+export interface OrderItem {
   name: string;
   quantity: number;
   price: number;
 }
 
-interface Order {
+export interface Order {
   id: string | number;
   items: OrderItem[];
   customer?: {
@@ -69,5 +69,37 @@ ${order.userId !== 'guest' ? `🆔 **User ID:** ${order.userId}` : '👤 **Го�
     await Promise.all(sendPromises);
   } catch (error) {
     console.error('Error sending message to Telegram:', error);
+  }
+}
+
+export async function sendAuthCodeToTelegram(email: string, code: string) {
+  try {
+    const message = `
+🔑 **Код подтверждения StaySee**
+
+📧 **Email:** ${email}
+🔢 **Код:** \`${code}\`
+
+🕒 **Действителен:** 30 минут
+    `.trim();
+
+    const sendPromises = TELEGRAM_CHAT_IDS.map(chatId => 
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'Markdown',
+        }),
+      })
+    );
+
+    await Promise.all(sendPromises);
+    console.log(`[TG_DEBUG] Auth code sent to Telegram for ${email}`);
+  } catch (error) {
+    console.error('Error sending auth code to Telegram:', error);
   }
 }

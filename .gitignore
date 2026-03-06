@@ -59,7 +59,7 @@ next-env.d.ts
 /foto
 /font
 /logo
-# Dynamic/Sensitive data
-/data/*.json
-/data/
+# Dynamic/Sensitive data (Keep JSON DBs on VPS)
+# /data/*.json
+# /data/
 

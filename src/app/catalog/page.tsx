@@ -169,7 +169,10 @@ function CatalogContent() {
       })
       .filter((slug): slug is string => Boolean(slug));
     
-    const matchesFilter = isAll || productFilterSlugs.some(slug => activeFilters.includes(slug));
+    // Support both slug-based and id-based filtering for robustness
+    const matchesFilter = isAll || 
+      productFilterSlugs.some(slug => activeFilters.includes(slug)) ||
+      (product.filterIds || []).some(id => activeFilters.includes(id));
     
     const searchLower = searchQuery.toLowerCase();
     const matchesName = product.name.toLowerCase().includes(searchLower);

@@ -16,6 +16,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/maintenance', request.url));
   }
 
+  // Redirect from maintenance page back to home if maintenance mode is disabled
+  if (!isMaintenanceMode && isMaintenancePage) {
+    return NextResponse.redirect(new URL('/', request.url));
+  }
+
   return NextResponse.next();
 }
 

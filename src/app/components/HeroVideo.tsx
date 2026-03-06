@@ -13,27 +13,13 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
   const { scrollY } = useScroll();
   const [isMobile, setIsMobile] = useState(true);
   const [isReady, setIsReady] = useState(false);
+  const [hasAutoplayFailed, setHasAutoplayFailed] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     
-    // Fix for older Safari/iOS: video might not trigger 'canplay' if already ready or on some power modes
-    const interval = setInterval(() => {
-      if (videoRef.current && videoRef.current.readyState >= 2 && !isReady) {
-        setIsReady(true);
-        videoRef.current.play().catch(() => {});
-      }
-    }, 500);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-      clearInterval(interval);
-    };
-  }, [isReady]);
-
-  useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
@@ -41,24 +27,32 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
+    video.loop = true;
+    video.autoplay = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("autoplay", "");
+    video.setAttribute("loop", "");
+    
+    // Explicitly set muted again to bypass some browser restrictions
+    video.volume = 0;
 
     const handleCanPlay = () => {
       setIsReady(true);
-      video.play().catch(() => {
-        // Autoplay might be blocked
-      });
+      // Small delay before first play
+      setTimeout(() => {
+        if (!video) return;
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            setHasAutoplayFailed(false);
+          }).catch(error => {
+            console.log("Autoplay was prevented:", error);
+            setHasAutoplayFailed(true);
+          });
+        }
+      }, 100);
     };
-
-    // Add user interaction listener to force play if autoplay fails
-    const forcePlay = () => {
-      if (video.paused) {
-        video.play().then(() => {
-          setIsReady(true);
-        }).catch(() => {});
-      }
-    };
-    window.addEventListener('touchstart', forcePlay, { once: true });
-    window.addEventListener('click', forcePlay, { once: true });
 
     if (video.readyState >= 2) {
       handleCanPlay();
@@ -66,10 +60,50 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
       video.addEventListener("canplay", handleCanPlay);
     }
 
-    return () => {
-      video.removeEventListener("canplay", handleCanPlay);
+    // Fix for older Safari/iOS and stuck state
+    const interval = setInterval(() => {
+      if (!video) return;
+
+      if (video.readyState >= 1) { // 1 is enough for play()
+        if (!isReady && video.readyState >= 2) setIsReady(true);
+        
+        // If it's ready but paused or stuck at frame 0, try to play it
+        // We also check for 'stuck' by checking if currentTime is advancing
+        if ((video.paused || video.currentTime === 0) && !hasAutoplayFailed) {
+          const playPromise = video.play();
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              setHasAutoplayFailed(false);
+            }).catch((e) => {
+              console.log("Autoplay check failed:", e);
+              // Only set failed if it's truly blocked, not just temporarily delayed
+              if (video.paused && !video.ended) setHasAutoplayFailed(true);
+            });
+          }
+        }
+      }
+    }, 1500);
+
+    // Add user interaction listener to force play if autoplay fails
+    const forcePlay = () => {
+      if (video && (video.paused || video.currentTime === 0)) {
+        video.play().then(() => {
+          setIsReady(true);
+          setHasAutoplayFailed(false);
+        }).catch(() => {});
+      }
     };
-  }, []);
+    window.addEventListener('touchstart', forcePlay, { once: true });
+    window.addEventListener('click', forcePlay, { once: true });
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener('touchstart', forcePlay);
+      window.removeEventListener('click', forcePlay);
+      video.removeEventListener("canplay", handleCanPlay);
+      clearInterval(interval);
+    };
+  }, [isReady, hasAutoplayFailed]);
 
   const y = useTransform(scrollY, [0, 500], [0, isMobile ? 0 : 100]);
   return (
@@ -108,6 +142,28 @@ export default function HeroVideo({ src = "/videos/hero-inline.mp4", poster = "/
         <div className="absolute inset-0 bg-black/40 z-10" />
         <div className="absolute inset-0 bg-[#FFD700]/10 mix-blend-soft-light z-20 pointer-events-none" />
         <div className="absolute inset-0 bg-brand-brown/15 mix-blend-multiply z-15 pointer-events-none" />
+
+        {/* Кнопка воспроизведения если автоплей заблокирован */}
+        {hasAutoplayFailed && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-auto">
+            <button 
+              onClick={() => {
+                const video = videoRef.current;
+                if (video) {
+                  video.play().then(() => {
+                    setHasAutoplayFailed(false);
+                    setIsReady(true);
+                  }).catch(e => console.error("Manual play failed:", e));
+                }
+              }}
+              className="p-6 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30 transition-all scale-110 active:scale-95 group"
+            >
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" className="ml-1 group-hover:scale-110 transition-transform">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </button>
+          </div>
+        )}
       </motion.div>
     </div>
   );

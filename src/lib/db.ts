@@ -1,4 +1,37 @@
-import { createClient } from 'redis';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const DATA_DIR = join(process.cwd(), 'data');
+
+const getFilePath = (key: string) => join(DATA_DIR, `${key}.json`);
+
+const readJsonFile = async <T,>(key: string): Promise<T | undefined> => {
+  try {
+    const filePath = getFilePath(key);
+    if (fs.existsSync(filePath)) {
+      const data = await fs.promises.readFile(filePath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error(`Error reading file ${key}:`, error);
+  }
+  return undefined;
+};
+
+const writeJsonFile = async (key: string, value: unknown): Promise<void> => {
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      await fs.promises.mkdir(DATA_DIR, { recursive: true });
+    }
+    const filePath = getFilePath(key);
+    await fs.promises.writeFile(filePath, JSON.stringify(value, null, 2), 'utf8');
+  } catch (error) {
+    console.error(`Error writing file ${key}:`, error);
+  }
+};
 
 const USERS_KEY = 'users';
 const ORDERS_KEY = 'orders';
@@ -8,104 +41,6 @@ const FILTERS_KEY = 'filters';
 const PROJECTS_KEY = 'projects';
 const GIFTS_KEY = 'gifts';
 const TRANSACTIONS_KEY = 'transactions';
-
-const kvBaseUrl = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const kvToken = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const useKv = !!kvBaseUrl && !!kvToken;
-const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_URL;
-const useRedis = !!redisUrl;
-
-type RedisClient = ReturnType<typeof createClient>;
-let redisClientPromise: Promise<RedisClient | null> | null = null;
-
-export const getRedisClient = async (): Promise<RedisClient | null> => {
-  if (!useRedis || !redisUrl) {
-    return null;
-  }
-  
-  if (redisClientPromise) {
-    return redisClientPromise;
-  }
-
-  redisClientPromise = (async () => {
-    try {
-      console.log('Connecting to Redis:', redisUrl.replace(/:[^:@]+@/, ':***@'));
-      const client = createClient({ 
-        url: redisUrl,
-        socket: {
-          connectTimeout: 5000,
-          reconnectStrategy: (retries) => {
-            if (retries > 5) {
-              console.error('Redis reconnect failed');
-              return false;
-            }
-            return Math.min(retries * 500, 2000);
-          }
-        }
-      });
-      
-      client.on('error', (err) => {
-        if (!err.message.includes('Socket closed')) {
-          console.error('Redis Client Error:', err.message);
-        }
-      });
-      
-      await client.connect();
-      console.log('Redis connected successfully');
-      return client;
-    } catch (error: any) {
-      console.warn('Redis connection failed:', error.message);
-      redisClientPromise = null;
-      return null;
-    }
-  })();
-
-  return redisClientPromise;
-};
-
-export const isRedisAvailable = useRedis;
-
-const kvGetJson = async <T,>(key: string): Promise<T | undefined> => {
-  if (!useKv || !kvBaseUrl || !kvToken) {
-    return undefined;
-  }
-  try {
-    const response = await fetch(`${kvBaseUrl}/get/${encodeURIComponent(key)}`, {
-      headers: { Authorization: `Bearer ${kvToken}` },
-    });
-    if (!response.ok) {
-      return undefined;
-    }
-    const data = await response.json();
-    if (data?.result === null || data?.result === undefined) {
-      return undefined;
-    }
-    return JSON.parse(data.result);
-  } catch (error) {
-    console.error('Error reading KV:', error);
-    return undefined;
-  }
-};
-
-const kvSetJson = async (key: string, value: unknown): Promise<boolean> => {
-  if (!useKv || !kvBaseUrl || !kvToken) {
-    return false;
-  }
-  try {
-    const encoded = encodeURIComponent(JSON.stringify(value));
-    const response = await fetch(`${kvBaseUrl}/set/${encodeURIComponent(key)}/${encoded}`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${kvToken}` },
-    });
-    if (!response.ok) {
-      throw new Error('KV write failed');
-    }
-    return true;
-  } catch (error) {
-    console.error('Error writing KV:', error);
-    return false;
-  }
-};
 
 export interface User {
   id: string;
@@ -227,35 +162,13 @@ export interface Gift {
 
 export const db = {
   getUsers: async (): Promise<User[]> => {
-    if (useKv) {
-      const users = await kvGetJson<User[]>(USERS_KEY);
-      if (Array.isArray(users)) return users;
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(USERS_KEY);
-      if (data) {
-        const users = JSON.parse(data);
-        if (Array.isArray(users)) return users;
-      }
-    }
-    return [];
+    const users = await readJsonFile<User[]>(USERS_KEY);
+    return Array.isArray(users) ? users : [];
   },
 
   getOrders: async (): Promise<Order[]> => {
-    if (useKv) {
-      const orders = await kvGetJson<Order[]>(ORDERS_KEY);
-      if (Array.isArray(orders)) return orders;
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(ORDERS_KEY);
-      if (data) {
-        const orders = JSON.parse(data);
-        if (Array.isArray(orders)) return orders;
-      }
-    }
-    return [];
+    const orders = await readJsonFile<Order[]>(ORDERS_KEY);
+    return Array.isArray(orders) ? orders : [];
   },
 
   getUserByEmail: async (email: string): Promise<User | undefined> => {
@@ -269,25 +182,19 @@ export const db = {
     if (!users.some(u => u.email.toLowerCase() === user.email.toLowerCase())) {
       users.push(user);
     }
-    if (useKv) await kvSetJson(USERS_KEY, users);
-    const redisClient = await getRedisClient();
-    if (redisClient) await redisClient.set(USERS_KEY, JSON.stringify(users));
+    await writeJsonFile(USERS_KEY, users);
   },
 
   createOrder: async (order: Order): Promise<void> => {
     const orders = await db.getOrders();
     orders.push(order);
-    if (useKv) await kvSetJson(ORDERS_KEY, orders);
-    const redisClient = await getRedisClient();
-    if (redisClient) await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
+    await writeJsonFile(ORDERS_KEY, orders);
   },
 
   deleteOrder: async (id: string): Promise<void> => {
     const orders = await db.getOrders();
     const filtered = orders.filter(o => o.id !== id);
-    if (useKv) await kvSetJson(ORDERS_KEY, filtered);
-    const redisClient = await getRedisClient();
-    if (redisClient) await redisClient.set(ORDERS_KEY, JSON.stringify(filtered));
+    await writeJsonFile(ORDERS_KEY, filtered);
   },
 
   updateOrder: async (order: Order): Promise<void> => {
@@ -295,9 +202,7 @@ export const db = {
     const index = orders.findIndex(o => o.id === order.id);
     if (index !== -1) {
       orders[index] = order;
-      if (useKv) await kvSetJson(ORDERS_KEY, orders);
-      const redisClient = await getRedisClient();
-      if (redisClient) await redisClient.set(ORDERS_KEY, JSON.stringify(orders));
+      await writeJsonFile(ORDERS_KEY, orders);
     }
   },
   
@@ -311,25 +216,12 @@ export const db = {
   },
 
   getCollections: async (): Promise<Collection[]> => {
-    if (useKv) {
-      const collections = await kvGetJson<Collection[]>(COLLECTIONS_KEY);
-      if (Array.isArray(collections)) return collections;
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(COLLECTIONS_KEY);
-      if (data) {
-        const collections = JSON.parse(data);
-        if (Array.isArray(collections)) return collections;
-      }
-    }
-    return [];
+    const collections = await readJsonFile<Collection[]>(COLLECTIONS_KEY);
+    return Array.isArray(collections) ? collections : [];
   },
 
   saveCollections: async (collections: Collection[]): Promise<void> => {
-    if (useKv) await kvSetJson(COLLECTIONS_KEY, collections);
-    const redisClient = await getRedisClient();
-    if (redisClient) await redisClient.set(COLLECTIONS_KEY, JSON.stringify(collections));
+    await writeJsonFile(COLLECTIONS_KEY, collections);
   },
 
   saveCollection: async (collection: Collection): Promise<void> => {
@@ -347,30 +239,11 @@ export const db = {
   },
 
   getProducts: async (): Promise<Product[]> => {
-    try {
-      if (useKv) {
-        const products = await kvGetJson<Product[]>(PRODUCTS_KEY);
-        if (Array.isArray(products)) return products;
-      }
-      const redisClient = await getRedisClient();
-      if (redisClient) {
-        const data = await redisClient.get(PRODUCTS_KEY);
-        if (data) {
-          // If data is already an object (some Redis clients do this automatically)
-          if (typeof data === 'object') return Array.isArray(data) ? data : [];
-          
-          const products = JSON.parse(data);
-          if (Array.isArray(products)) return products;
-        }
-      }
-    } catch (error) {
-      console.error('CRITICAL ERROR reading products from Redis:', error);
-    }
-    return [];
+    const products = await readJsonFile<Product[]>(PRODUCTS_KEY);
+    return Array.isArray(products) ? products : [];
   },
 
   saveProducts: async (products: Product[]): Promise<void> => {
-    // Ensure all products have properly formatted images arrays before saving
     const sanitizedProducts = products.map(p => ({
       ...p,
       images: Array.isArray(p.images) ? p.images.filter(Boolean) : (p.image ? [p.image] : []),
@@ -379,17 +252,7 @@ export const db = {
         images: Array.isArray(c.images) ? c.images.filter(Boolean) : []
       })) : []
     }));
-
-    if (useKv) await kvSetJson(PRODUCTS_KEY, sanitizedProducts);
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      try {
-        await redisClient.set(PRODUCTS_KEY, JSON.stringify(sanitizedProducts));
-      } catch (error) {
-        console.error('Redis save error:', error);
-        throw error;
-      }
-    }
+    await writeJsonFile(PRODUCTS_KEY, sanitizedProducts);
   },
   
   saveProduct: async (product: Product): Promise<void> => {
@@ -407,25 +270,12 @@ export const db = {
   },
 
   getProjects: async (): Promise<Project[]> => {
-    if (useKv) {
-      const projects = await kvGetJson<Project[]>(PROJECTS_KEY);
-      if (Array.isArray(projects)) return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(PROJECTS_KEY);
-      if (data) {
-        const projects = JSON.parse(data);
-        if (Array.isArray(projects)) return projects.sort((a, b) => (a.order || 0) - (b.order || 0));
-      }
-    }
-    return [];
+    const projects = await readJsonFile<Project[]>(PROJECTS_KEY);
+    return Array.isArray(projects) ? projects.sort((a, b) => (a.order || 0) - (b.order || 0)) : [];
   },
 
   saveProjects: async (projects: Project[]): Promise<void> => {
-    if (useKv) await kvSetJson(PROJECTS_KEY, projects);
-    const redisClient = await getRedisClient();
-    if (redisClient) await redisClient.set(PROJECTS_KEY, JSON.stringify(projects));
+    await writeJsonFile(PROJECTS_KEY, projects);
   },
 
   saveProject: async (project: Project): Promise<void> => {
@@ -444,19 +294,8 @@ export const db = {
   },
 
   getFilters: async (): Promise<Filter[]> => {
-    if (useKv) {
-      const filters = await kvGetJson<Filter[]>(FILTERS_KEY);
-      if (Array.isArray(filters)) return filters;
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(FILTERS_KEY);
-      if (data) {
-        const filters = JSON.parse(data);
-        if (Array.isArray(filters)) return filters;
-      }
-    }
-    return [];
+    const filters = await readJsonFile<Filter[]>(FILTERS_KEY);
+    return Array.isArray(filters) ? filters : [];
   },
 
   saveFilter: async (filter: Filter): Promise<void> => {
@@ -464,41 +303,24 @@ export const db = {
     const index = filters.findIndex(f => f.id === filter.id);
     if (index >= 0) filters[index] = filter;
     else filters.push(filter);
-    if (useKv) await kvSetJson(FILTERS_KEY, filters);
-    const redisClient = await getRedisClient();
-    if (redisClient) await redisClient.set(FILTERS_KEY, JSON.stringify(filters));
+    await writeJsonFile(FILTERS_KEY, filters);
   },
 
   deleteFilter: async (id: string): Promise<void> => {
     const filters = await db.getFilters();
     const filtered = filters.filter(f => f.id !== id);
-    if (useKv) await kvSetJson(FILTERS_KEY, filtered);
-    const redisClient = await getRedisClient();
-    if (redisClient) await redisClient.set(FILTERS_KEY, JSON.stringify(filtered));
+    await writeJsonFile(FILTERS_KEY, filtered);
   },
 
   getTransactions: async (): Promise<Transaction[]> => {
-    if (useKv) {
-      const transactions = await kvGetJson<Transaction[]>(TRANSACTIONS_KEY);
-      if (Array.isArray(transactions)) return transactions;
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(TRANSACTIONS_KEY);
-      if (data) {
-        const transactions = JSON.parse(data);
-        if (Array.isArray(transactions)) return transactions;
-      }
-    }
-    return [];
+    const transactions = await readJsonFile<Transaction[]>(TRANSACTIONS_KEY);
+    return Array.isArray(transactions) ? transactions : [];
   },
 
   createTransaction: async (transaction: Transaction): Promise<void> => {
     const transactions = await db.getTransactions();
     transactions.push(transaction);
-    if (useKv) await kvSetJson(TRANSACTIONS_KEY, transactions);
-    const redisClient = await getRedisClient();
-    if (redisClient) await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
+    await writeJsonFile(TRANSACTIONS_KEY, transactions);
   },
 
   updateTransaction: async (transaction: Transaction): Promise<void> => {
@@ -506,31 +328,16 @@ export const db = {
     const index = transactions.findIndex(t => t.id === transaction.id);
     if (index >= 0) {
       transactions[index] = transaction;
-      if (useKv) await kvSetJson(TRANSACTIONS_KEY, transactions);
-      const redisClient = await getRedisClient();
-      if (redisClient) await redisClient.set(TRANSACTIONS_KEY, JSON.stringify(transactions));
+      await writeJsonFile(TRANSACTIONS_KEY, transactions);
     }
   },
 
   getGifts: async (): Promise<Gift[]> => {
-    if (useKv) {
-      const gifts = await kvGetJson<Gift[]>(GIFTS_KEY);
-      if (Array.isArray(gifts)) return gifts;
-    }
-    const redisClient = await getRedisClient();
-    if (redisClient) {
-      const data = await redisClient.get(GIFTS_KEY);
-      if (data) {
-        const gifts = JSON.parse(data);
-        if (Array.isArray(gifts)) return gifts;
-      }
-    }
-    return [];
+    const gifts = await readJsonFile<Gift[]>(GIFTS_KEY);
+    return Array.isArray(gifts) ? gifts : [];
   },
 
   saveGifts: async (gifts: Gift[]): Promise<void> => {
-    if (useKv) await kvSetJson(GIFTS_KEY, gifts);
-    const redisClient = await getRedisClient();
-    if (redisClient) await redisClient.set(GIFTS_KEY, JSON.stringify(gifts));
+    await writeJsonFile(GIFTS_KEY, gifts);
   }
 };

@@ -726,7 +726,7 @@ function ProjectsTab() {
                 <div className="space-y-3">
                   {currentProject.image && (
                     <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-                      <Image
+                      <SafeImage
                         src={currentProject.image}
                         alt="Предпросмотр"
                         fill
@@ -895,7 +895,7 @@ function ProjectsTab() {
                   <>
                     <div className="relative aspect-video bg-gray-100 overflow-hidden">
                        {project.image ? (
-                        <Image
+                        <SafeImage
                           src={project.image}
                           alt={project.title || "Проект"}
                           fill
@@ -1697,12 +1697,16 @@ function CatalogTab() {
     id: product?.id,
     name: product?.name || "",
     price: product?.price || 0,
-    images: product?.images || (product?.image ? [product.image] : []),
+    images: (product?.images || (product?.image ? [product.image] : [])).filter(Boolean),
     description: product?.description || "",
-    filterIds: product?.filterIds || [],
-    tags: product?.tags || [],
-    sizes: product?.sizes || [],
-    colors: product?.colors || [],
+    filterIds: (product?.filterIds || []).filter(Boolean),
+    tags: (product?.tags || []).filter(Boolean),
+    sizes: (product?.sizes || []).filter(Boolean),
+    colors: (product?.colors || []).map(c => ({
+      ...c,
+      images: (c.images || []).filter(Boolean),
+      sizes: (c.sizes || []).filter(Boolean)
+    })),
     details: {
       material: product?.details?.material || "",
       characteristics: product?.details?.characteristics || "",
@@ -1835,14 +1839,15 @@ function CatalogTab() {
 
     if (newImages.length > 0) {
       setCurrentProduct(prev => {
-        const nextImages = [...(prev.images || []), ...newImages];
-        const nextIndex = (prev.images || []).length;
+        const prevImages = (prev.images || []).filter(Boolean);
+        const nextImages = [...prevImages, ...newImages].filter(Boolean);
+        const nextIndex = prevImages.length;
         
         // Use a small timeout to ensure state update is processed before switching preview
         setTimeout(() => {
           setPreviewColorIndex(null);
           setPreviewImageIndex(nextIndex);
-        }, 10);
+        }, 100);
 
         return {
           ...prev,
@@ -2075,14 +2080,14 @@ function CatalogTab() {
     const value = imageInput.trim();
     if (!value) return;
     setCurrentProduct(prev => {
-      const nextImages = [...(prev.images || []), value];
-      const nextIndex = (prev.images || []).length;
+      const nextImages = [...(prev.images || []), value].filter(Boolean);
+      const nextIndex = nextImages.length - 1;
 
       // Use a small timeout to ensure state update is processed before switching preview
       setTimeout(() => {
         setPreviewColorIndex(null);
         setPreviewImageIndex(nextIndex);
-      }, 10);
+      }, 100);
 
       return {
         ...prev,
@@ -2169,16 +2174,17 @@ function CatalogTab() {
       setCurrentProduct(prev => {
         const colors = [...(prev.colors || [])];
         const color = colors[colorIndex];
-        const existingImages = color.images || [];
-        const nextImages = [...existingImages, ...newImages];
-        colors[colorIndex] = { ...color, images: nextImages };
-        
+        const prevImages = (color.images || []).filter(Boolean);
+        const nextImages = [...prevImages, ...newImages].filter(Boolean);
+        const nextIndex = prevImages.length;
+
         // Use a small timeout to ensure state update is processed before switching preview
         setTimeout(() => {
           setPreviewColorIndex(colorIndex);
-          setPreviewImageIndex(existingImages.length);
-        }, 10);
-        
+          setPreviewImageIndex(nextIndex);
+        }, 100);
+
+        colors[colorIndex] = { ...color, images: nextImages };
         return { ...prev, colors };
       });
     }
@@ -2537,7 +2543,7 @@ function CatalogTab() {
               </div>
               
               <div 
-                className="border-2 border-dashed border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center text-gray-500 hover:border-brand-brown hover:bg-brand-brown/5 transition-colors cursor-pointer mb-6"
+                className="relative border-2 border-dashed border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center text-gray-500 hover:border-brand-brown hover:bg-brand-brown/5 transition-colors cursor-pointer mb-6"
                 onDragOver={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -2547,21 +2553,24 @@ function CatalogTab() {
                   e.stopPropagation();
                   handleFileUpload(e.dataTransfer.files);
                 }}
-                onClick={() => document.getElementById('file-upload')?.click()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  document.getElementById('file-upload')?.click();
+                }}
               >
+                <div className="bg-gray-100 p-3 rounded-full mb-2 group-hover:scale-110 transition-transform">
+                  <Upload size={20} className="text-gray-400 group-hover:text-brand-brown transition-colors" />
+                </div>
+                <span className="text-sm font-medium text-gray-700 group-hover:text-brand-brown transition-colors">Загрузить фото по умолчанию</span>
+                <span className="text-xs text-gray-400 mt-1">JPG, PNG, WEBP</span>
                 <input 
                   type="file" 
                   id="file-upload" 
-                  className="hidden" 
+                  className="absolute inset-0 opacity-0 cursor-pointer pointer-events-none" 
                   accept="image/*"
                   multiple
                   onChange={(e) => handleFileUpload(e.target.files)}
                 />
-                <div className="bg-gray-100 p-3 rounded-full mb-2">
-                  <Upload size={20} className="text-gray-400" />
-                </div>
-                <span className="text-sm font-medium text-gray-700">Загрузить фото по умолчанию</span>
-                <span className="text-xs text-gray-400 mt-1">JPG, PNG, WEBP</span>
               </div>
 
               <div className="flex gap-2 mb-4">
@@ -2595,7 +2604,7 @@ function CatalogTab() {
                           : 'border-gray-200 bg-gray-50 hover:border-brand-brown/50'
                       }`}
                     >
-                      <Image src={img} alt="" fill className="object-cover" />
+                      <SafeImage src={img} alt="" fill className="object-cover" />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2" onClick={(e) => e.stopPropagation()}>
                         <button 
                           onClick={() => moveImage(index, -1)} 
@@ -2622,7 +2631,7 @@ function CatalogTab() {
                         {index === 0 ? "Главное" : `Фото ${index + 1}`}
                       </div>
                       {previewColorIndex === null && previewImageIndex === index && (
-                        <div className="absolute top-1 left-1 bg-brand-brown text-white p-1 rounded-full shadow-sm">
+                        <div className="absolute top-1 left-1 bg-brand-brown text-white p-1 rounded-full shadow-sm z-20">
                           <Eye size={10} />
                         </div>
                       )}
@@ -2666,7 +2675,7 @@ function CatalogTab() {
                 ) : (
                   colors.map((color, index) => (
                     <div 
-                      key={index} 
+                      key={`${color.name}-${index}`} 
                       className={`border rounded-xl overflow-hidden shadow-sm transition-all bg-white ${previewColorIndex === index ? 'ring-2 ring-brand-brown border-brand-brown' : 'border-gray-200 hover:shadow-md'}`}
                     >
                       {/* Color Header */}
@@ -2778,7 +2787,7 @@ function CatalogTab() {
                                     : 'border-gray-200 bg-gray-50 hover:border-brand-brown/50'
                                 }`}
                               >
-                                <Image src={img} alt="" fill className="object-cover" />
+                                <SafeImage src={img} alt="" fill className="object-cover" />
                                 <button 
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -2795,20 +2804,23 @@ function CatalogTab() {
                                   </div>
                                 )}
                                 {previewColorIndex === index && previewImageIndex === imgIdx && (
-                                  <div className="absolute top-1 left-1 bg-brand-brown text-white p-1 rounded-full shadow-sm">
+                                  <div className="absolute top-1 left-1 bg-brand-brown text-white p-1 rounded-full shadow-sm z-20">
                                     <Eye size={10} />
                                   </div>
                                 )}
                               </div>
                             ))}
-                            <label className="aspect-square border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-brand-brown hover:bg-brand-brown/5 transition-colors bg-gray-50 hover:bg-white text-gray-400 hover:text-brand-brown group">
+                            <label 
+                              className="aspect-square border-2 border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-brand-brown hover:bg-brand-brown/5 transition-colors bg-gray-50 hover:bg-white text-gray-400 hover:text-brand-brown group relative"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <div className="p-2 bg-white rounded-full shadow-sm mb-2 group-hover:scale-110 transition-transform">
                                 <Plus size={20} />
                               </div>
                               <span className="text-xs font-medium text-center px-1">Добавить фото</span>
                               <input 
                                 type="file" 
-                                className="hidden" 
+                                className="absolute inset-0 opacity-0 cursor-pointer pointer-events-none" 
                                 accept="image/*"
                                 multiple
                                 onChange={(e) => handleColorFileUpload(e.target.files, index)}
@@ -3038,13 +3050,13 @@ function CatalogTab() {
                       <div className="aspect-[3/4] bg-gray-100 relative group overflow-hidden">
                          {(() => {
                            const activeColor = previewColorIndex !== null ? currentProduct.colors?.[previewColorIndex] : null;
-                           const displayImages = (activeColor?.images?.length ? activeColor.images : (currentProduct.images?.length ? currentProduct.images : []));
+                           const displayImages = (activeColor?.images?.length ? activeColor.images : (currentProduct.images?.length ? currentProduct.images : [])).filter(Boolean);
                            const safeIndex = Math.min(previewImageIndex, Math.max(0, displayImages.length - 1));
                            const currentImage = displayImages[safeIndex] || displayImages[0];
                            
                            return displayImages.length > 0 ? (
                             <>
-                               <Image 
+                               <SafeImage 
                                   src={currentImage} 
                                   alt="" 
                                   fill
@@ -3598,7 +3610,7 @@ function ProductPickerModal({ isOpen, onClose, products, onSelect, alreadySelect
                          {isSelected && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
                        </div>
                        
-                       <Image 
+                       <SafeImage 
                          src={image} 
                          alt={product.name}
                          fill

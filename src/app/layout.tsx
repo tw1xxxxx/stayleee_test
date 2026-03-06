@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   description: "Одежда для ресторанов и поваров. Продажа физическим и юридическим лицам.",
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icon.png",
     apple: "/images/logo/StaySee_Logo_chocolate_v1-0.png",
   },
   appleWebApp: {

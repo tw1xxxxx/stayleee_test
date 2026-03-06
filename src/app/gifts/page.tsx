@@ -132,7 +132,7 @@ export default function GiftsPage() {
             return (
               <FadeIn key={gift.id} delay={idx * 0.1}>
                 <div className="bg-white/40 backdrop-blur-sm rounded-3xl overflow-hidden border border-brand-brown/5 shadow-sm hover:shadow-xl transition-all duration-500 group">
-                  <div className="flex flex-col md:flex-row h-full">
+                  <div className="flex flex-col md:flex-row min-h-[400px]">
                     {/* Image Section */}
                     <div className="relative w-full md:w-2/5 aspect-[4/5] md:aspect-auto overflow-hidden">
                       <Image 

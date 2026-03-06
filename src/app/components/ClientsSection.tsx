@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import FadeIn from "./FadeIn";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const clients = [
   { name: "Yauza", logo: "/images/clients/yauza.png", url: "https://yauza.place" },
@@ -73,10 +73,28 @@ const allLogos = [
 ];
 
 export default function ClientsSection() {
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [visibleCount, setVisibleCount] = useState(12);
+  const [increment, setIncrement] = useState(12);
+
+  useEffect(() => {
+    const updateConfig = () => {
+      const isDesktop = window.innerWidth >= 1024;
+      if (isDesktop) {
+        setVisibleCount(24);
+        setIncrement(24);
+      } else {
+        setVisibleCount(12);
+        setIncrement(12);
+      }
+    };
+
+    updateConfig();
+    window.addEventListener('resize', updateConfig);
+    return () => window.removeEventListener('resize', updateConfig);
+  }, []);
 
   const handleShowMore = () => {
-    setVisibleCount(prev => Math.min(prev + 6, allLogos.length));
+    setVisibleCount(prev => Math.min(prev + increment, allLogos.length));
   };
 
   return (
@@ -85,7 +103,7 @@ export default function ClientsSection() {
         Нам доверяют
       </h2>
       <div className="w-full max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12 lg:gap-16 items-center justify-items-center">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-10 lg:gap-14 items-center justify-items-center">
           {allLogos.slice(0, visibleCount).map((logo, index) => (
             <FadeIn 
               key={`${logo.src}-${index}`} 
@@ -94,7 +112,7 @@ export default function ClientsSection() {
               priority={true}
             >
               <div 
-                className={`w-full h-32 md:h-40 lg:h-48 relative block transition-all duration-500 hover:scale-105 ${
+                className={`w-full h-16 md:h-20 lg:h-24 relative block transition-all duration-500 hover:scale-110 ${
                   logo.type === 'partner' ? 'grayscale hover:grayscale-0' : ''
                 }`}
               >
@@ -103,7 +121,7 @@ export default function ClientsSection() {
                    alt={logo.name}
                    fill
                    className="object-contain"
-                   sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                   sizes="(max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw"
                  />
               </div>
             </FadeIn>
@@ -114,7 +132,7 @@ export default function ClientsSection() {
           <div className="mt-16 flex justify-center">
             <button
               onClick={handleShowMore}
-              className="px-8 py-4 border border-brand-brown text-brand-brown uppercase tracking-[0.2em] text-sm hover:bg-brand-brown hover:text-white transition-all duration-300 rounded-full"
+              className="px-8 py-3 border border-brand-brown text-brand-brown uppercase tracking-[0.2em] text-xs hover:bg-brand-brown hover:text-white transition-all duration-300 rounded-full"
             >
               Показать еще
             </button>
@@ -124,3 +142,4 @@ export default function ClientsSection() {
     </section>
   );
 }
+

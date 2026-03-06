@@ -4,8 +4,8 @@ module.exports = {
       name: 'clothing-for-restaurants',
       script: 'node_modules/next/dist/bin/next',
       args: 'start -p 3000',
-      instances: 'max',
-      exec_mode: 'cluster',
+      instances: 1,
+      exec_mode: 'fork',
       env: {
         NODE_ENV: 'production',
       },

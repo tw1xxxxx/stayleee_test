@@ -12,9 +12,10 @@ interface ElasticImageProps {
   enableSnapBack?: boolean;
   sizes?: string;
   objectFit?: "contain" | "cover" | "fill" | "none" | "scale-down";
+  noBackground?: boolean;
 }
 
-export default function ElasticImage({ src, alt, className, priority, onClick, sizes, objectFit = "cover", enableSnapBack = false }: ElasticImageProps) {
+export default function ElasticImage({ src, alt, className, priority, onClick, sizes, objectFit = "cover", enableSnapBack = false, noBackground = false }: ElasticImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
 
@@ -356,6 +357,7 @@ export default function ElasticImage({ src, alt, className, priority, onClick, s
           sizes={sizes}
           draggable={false}
           style={{ objectFit: objectFit }}
+          noBackground={noBackground}
         />
       </div>
     </div>

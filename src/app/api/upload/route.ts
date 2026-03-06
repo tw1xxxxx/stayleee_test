@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, chmod } from 'fs/promises';
 import { join } from 'path';
 
 export async function POST(request: Request) {
@@ -25,24 +25,24 @@ export async function POST(request: Request) {
       });
       return NextResponse.json({ url: blob.url });
     } else {
-      // Check if running on Vercel without token
-      if (process.env.VERCEL) {
-        console.error('Vercel Blob Token missing in Vercel environment');
-        return NextResponse.json(
-          { error: 'Vercel Blob storage is not configured. Please add BLOB_READ_WRITE_TOKEN to your environment variables.' },
-          { status: 500 }
-        );
+      // Fallback to local file system (for local development or VPS without Blob token)
+      const buffer = Buffer.from(await file.arrayBuffer());
+      
+      if (buffer.length === 0) {
+        throw new Error('File buffer is empty');
       }
 
-      // Fallback to local file system (for local development without Blob token)
-      const buffer = Buffer.from(await file.arrayBuffer());
       const uploadDir = join(process.cwd(), 'public/images/uploads');
       
-      // Ensure directory exists
+      // Ensure directory exists with correct permissions
       try {
         await mkdir(uploadDir, { recursive: true });
-      } catch {
-        // Ignore if exists
+        // Try to set directory permissions if on Linux
+        if (process.platform !== 'win32') {
+          await chmod(uploadDir, 0o777);
+        }
+      } catch (err) {
+        console.warn('Directory creation warning:', err);
       }
 
       // Create unique filename
@@ -51,9 +51,20 @@ export async function POST(request: Request) {
       const filename = `upload-${uniqueSuffix}.${ext}`;
       const filepath = join(uploadDir, filename);
 
+      console.log('Writing file to:', filepath);
       await writeFile(filepath, buffer);
 
+      // Set file permissions to be readable by everyone (crucial for VPS/Nginx)
+      if (process.platform !== 'win32') {
+        try {
+          await chmod(filepath, 0o644);
+        } catch (e) {
+          console.error('Failed to set file permissions:', e);
+        }
+      }
+
       const publicUrl = `/images/uploads/${filename}`;
+      console.log('Upload successful, public URL:', publicUrl);
 
       return NextResponse.json({ url: publicUrl });
     }

@@ -593,6 +593,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
                    objectFit="contain"
                    enableSnapBack={true}
                    className="w-full h-full"
+                   noBackground={true}
                  />
                </div>
             </div>

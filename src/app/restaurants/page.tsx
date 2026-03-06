@@ -37,28 +37,28 @@ const STAGES = [
     id: 'concept',
     number: '01',
     title: 'Концепция',
-    icon: '/images/icons8-концепция-64.png',
+    image: '/IMG_2203.PNG',
     text: 'Мы обсуждаем Ваши идеи и создаём образ будущего изделия — его стиль, характер и настроение'
   },
   {
     id: 'construction',
     number: '02',
     title: 'Конструкция',
-    icon: '/images/icons8-телевышка-50.png',
+    image: '/IMG_2204.PNG',
     text: 'Разрабатываем индивидуальную конструкцию с учётом особенностей фигуры для идеальной посадки'
   },
   {
     id: 'fabric',
     number: '03',
     title: 'Ткань',
-    icon: '/images/icons8-cloth-64.png',
+    image: '/IMG_2205.PNG',
     text: 'Подбираем материалы, которые подчеркнут концепцию и будут комфортны в носке'
   },
   {
     id: 'fitting',
     number: '04',
     title: 'Примерки\nи финал',
-    icon: '/images/icons8-победитель-гонки-53.png',
+    image: '/IMG_2206.PNG',
     text: 'На примерках оттачиваем детали и доводим изделие до совершенства. В результате Вы получаете уникальную вещь, созданную специально для Вас'
   }
 ];
@@ -189,17 +189,19 @@ export default function RestaurantsPage() {
               {STAGES.map((stage) => (
                 <FadeIn key={stage.id} delay={0.1}>
                   <div className="group relative bg-white rounded-3xl p-6 h-full border border-brand-brown/5 transition-all duration-300 hover:shadow-xl hover:border-brand-brown/10">
-                    {/* Number & Icon Header */}
-                    <div className="flex items-start justify-between mb-6">
-                      <span className="text-4xl font-bold text-brand-brown/10 font-mono tracking-tighter">
-                        {stage.number}
-                      </span>
-                      <div className="w-12 h-12 relative grayscale group-hover:grayscale-0 transition-all duration-500">
+                    {/* Number & Image Header */}
+                    <div className="flex flex-col gap-4 mb-6">
+                      <div className="flex items-start justify-between">
+                        <span className="text-4xl font-bold text-brand-brown/10 font-mono tracking-tighter">
+                          {stage.number}
+                        </span>
+                      </div>
+                      <div className="w-full aspect-video relative rounded-2xl overflow-hidden shadow-sm">
                         <Image 
-                          src={stage.icon} 
+                          src={stage.image} 
                           alt={stage.title.replace('\n', ' ')}
                           fill 
-                          className="object-contain"
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       </div>
                     </div>

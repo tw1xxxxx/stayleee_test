@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
-import { db, getRedisClient, isRedisAvailable } from '@/lib/db';
+import { db } from '@/lib/db';
+
+const isRedisAvailable = false;
+const getRedisClient = async () => null;
 
 declare global {
   var otpStore: Map<string, { code: string; expires: number; name?: string }>;

@@ -1,71 +1,83 @@
 import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+
+// If RESEND_API_KEY is provided, we use the API to bypass VPS port blocking (SMTP ports 465/587)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.yandex.ru',
   port: 465,
-  secure: true, // true for 465, false for 587
+  secure: true, // Port 465 requires secure: true
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  connectionTimeout: 15000, // 15 seconds
-  greetingTimeout: 15000,
-  socketTimeout: 30000,
+  tls: {
+    // Ensuring we don't reject valid certs, but trying to be standard
+    rejectUnauthorized: true,
+    minVersion: 'TLSv1.2'
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 20000,
   debug: true,
   logger: true,
 });
 
 export async function sendEmail(to: string, subject: string, html: string) {
-  // If RESEND_API_KEY is present, use Resend (HTTP API, not blocked by cloud providers)
-  if (process.env.RESEND_API_KEY) {
-    console.log(`Sending email to ${to} via Resend API...`);
+  console.log(`[EMAIL_DEBUG] Attempting to send email to ${to} using ${resend ? 'Resend API' : 'SMTP'}`);
+
+  if (resend) {
     try {
-      const response = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
+      const { data, error } = await resend.emails.send({
+        from: 'StaySee <auth@staysee.shop>', // Updated to .shop domain
+        to: [to],
+        subject,
+        html,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-        },
-        body: JSON.stringify({
-          from: process.env.RESEND_FROM || 'StaySee <onboarding@resend.dev>',
-          to,
-          subject,
-          html,
-        }),
+          'X-Priority': '1 (Highest)',
+          'Importance': 'high',
+        }
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Resend API error:", errorData);
-        throw new Error(`Resend API failed: ${JSON.stringify(errorData)}`);
+      if (error) {
+        console.error("Resend API error:", error);
+        throw error;
       }
 
-      const data = await response.json();
-      console.log(`Email sent via Resend to ${to}: ${data.id}`);
-      return;
-    } catch (error) {
-      console.error("Resend delivery failed:", error);
-      // Fallback to SMTP if Resend fails, but if it was the primary choice, we should know
+      console.log(`Email sent via Resend API: ${data?.id}`);
+      return data;
+    } catch (apiError) {
+      console.error("Resend API failed, falling back to SMTP if configured:", apiError);
+      // Fallback to SMTP if API fails
     }
   }
 
-  // Fallback to Nodemailer/SMTP
+  // Fallback to SMTP if Resend is not configured or failed
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.error("Email credentials (EMAIL_USER, EMAIL_PASS) are not set.");
-    throw new Error("Email configuration missing");
+    throw new Error("Email configuration missing (no Resend API Key and no SMTP credentials)");
   }
 
   try {
-    console.log(`Sending email to ${to} via SMTP...`);
     const info = await transporter.sendMail({
       from: `"StaySee" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
+      // Adding headers to prevent spam
+      headers: {
+        'X-Priority': '1 (Highest)',
+        'X-Mailer': 'Nodemailer',
+        'List-Unsubscribe': `<mailto:${process.env.EMAIL_USER}?subject=unsubscribe>`,
+        'Reply-To': process.env.EMAIL_USER,
+        'Importance': 'high',
+        'Message-ID': `<${Date.now()}.${Math.random().toString(36).substring(2)}@staysee.shop>`,
+      }
     });
     console.log(`Email sent to ${to} via SMTP: ${info.messageId}`);
+    return info;
   } catch (error) {
     console.error("Nodemailer detailed error:", error);
-    throw new Error("Failed to send email via SMTP");
+    throw error;
   }
 }
