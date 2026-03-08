@@ -94,7 +94,7 @@ export default function ClientsSection() {
   }, []);
 
   const handleShowMore = () => {
-    setVisibleCount(prev => Math.min(prev + increment, allLogos.length - 12));
+    setVisibleCount(prev => Math.min(prev + increment, allLogos.length));
   };
 
   return (
@@ -104,7 +104,7 @@ export default function ClientsSection() {
       </h2>
       <div className="w-full max-w-7xl mx-auto">
         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-8 gap-y-12 md:gap-x-12 md:gap-y-16 lg:gap-x-16 lg:gap-y-20 items-center justify-items-center">
-          {allLogos.slice(12, 12 + visibleCount).map((logo, index) => (
+          {allLogos.slice(0, visibleCount).map((logo, index) => (
             <FadeIn 
               key={`${logo.src}-${index}`} 
               delay={(index % 6) * 0.05} 
@@ -126,7 +126,7 @@ export default function ClientsSection() {
           ))}
         </div>
 
-        {visibleCount < allLogos.length - 12 && (
+        {visibleCount < allLogos.length && (
           <div className="mt-16 flex justify-center">
             <button
               onClick={handleShowMore}

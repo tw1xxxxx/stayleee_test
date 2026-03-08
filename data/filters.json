@@ -15,8 +15,25 @@
     "slug": "фартуки"
   },
   {
-    "id": "filter-головные-уборы",
-    "name": "Головные уборы",
-    "slug": "головные-уборы"
+    "id": "filter-headwear",
+    "name": "Голоаные уборы",
+    "slug": "headwear"
+  },
+  {
+    "id": "filter-merch",
+    "name": "Мерч",
+    "slug": "merch"
+  },
+  {
+    "id": "gender-male",
+    "name": "Мужское",
+    "slug": "male",
+    "type": "gender"
+  },
+  {
+    "id": "gender-female",
+    "name": "Женское",
+    "slug": "female",
+    "type": "gender"
   }
 ]

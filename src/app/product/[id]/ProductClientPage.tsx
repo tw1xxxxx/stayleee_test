@@ -71,6 +71,7 @@ export interface ApiProduct {
   colors?: ApiProductColor[];
   details?: ApiProductDetails;
   variants?: ApiProductVariant[];
+  gender?: 'male' | 'female' | 'unisex';
 }
 
 interface ProductClientPageProps {
@@ -90,7 +91,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
     }
     return null;
   });
-  const [visibleRelatedCount, setVisibleRelatedCount] = useState(4);
+  const [visibleRelatedCount, setVisibleRelatedCount] = useState(5);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   const [addEmbroidery, setAddEmbroidery] = useState(false);
   const { addToCart, getItemQuantity, updateQuantity, removeFromCart } = useCart();
@@ -154,6 +155,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
 
   const currentColorName = selectedColorObj ? selectedColorObj.label : selectedColor;
   const isKitel = PRODUCT.title.toLowerCase().includes("китель");
+  const isApron = (currentProduct?.category || "").toLowerCase() === "фартуки";
 
   const quantity = getItemQuantity(PRODUCT.id, selectedSize, currentColorName, isKitel ? addEmbroidery : false);
   const cartId = `${PRODUCT.id}-${selectedSize}-${currentColorName}${isKitel && addEmbroidery ? '-embroidery' : ''}`;
@@ -164,7 +166,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
   const hasMoreRelated = visibleRelatedCount < relatedProducts.length;
 
   const handleLoadMore = () => {
-    setVisibleRelatedCount((prev) => prev + 4);
+    setVisibleRelatedCount((prev) => prev + 5);
   };
 
   // Sync URL with selected color
@@ -237,7 +239,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
             if (window.history.length > 1) {
               router.back();
             } else {
-              router.push('/');
+              router.push('/catalog');
             }
           }}
           className="hidden lg:flex absolute left-[-80px] top-8 z-50 w-12 h-12 items-center justify-center bg-white rounded-full shadow-lg hover:bg-gray-50 transition-all hover:scale-110 cursor-pointer group"
@@ -254,7 +256,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
             if (window.history.length > 1) {
               router.back();
             } else {
-              router.push('/');
+              router.push('/catalog');
             }
           }}
           className="lg:hidden absolute top-4 left-4 z-[100] w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors cursor-pointer"
@@ -339,37 +341,39 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
             {/* Selectors */}
             <div className="space-y-8 mb-10">
               {/* Size Selector */}
-              <div className="space-y-3">
-                <p className="font-bold text-sm uppercase tracking-wider text-brand-brown/80">Размер</p>
-                <div className="flex flex-wrap gap-3">
-                  {PRODUCT.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSizeOverride(size)}
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold relative transition-all ${
-                        selectedSize === size ? "text-white" : "text-brand-brown hover:bg-white"
-                      }`}
-                    >
-                      {selectedSize === size ? (
-                        <motion.div
-                          layoutId="size-indicator"
-                          className="absolute inset-0 bg-brand-brown shadow-md rounded-xl"
-                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        />
-                      ) : (
-                        <div className="absolute inset-0 border border-brand-brown/20 rounded-xl" />
-                      )}
-                      <span className="relative z-10">{size}</span>
-                    </button>
-                  ))}
+              {!isApron && (
+                <div className="space-y-3">
+                  <p className="font-bold text-sm uppercase tracking-wider text-brand-brown/80">Размер</p>
+                  <div className="flex flex-wrap gap-3">
+                    {PRODUCT.sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSizeOverride(size)}
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold relative transition-all ${
+                          selectedSize === size ? "text-white" : "text-brand-brown hover:bg-white"
+                        }`}
+                      >
+                        {selectedSize === size ? (
+                          <motion.div
+                            layoutId="size-indicator"
+                            className="absolute inset-0 bg-brand-brown shadow-md rounded-xl"
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                          />
+                        ) : (
+                          <div className="absolute inset-0 border border-brand-brown/20 rounded-xl" />
+                        )}
+                        <span className="relative z-10">{size}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <button 
+                    onClick={() => setIsSizeGuideOpen(true)}
+                    className="text-brand-brown/60 underline underline-offset-4 text-xs cursor-pointer mt-2 block hover:text-brand-brown transition-colors font-sans uppercase tracking-widest"
+                  >
+                    Размерная сетка
+                  </button>
                 </div>
-                <button 
-                  onClick={() => setIsSizeGuideOpen(true)}
-                  className="text-brand-brown/60 underline underline-offset-4 text-xs cursor-pointer mt-2 block hover:text-brand-brown transition-colors font-sans uppercase tracking-widest"
-                >
-                  Размерная сетка
-                </button>
-              </div>
+              )}
 
               {/* Color Selector */}
               {PRODUCT.colors.length > 0 && (

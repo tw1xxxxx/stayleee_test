@@ -29,7 +29,7 @@ interface Promo {
 type InterleavedItem = Project | Promo;
 
 function isPromo(item: InterleavedItem): item is Promo {
-  return item.type === 'promo' && 'icon' in item;
+  return item.type === 'promo';
 }
 
 const STAGES = [
@@ -391,53 +391,72 @@ export default function RestaurantsPage() {
         </div>
 
         {/* Dynamic Content List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-12">
           {isLoading ? (
             // Loading Skeletons
             Array.from({ length: 6 }).map((_, index) => (
               <div 
                 key={`skeleton-${index}`} 
-                className="relative w-full aspect-[4/3] rounded-[2rem] overflow-hidden bg-white/50"
+                className="relative w-full aspect-[16/9] rounded-[2.5rem] overflow-hidden bg-white/50"
               >
                 <div className="absolute inset-0 skeleton-shimmer" />
               </div>
             ))
           ) : interleavedItems.length > 0 ? (
             interleavedItems.map((item, index) => (
-              <FadeIn key={item.id} delay={0.2 + (index % 3) * 0.1} className="h-full">
+              <FadeIn key={item.id} delay={0.2} className="h-full">
                 {isPromo(item) ? (
-                  <div className="group relative w-full h-full min-h-[280px] flex flex-col justify-center bg-white rounded-[2rem] p-8 border border-brand-brown/5 transition-all duration-300 hover:shadow-xl hover:border-brand-brown/10 overflow-hidden">
-                    {/* Background Accent */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-brand-brown/[0.02] rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150" />
+                  <Link 
+                    href="https://t.me/stay_see" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group relative w-full h-full min-h-[320px] md:min-h-[480px] flex flex-col justify-center bg-gradient-to-br from-white via-white to-brand-beige/30 rounded-[2.5rem] p-10 md:p-20 border border-brand-brown/10 transition-all duration-500 hover:shadow-2xl hover:border-brand-brown/20 overflow-hidden cursor-pointer"
+                  >
+                    {/* Background Accents */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-brand-brown/[0.03] rounded-full -mr-32 -mt-32 transition-transform duration-1000 group-hover:scale-110" />
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-beige/20 rounded-full -ml-24 -mb-24 blur-3xl pointer-events-none" />
                     
-                    <div className="flex items-center gap-3 mb-6 relative z-10">
-                      <div className="w-10 h-10 rounded-full bg-brand-brown/5 flex items-center justify-center text-xl">
+                    <div className="flex items-center gap-4 mb-10 relative z-10">
+                      <div className="w-14 h-14 rounded-2xl bg-brand-brown/5 flex items-center justify-center text-3xl shadow-sm transition-transform duration-500 group-hover:scale-110">
                         {item.icon || '✨'}
                       </div>
-                      <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-brand-brown/40">
-                        Специальное предложение
-                      </span>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-brand-brown/40 mb-1">
+                          Exclusive Offer
+                        </span>
+                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-brand-brown/60">
+                          Специальное предложение
+                        </span>
+                      </div>
                     </div>
                     
-                    <div className="pl-6 border-l-2 border-brand-brown/20 relative z-10">
+                    <div className="pl-10 border-l-2 border-brand-brown/10 relative z-10 group-hover:border-brand-brown/30 transition-colors duration-500">
                       {item.title && (
-                        <h3 className="text-xl font-bold uppercase tracking-widest text-brand-brown leading-tight mb-3">
+                        <h3 className="text-2xl md:text-4xl font-bold uppercase tracking-widest text-brand-brown leading-tight mb-6">
                           {item.title}
                         </h3>
                       )}
-                      <div className="text-sm leading-relaxed text-brand-brown/70 font-medium whitespace-pre-line">
+                      <div className="text-base md:text-xl leading-relaxed text-brand-brown/70 font-medium whitespace-pre-line max-w-3xl">
                         {item.text}
                       </div>
                     </div>
 
-                    {/* Bottom accent line */}
-                    <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-brand-brown/5">
-                      <div className="h-full w-0 bg-brand-brown group-hover:w-full transition-all duration-700 ease-out" />
+                    {/* Interactive element */}
+                    <div className="mt-12 relative z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div className="inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em] text-brand-brown">
+                        <span>Перейти в Telegram</span>
+                        <div className="w-12 h-[1px] bg-brand-brown" />
+                      </div>
                     </div>
-                  </div>
+
+                    {/* Bottom accent line */}
+                    <div className="absolute bottom-0 left-0 right-0 h-2 bg-brand-brown/5">
+                      <div className="h-full w-0 bg-brand-brown group-hover:w-full transition-all duration-1000 ease-out" />
+                    </div>
+                  </Link>
                 ) : (
                   <motion.section 
-                    className="group relative aspect-[4/3] w-full overflow-hidden rounded-[2rem] cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500"
+                    className="group relative aspect-[4/3] md:aspect-[16/9] w-full overflow-hidden rounded-[2.5rem] cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-700"
                     whileHover="hover"
                     initial="initial"
                   >
@@ -446,9 +465,9 @@ export default function RestaurantsPage() {
                       className="absolute inset-0 w-full h-full"
                       variants={{
                         initial: { scale: 1 },
-                        hover: { scale: 1.1 }
+                        hover: { scale: 1.05 }
                       }}
-                      transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
+                      transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1] }}
                     >
                       <SafeImage
                         src={item.image || "/images/470750.jpg"}
@@ -456,8 +475,8 @@ export default function RestaurantsPage() {
                         fill
                         className="object-cover"
                       />
-                      {/* Subtle Gradient for text readability */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+                      {/* Gradient for text readability */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-all duration-700" />
                     </motion.div>
 
                     {/* Title in Bottom Left */}

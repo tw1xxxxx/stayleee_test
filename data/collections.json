@@ -4,7 +4,31 @@
     "title": "RIDGE",
     "slug": "ridge",
     "description": "“Ridge” ( в переводе с англ.) “Грядка”. Наша новая коллекция несет за собой символ роста, создания и развития. Только представьте: солнечный свет проникает сквозь листья, согревая плодородную землю, а земля дышит и питает корни, отдавая силу и энергию для созревания урожая.",
-    "sections": []
+    "sections": [
+      {
+        "id": "ridge-kitels",
+        "title": "Кители",
+        "productIds": [
+          "kitel-mono",
+          "kitel-downy",
+          "kitel-grand"
+        ]
+      },
+      {
+        "id": "ridge-pants",
+        "title": "Брюки",
+        "productIds": [
+          "bryuki-jab"
+        ]
+      },
+      {
+        "id": "ridge-merch",
+        "title": "Мерч",
+        "productIds": [
+          "merch-shopper-scoop"
+        ]
+      }
+    ]
   },
   {
     "id": "semis",
@@ -13,24 +37,24 @@
     "description": "(сэми, (фр.) проросток, побег растения) — первая коллекция из 5 изделий, которая передаёт свежий взгляд на форму повара и бармена. А также является новым творческим проростком в деятельности основателя бренда.",
     "sections": [
       {
-        "id": "ib3evst",
+        "id": "semis-kitels",
         "title": "Кители",
         "productIds": [
-          "kitel-1771958311512-1",
-          "kitel-1771958311512-2",
-          "kitel-1771958311512-0"
+          "kitel-seed",
+          "kitel-embody",
+          "kitel-made"
         ]
       },
       {
-        "id": "0do50cr",
-        "title": "Брюки",
+        "id": "semis-aprons",
+        "title": "Фартуки",
         "productIds": [
-          "pant-1771958922441-9",
-          "pant-1771958922440-5",
-          "pant-1771958922440-4"
+          "apron-waterproof",
+          "apron-inspire",
+          "apron-simple"
         ]
       }
     ],
-    "image": "/images/uploads/upload-1772762108237-187879521.jpg"
+    "image": "/images/collections/semis-bg.jpg"
   }
 ]

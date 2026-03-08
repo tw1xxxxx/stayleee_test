@@ -5,5 +5,11 @@
     "title": "White Rabbit",
     "image": "/images/uploads/upload-1772818557713-314012415.jpg",
     "order": 1
+  },
+  {
+    "id": "4",
+    "type": "promo",
+    "text": "efefweferf",
+    "order": 1
   }
 ]

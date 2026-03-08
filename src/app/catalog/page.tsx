@@ -21,6 +21,7 @@ interface ApiProduct {
   images?: string[];
   filterIds?: string[];
   tags?: string[];
+  gender?: 'male' | 'female' | 'unisex';
   details?: {
     article?: string;
   };
@@ -30,6 +31,7 @@ interface ApiFilter {
   id: string;
   name: string;
   slug: string;
+  type?: string;
 }
 
 function CatalogContent() {
@@ -72,6 +74,24 @@ function CatalogContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState<ApiProduct[]>([]);
   const [filters, setFilters] = useState<ApiFilter[]>([]);
+
+  // Scroll restoration
+  useEffect(() => {
+    if (!isLoading && products.length > 0) {
+      const savedScrollPos = sessionStorage.getItem("catalogScrollPos");
+      if (savedScrollPos) {
+        // Use a small timeout to ensure grid is rendered
+        setTimeout(() => {
+          window.scrollTo(0, parseInt(savedScrollPos, 10));
+          sessionStorage.removeItem("catalogScrollPos");
+        }, 100);
+      }
+    }
+  }, [isLoading, products]);
+
+  const handleProductClick = () => {
+    sessionStorage.setItem("catalogScrollPos", window.scrollY.toString());
+  };
 
   // Function to scroll and focus search
   const handleSearchClick = () => {
@@ -170,9 +190,17 @@ function CatalogContent() {
       .filter((slug): slug is string => Boolean(slug));
     
     // Support both slug-based and id-based filtering for robustness
-    const matchesFilter = isAll || 
+    const matchesCategoryFilter = isAll || 
       productFilterSlugs.some(slug => activeFilters.includes(slug)) ||
       (product.filterIds || []).some(id => activeFilters.includes(id));
+    
+    // Gender filtering logic
+    const activeGenderFilters = activeFilters.filter(f => f === 'male' || f === 'female');
+    const matchesGenderFilter = activeGenderFilters.length === 0 || 
+      product.gender === 'unisex' || 
+      (product.gender && activeGenderFilters.includes(product.gender));
+
+    const matchesFilter = matchesCategoryFilter && matchesGenderFilter;
     
     const searchLower = searchQuery.toLowerCase();
     const matchesName = product.name.toLowerCase().includes(searchLower);
@@ -221,10 +249,9 @@ function CatalogContent() {
     const specificFilters = filterOptions.filter(f => f.slug !== "all");
     const areAllSelected = specificFilters.every(f => newFilters.includes(f.slug));
     
-    if (areAllSelected) {
-      newFilters = ["all"];
-    }
-
+    // Если все фильтры категорий выбраны, но гендеры не все, или наоборот,
+    // логика "all" может быть сложной. Упростим: если массив пуст, ставим all.
+    
     if (newFilters.length === 0) {
       newFilters = ["all"];
     }
@@ -435,7 +462,12 @@ function CatalogContent() {
           // Real Products
           filteredProducts.map((product) => (
             <FadeIn key={product.id} layout delay={0.05} className="h-full">
-              <Link href={`/product/${product.id}`} prefetch={false} className="flex flex-col gap-2 group cursor-pointer h-full">
+              <Link 
+                href={`/product/${product.id}`} 
+                prefetch={false} 
+                onClick={handleProductClick}
+                className="flex flex-col gap-2 group cursor-pointer h-full"
+              >
                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-gray-100">
                   <SafeImage
                     src={product.images?.[0] || product.image || "/images/catalog-product.jpg"}
@@ -448,6 +480,11 @@ function CatalogContent() {
                 </div>
                 <div className="flex flex-col flex-1 justify-between">
                   <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      {product.gender === 'male' && <span className="text-[10px] bg-brand-brown/5 text-brand-brown/60 px-1.5 py-0.5 rounded uppercase font-bold">Мужской</span>}
+                      {product.gender === 'female' && <span className="text-[10px] bg-brand-brown/5 text-brand-brown/60 px-1.5 py-0.5 rounded uppercase font-bold">Женский</span>}
+                      {product.gender === 'unisex' && <span className="text-[10px] bg-brand-brown/5 text-brand-brown/60 px-1.5 py-0.5 rounded uppercase font-bold">Unisex</span>}
+                    </div>
                     <h3 className="font-medium text-xs md:text-sm lg:text-base leading-tight group-hover:text-brand-brown/70 transition-colors uppercase tracking-wider">
                       {product.name}
                     </h3>
@@ -526,10 +563,34 @@ function CatalogContent() {
               </div>
 
               <div className="space-y-8">
+                {/* Категории */}
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-brand-brown/40 mb-4 ml-1">Категории</h3>
                   <div className="flex flex-wrap gap-2">
-                    {filterOptions.map((filter) => {
+                    {filterOptions.filter(f => f.type !== 'gender').map((filter) => {
+                      const isActive = activeFilters.includes(filter.slug);
+                      return ( 
+                        <button
+                          key={filter.id}
+                          onClick={() => toggleFilter(filter.slug)}
+                          className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                            isActive 
+                              ? "bg-brand-brown text-white shadow-lg shadow-brand-brown/20" 
+                              : "bg-white text-brand-brown hover:bg-brand-brown/5 border border-brand-brown/5"
+                          }`}
+                        >
+                          {filter.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Пол */}
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-brand-brown/40 mb-4 ml-1">Пол</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {filterOptions.filter(f => f.type === 'gender').map((filter) => {
                       const isActive = activeFilters.includes(filter.slug);
                       return ( 
                         <button
