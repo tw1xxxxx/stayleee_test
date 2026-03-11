@@ -36,6 +36,22 @@ export default function GiftsPage() {
         if (res.ok) {
           const data = await res.json();
           setGifts(data);
+          
+          // After gifts are loaded, check for hash and scroll
+          if (typeof window !== "undefined" && window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            setTimeout(() => {
+              const element = document.getElementById(hash);
+              if (element) {
+                element.scrollIntoView({ behavior: "smooth", block: "center" });
+                // Add a temporary highlight effect
+                element.classList.add("ring-2", "ring-brand-red", "ring-offset-4");
+                setTimeout(() => {
+                  element.classList.remove("ring-2", "ring-brand-red", "ring-offset-4");
+                }, 2000);
+              }
+            }, 500); // Small delay to allow FadeIn animations
+          }
         }
       } catch (error) {
         console.error("Failed to fetch gifts", error);
@@ -131,7 +147,7 @@ export default function GiftsPage() {
             
             return (
               <FadeIn key={gift.id} delay={idx * 0.1}>
-                <div className="bg-white/40 backdrop-blur-sm rounded-3xl overflow-hidden border border-brand-brown/5 shadow-sm hover:shadow-xl transition-all duration-500 group">
+                <div id={gift.id.toString()} className="bg-white/40 backdrop-blur-sm rounded-3xl overflow-hidden border border-brand-brown/5 shadow-sm hover:shadow-xl transition-all duration-500 group">
                   <div className="flex flex-col md:flex-row min-h-[300px]">
                     {/* Image Section */}
                     <div className="relative w-full md:w-1/3 aspect-[4/5] md:aspect-auto min-h-[300px] overflow-hidden">
@@ -174,9 +190,6 @@ export default function GiftsPage() {
                               Условие получения
                             </span>
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-brand-beige flex items-center justify-center text-xs font-bold text-brand-brown shadow-sm">
-                                {gift.threshold / 1000}к
-                              </div>
                               <span className="text-sm font-medium text-brand-brown/80">
                                 Бесплатно при заказе от {isMounted ? formatPrice(gift.threshold) : gift.threshold} ₽
                               </span>

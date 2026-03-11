@@ -15,6 +15,7 @@ interface Gift {
   threshold: number;
   title: string;
   image: string;
+  description?: string;
 }
 
 export default function CartPage() {
@@ -32,6 +33,7 @@ export default function CartPage() {
 
   const [isCheckoutVisible, setIsCheckoutVisible] = useState(true);
   const [gifts, setGifts] = useState<Gift[]>([]);
+  const [isGiftsModalOpen, setIsGiftsModalOpen] = useState(false);
   const { scrollY } = useScroll();
   const lastScrollY = useRef(0);
 
@@ -217,7 +219,12 @@ export default function CartPage() {
                         />
                       </div>
                     ) : (
-                      <Link href={`/product/${item.id}`} prefetch={false} className="relative w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100 block">
+                      <Link
+                        href={`/product/${item.id}${item.color ? `?color=${encodeURIComponent(item.color)}` : ''}`}
+                        prefetch={false}
+                        replace
+                        className="relative w-20 h-24 shrink-0 rounded-lg overflow-hidden bg-gray-100 block"
+                      >
                         <SafeImage
                           src={item.image}
                           alt={item.title}
@@ -238,7 +245,11 @@ export default function CartPage() {
                               </h3>
                             </div>
                           ) : (
-                            <Link href={`/product/${item.id}`} prefetch={false} className="block">
+                            <Link 
+                            href={`/product/${item.id}${item.color ? `?color=${encodeURIComponent(item.color)}` : ''}`} 
+                            prefetch={false} 
+                            className="block"
+                          >
                               <h3 className="font-medium text-sm leading-tight pr-6 hover:text-brand-red transition-colors line-clamp-2">
                                 {item.title}
                               </h3>
@@ -314,11 +325,23 @@ export default function CartPage() {
         </div>
 
         {/* Gift Progress Section */}
-        <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-brand-brown/5">
+        <div 
+          onClick={() => setIsGiftsModalOpen(true)}
+          className="bg-white/50 backdrop-blur-sm rounded-2xl p-4 shadow-sm border border-brand-brown/5 relative group cursor-pointer hover:bg-white/70 transition-all duration-300"
+        >
           <div className="flex justify-between items-end mb-2">
-            <span className="text-xs font-medium text-brand-brown/70">
-              {progress.completed ? "Цель достигнута!" : "До следующего подарка"}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs font-medium text-brand-brown/70">
+                {progress.completed ? "Цель достигнута!" : "До следующего подарка"}
+              </span>
+              <div className="p-1 text-brand-brown/30 group-hover:text-brand-brown transition-colors">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </div>
+            </div>
             <span className="text-[10px] font-bold bg-brand-brown text-white px-2 py-0.5 rounded-full">
               {progress.completed ? "MAX" : `${formatPrice(progress.target)} ₽`}
             </span>
@@ -378,8 +401,20 @@ export default function CartPage() {
                 </div>
                 
                 <div className="flex-1">
-                  <div className="text-[8px] font-bold uppercase text-white/50 mb-0.5">
-                    Подарок
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <div className="text-[8px] font-bold uppercase text-white/50">
+                      Подарок
+                    </div>
+                    <button 
+                      onClick={() => setIsGiftsModalOpen(true)}
+                      className="p-1 -m-1 text-white/30 hover:text-white transition-colors"
+                    >
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                      </svg>
+                    </button>
                   </div>
                   <h4 className="font-bold text-sm leading-tight">
                     {gift.title}
@@ -428,6 +463,7 @@ export default function CartPage() {
               <Link 
                 href="/checkout"
                 prefetch={false}
+                replace
                 aria-disabled={total === 0}
                 className={`font-bold py-3 px-8 rounded-sm shadow-lg transition-all flex-1 uppercase tracking-wider text-sm flex items-center justify-center ${
                   total === 0 
@@ -439,6 +475,120 @@ export default function CartPage() {
               </Link>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Gifts Info Modal */}
+      <AnimatePresence>
+        {isGiftsModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsGiftsModalOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-[340px] bg-white rounded-3xl overflow-hidden shadow-2xl border border-brand-brown/10 z-[101]"
+            >
+              <div className="p-5 border-b border-brand-brown/5 flex justify-between items-center bg-brand-beige/20">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold uppercase text-brand-red tracking-[0.15em] mb-0.5">
+                    Программа лояльности
+                  </span>
+                  <h3 className="text-sm font-bold text-brand-brown uppercase tracking-wider">
+                    Доступные подарки
+                  </h3>
+                </div>
+                <button 
+                  onClick={() => setIsGiftsModalOpen(false)}
+                  className="p-1.5 text-brand-brown/40 hover:text-brand-brown transition-colors bg-white rounded-full shadow-sm"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+
+              <div className="max-h-[60vh] overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                <p className="text-[11px] text-brand-brown/70 bg-brand-beige/30 p-3 rounded-xl border border-brand-brown/5 leading-snug">
+                  Бесплатные подарки от нас за сумму заказа. Нажмите на подарок, чтобы узнать о нём подробнее.
+                </p>
+                {gifts.map((gift) => {
+                  const isEarned = total >= gift.threshold;
+                  return (
+                    <Link 
+                      key={gift.id}
+                      href={`/gifts#${gift.id}`}
+                      onClick={() => setIsGiftsModalOpen(false)}
+                      className={`relative flex gap-4 p-3 rounded-2xl border transition-all hover:scale-[1.02] active:scale-[0.98] group ${
+                        isEarned 
+                          ? "bg-brand-beige/30 border-brand-brown/10 shadow-sm" 
+                          : "bg-white border-brand-brown/5 opacity-80"
+                      }`}
+                    >
+                      <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 shadow-sm">
+                        <Image
+                          src={gift.image}
+                          alt={gift.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        {isEarned && (
+                          <div className="absolute inset-0 bg-brand-brown/20 flex items-center justify-center">
+                            <div className="bg-white rounded-full p-1 shadow-sm">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2B1A15" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1 flex flex-col justify-center min-w-0">
+                        <div className="flex justify-between items-start mb-1 gap-2">
+                          <h4 className="text-[13px] font-bold text-brand-brown leading-tight truncate">
+                            {gift.title}
+                          </h4>
+                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0 ${
+                            isEarned 
+                              ? "bg-green-500 text-white" 
+                              : "bg-brand-brown/10 text-brand-brown/60"
+                          }`}>
+                            от {formatPrice(gift.threshold)} ₽
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-brand-brown/60 leading-tight line-clamp-2">
+                          {gift.description}
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <div className="p-4 bg-brand-beige/10 border-t border-brand-brown/5">
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between items-center text-[10px] font-medium text-brand-brown/60">
+                    <span>Текущая сумма заказа:</span>
+                    <span className="font-bold text-brand-brown">{formatPrice(total)} ₽</span>
+                  </div>
+                  <div className="h-1.5 w-full bg-brand-brown/5 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min((total / (gifts[gifts.length-1]?.threshold || 1)) * 100, 100)}%` }}
+                      className="h-full bg-brand-red rounded-full"
+                    />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

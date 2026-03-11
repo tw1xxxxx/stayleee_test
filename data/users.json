@@ -10,5 +10,17 @@
     "email": "azimut.it.02@mail.ru",
     "name": "User",
     "createdAt": "2026-03-03T00:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "email": "mixartemmai06@gmail.com",
+    "name": "Артем",
+    "createdAt": "2026-03-10T19:57:16.397Z"
+  },
+  {
+    "id": "3",
+    "email": "artemmai06@gmail.com",
+    "name": "Jon",
+    "createdAt": "2026-03-11T12:14:22.364Z"
   }
 ]

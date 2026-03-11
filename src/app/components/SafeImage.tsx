@@ -10,7 +10,7 @@ interface SafeImageProps extends ImageProps {
 
 const SafeImage: React.FC<SafeImageProps> = ({ 
   src, 
-  fallbackSrc = "/images/catalog-product.jpg", 
+  fallbackSrc = "/images/470750.jpg", 
   alt, 
   noBackground = false,
   ...props 
@@ -24,15 +24,15 @@ const SafeImage: React.FC<SafeImageProps> = ({
     setHasError(false);
     setRetryCount(0);
     // If src is null, undefined, or empty, use fallback
-    const validSrc = (src && src.toString().trim() !== "") ? src : fallbackSrc;
+    const validSrc = (src && typeof src === 'string' && src.trim() !== "") ? src : fallbackSrc;
     setImgSrc(validSrc);
     setIsLoading(true);
   }, [src, fallbackSrc]);
 
   return (
-    <div className={`relative w-full h-full ${noBackground ? "" : "bg-gray-100"} ${props.className || ""}`}>
+    <div className={`relative w-full h-full ${noBackground ? "" : "bg-gray-100/50"} ${props.className || ""}`}>
       {isLoading && !hasError && (
-        <div className={`absolute inset-0 flex items-center justify-center ${noBackground ? "" : "bg-gray-100"} z-10 transition-opacity duration-300`}>
+        <div className={`absolute inset-0 flex items-center justify-center ${noBackground ? "" : "bg-gray-100/50"} z-10 transition-opacity duration-300`}>
           <div className="w-6 h-6 border-2 border-brand-brown/20 border-t-brand-brown rounded-full animate-spin" />
         </div>
       )}
@@ -42,7 +42,7 @@ const SafeImage: React.FC<SafeImageProps> = ({
         alt={alt || ""}
         onLoadingComplete={() => setIsLoading(false)}
         onError={(e) => {
-          console.error(`SafeImage failed to load: ${imgSrc}`, e);
+          // console.error(`SafeImage failed to load: ${imgSrc}`, e);
           if (retryCount < 3) { // Reduced retries for faster fallback
             setTimeout(() => {
               setRetryCount(prev => prev + 1);

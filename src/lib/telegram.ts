@@ -18,6 +18,9 @@ export interface Order {
   createdAt: string | number | Date;
   total: number;
   address?: string;
+  deliveryType?: 'delivery' | 'pickup';
+  deliveryFee?: number;
+  comment?: string;
   userId?: string;
 }
 
@@ -36,8 +39,9 @@ export async function sendOrderToTelegram(order: Order) {
 🆕 **Новый заказ #${order.id}**
 
 📅 **Дата:** ${new Date(order.createdAt).toLocaleString('ru-RU')}
-💰 **Сумма:** ${order.total} ₽
-📍 **Адрес:** ${order.address || 'Не указан'}
+💰 **Сумма:** ${order.total} ₽ ${order.deliveryFee ? `(в т.ч. доставка ${order.deliveryFee} ₽)` : ''}
+📍 **Доставка:** ${order.deliveryType === 'pickup' ? 'Самовывоз' : `Курьер (${order.address || 'Не указан'})`}
+${order.comment ? `💬 **Комментарий:** ${order.comment}` : ''}
 ${customerInfo}
 
 🛒 **Товары:**
@@ -75,7 +79,7 @@ ${order.userId !== 'guest' ? `🆔 **User ID:** ${order.userId}` : '👤 **Го�
 export async function sendAuthCodeToTelegram(email: string, code: string) {
   try {
     const message = `
-🔑 **Код подтверждения StaySee**
+🔑 **Код подтверждения STAY.SEE.**
 
 📧 **Email:** ${email}
 🔢 **Код:** \`${code}\`

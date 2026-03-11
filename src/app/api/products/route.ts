@@ -36,7 +36,8 @@ const normalizeProduct = (product: Product): Product => {
     sizes: Array.isArray(product.sizes) ? product.sizes : [],
     colors,
     details: product.details || {},
-    variants: Array.isArray(product.variants) ? product.variants : []
+    variants: Array.isArray(product.variants) ? product.variants : [],
+    collectionImage: product.collectionImage || ""
   };
 };
 

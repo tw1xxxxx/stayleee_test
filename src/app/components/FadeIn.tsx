@@ -93,14 +93,26 @@ export default function FadeIn({
     );
   }
 
+  if (disableAnimation) {
+    return (
+      <div 
+        ref={ref}
+        className={`${fullWidth ? "w-full" : ""} ${className}`}
+        style={{ opacity: 1 }}
+      >
+        {children}
+      </div>
+    );
+  }
+
   return (
     <motion.div
       ref={ref}
-      initial={disableAnimation ? getAnimate() : getInitial()}
-      animate={disableAnimation ? getAnimate() : shouldAnimate ? getAnimate() : getInitial()}
+      initial={getInitial()}
+      animate={shouldAnimate ? getAnimate() : getInitial()}
       transition={{
-        duration: disableAnimation ? 0 : 0.8,
-        delay: disableAnimation ? 0 : delay,
+        duration: 0.8,
+        delay: delay,
         ease: [0.21, 0.47, 0.32, 0.98],
       }}
       className={`${fullWidth ? "w-full" : ""} ${className}`}

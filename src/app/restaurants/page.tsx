@@ -14,6 +14,8 @@ interface Project {
   type: 'portfolio' | 'promo';
   title?: string;
   image?: string;
+  image2?: string;
+  imageLayout?: 'single' | 'double';
   text?: string;
   order: number;
 }
@@ -326,41 +328,6 @@ export default function RestaurantsPage() {
                     </div>
                   </div>
                 </div>
-
-                {/* Gifts List - Single Column */}
-                <div className="space-y-4">
-                  <div className="px-2 mb-4 flex items-center justify-between">
-                    <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-brown/60">Подарки при заказе</h3>
-                    <span className="text-[10px] font-bold text-brand-brown/40 uppercase">Автоматически в корзине</span>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 gap-4">
-                    {[
-                      { amount: '15 000 ₽', gift: 'Фирменный карандаш', icon: '✏️' },
-                      { amount: '20 000 ₽', gift: 'Набор стикеров', icon: '🏷️' },
-                      { amount: '25 000 ₽', gift: 'Поварской фартук', icon: '🧑‍🍳' },
-                      { amount: '35 000 ₽', gift: 'Персональная вышивка', icon: '🪡' }
-                    ].map((item, i) => (
-                      <div key={i} className="bg-brand-beige/10 rounded-2xl p-6 border border-brand-brown/5 flex items-center justify-between group hover:bg-white hover:shadow-xl transition-all duration-500">
-                        <div className="flex items-center gap-6">
-                          <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-3xl shadow-sm group-hover:scale-110 transition-transform duration-300">
-                            {item.icon}
-                          </div>
-                          <div>
-                            <span className="text-[10px] font-bold text-brand-brown/40 uppercase tracking-widest block mb-1">Подарок {i + 1}</span>
-                            <h4 className="text-base font-bold uppercase tracking-wider text-brand-brown leading-tight">{item.gift}</h4>
-                            <p className="text-xs font-medium text-brand-brown/60 mt-1">При заказе от {item.amount}</p>
-                          </div>
-                        </div>
-                        <div className="hidden md:block">
-                          <div className="px-6 py-2.5 rounded-full border border-brand-brown/10 text-[10px] font-bold uppercase tracking-widest text-brand-brown/40 group-hover:bg-brand-brown group-hover:text-white group-hover:border-brand-brown transition-all duration-300">
-                            Автоматически
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
           </section>
@@ -391,101 +358,114 @@ export default function RestaurantsPage() {
         </div>
 
         {/* Dynamic Content List */}
-        <div className="grid grid-cols-1 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12" style={{ rowGap: '50px' }}>
           {isLoading ? (
             // Loading Skeletons
-            Array.from({ length: 6 }).map((_, index) => (
+            Array.from({ length: 4 }).map((_, index) => (
               <div 
                 key={`skeleton-${index}`} 
-                className="relative w-full aspect-[16/9] rounded-[2.5rem] overflow-hidden bg-white/50"
+                className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-white/50"
               >
                 <div className="absolute inset-0 skeleton-shimmer" />
               </div>
             ))
           ) : interleavedItems.length > 0 ? (
             interleavedItems.map((item, index) => (
-              <FadeIn key={item.id} delay={0.2} className="h-full">
+              <FadeIn key={item.id} delay={0.1} className="h-full">
                 {isPromo(item) ? (
                   <Link 
                     href="https://t.me/stay_see" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="group relative w-full h-full min-h-[320px] md:min-h-[480px] flex flex-col justify-center bg-gradient-to-br from-white via-white to-brand-beige/30 rounded-[2.5rem] p-10 md:p-20 border border-brand-brown/10 transition-all duration-500 hover:shadow-2xl hover:border-brand-brown/20 overflow-hidden cursor-pointer"
+                    className="group relative w-full aspect-[4/3] flex flex-col justify-center bg-gradient-to-br from-white via-white to-brand-beige/30 rounded-2xl p-8 border border-brand-brown/10 transition-all duration-500 hover:shadow-xl hover:border-brand-brown/20 overflow-hidden cursor-pointer"
                   >
                     {/* Background Accents */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-brand-brown/[0.03] rounded-full -mr-32 -mt-32 transition-transform duration-1000 group-hover:scale-110" />
-                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-beige/20 rounded-full -ml-24 -mb-24 blur-3xl pointer-events-none" />
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-brand-brown/[0.03] rounded-full -mr-16 -mt-16 transition-transform duration-1000 group-hover:scale-110" />
                     
-                    <div className="flex items-center gap-4 mb-10 relative z-10">
-                      <div className="w-14 h-14 rounded-2xl bg-brand-brown/5 flex items-center justify-center text-3xl shadow-sm transition-transform duration-500 group-hover:scale-110">
+                    <div className="flex items-center gap-3 mb-6 relative z-10">
+                      <div className="w-10 h-10 rounded-xl bg-brand-brown/5 flex items-center justify-center text-xl shadow-sm transition-transform duration-500 group-hover:scale-110">
                         {item.icon || '✨'}
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-brand-brown/40 mb-1">
+                        <span className="text-[8px] font-bold uppercase tracking-[0.4em] text-brand-brown/40 mb-0.5">
                           Exclusive Offer
                         </span>
-                        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-brand-brown/60">
-                          Специальное предложение
+                        <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-brand-brown/60">
+                          Спецпредложение
                         </span>
                       </div>
                     </div>
                     
-                    <div className="pl-10 border-l-2 border-brand-brown/10 relative z-10 group-hover:border-brand-brown/30 transition-colors duration-500">
+                    <div className="pl-6 border-l-2 border-brand-brown/10 relative z-10 group-hover:border-brand-brown/30 transition-colors duration-500">
                       {item.title && (
-                        <h3 className="text-2xl md:text-4xl font-bold uppercase tracking-widest text-brand-brown leading-tight mb-6">
+                        <h3 className="text-lg md:text-xl font-bold uppercase tracking-widest text-brand-brown leading-tight mb-3">
                           {item.title}
                         </h3>
                       )}
-                      <div className="text-base md:text-xl leading-relaxed text-brand-brown/70 font-medium whitespace-pre-line max-w-3xl">
+                      <div className="text-xs md:text-sm leading-relaxed text-brand-brown/70 font-medium whitespace-pre-line line-clamp-4">
                         {item.text}
                       </div>
                     </div>
 
-                    {/* Interactive element */}
-                    <div className="mt-12 relative z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <div className="inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.3em] text-brand-brown">
-                        <span>Перейти в Telegram</span>
-                        <div className="w-12 h-[1px] bg-brand-brown" />
-                      </div>
-                    </div>
-
                     {/* Bottom accent line */}
-                    <div className="absolute bottom-0 left-0 right-0 h-2 bg-brand-brown/5">
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-brown/5">
                       <div className="h-full w-0 bg-brand-brown group-hover:w-full transition-all duration-1000 ease-out" />
                     </div>
                   </Link>
                 ) : (
-                  <motion.section 
-                    className="group relative aspect-[4/3] md:aspect-[16/9] w-full overflow-hidden rounded-[2.5rem] cursor-pointer shadow-sm hover:shadow-2xl transition-all duration-700"
-                    whileHover="hover"
-                    initial="initial"
-                  >
-                    {/* Image Background */}
-                    <motion.div 
-                      className="absolute inset-0 w-full h-full"
-                      variants={{
-                        initial: { scale: 1 },
-                        hover: { scale: 1.05 }
-                      }}
-                      transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1] }}
+                  <div className="group cursor-pointer">
+                    <motion.section 
+                      className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-sm transition-all duration-700 mb-6"
+                      whileHover="hover"
+                      initial="initial"
                     >
-                      <SafeImage
-                        src={item.image || "/images/470750.jpg"}
-                        alt={item.title || "Изображение проекта"}
-                        fill
-                        className="object-cover"
-                      />
-                      {/* Gradient for text readability */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-all duration-700" />
-                    </motion.div>
-
-                    {/* Title in Bottom Left */}
-                    <div className="absolute bottom-0 left-0 p-8 md:p-10 w-full">
-                      <h3 className="text-xl md:text-3xl font-bold text-white uppercase tracking-wider drop-shadow-lg font-sans leading-tight group-hover:translate-x-2 transition-transform duration-500">
+                      {/* Image Background */}
+                      <motion.div 
+                        className="absolute inset-0 w-full h-full flex"
+                        variants={{
+                          initial: { scale: 1 },
+                          hover: { scale: 1.02 }
+                        }}
+                        transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1] }}
+                      >
+                        {item.type === 'portfolio' && item.imageLayout === 'double' ? (
+                          <div className="flex w-full h-full">
+                            <div className="relative w-1/2 h-full border-r border-white/10 overflow-hidden">
+                              <img
+                                src={item.image}
+                                alt={item.title || "1"}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="relative w-1/2 h-full overflow-hidden">
+                              <img
+                                src={item.image2 || item.image}
+                                alt={item.title || "2"}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="relative w-full h-full">
+                            <img
+                              src={(item as Project).image}
+                              alt={(item as Project).title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        {/* Subtle Overlay */}
+                        <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-all duration-700" />
+                      </motion.div>
+                    </motion.section>
+                    
+                    {/* Title Below Image */}
+                    <div className="text-center">
+                      <h3 className="text-sm md:text-base font-bold text-brand-brown uppercase tracking-[0.2em] transition-all duration-500 group-hover:text-brand-brown/70">
                         {item.title}
                       </h3>
                     </div>
-                  </motion.section>
+                  </div>
                 )}
               </FadeIn>
             ))

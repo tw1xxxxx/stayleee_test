@@ -428,6 +428,8 @@ interface Project {
   type: 'portfolio' | 'promo';
   title?: string;
   image?: string;
+  image2?: string;
+  imageLayout?: 'single' | 'double';
   text?: string;
   order: number;
 }
@@ -543,7 +545,7 @@ function ProjectsTab() {
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'image' | 'image2' = 'image') => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -559,7 +561,7 @@ function ProjectsTab() {
       
       if (response.ok) {
         const data = await response.json();
-        setCurrentProject(prev => ({ ...prev, image: data.url }));
+        setCurrentProject(prev => ({ ...prev, [field]: data.url }));
       } else {
         const data = await response.json().catch(() => ({}));
         alert(data.error || "Ошибка при загрузке файла");
@@ -720,51 +722,131 @@ function ProjectsTab() {
                   placeholder="Например: Клод Моне"
                 />
               </div>
-              
+
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Изображение</label>
-                <div className="space-y-3">
-                  {currentProject.image && (
-                    <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-                      <SafeImage
-                        src={currentProject.image}
-                        alt="Предпросмотр"
-                        fill
-                        className="object-cover"
-                      />
-                      <button
-                        onClick={() => setCurrentProject({ ...currentProject, image: '' })}
-                        className="absolute top-2 right-2 p-1 bg-white/90 text-red-500 rounded-full shadow-sm hover:bg-red-50 transition-colors"
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  )}
-                  
-                  <div className="flex gap-2">
-                    <label className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 border border-dashed border-gray-300 rounded-lg hover:border-brand-brown hover:bg-brand-brown/5 transition-all text-gray-500 hover:text-brand-brown">
-                      <Upload size={18} />
-                      <span className="text-sm font-medium">Загрузить файл</span>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleImageUpload}
-                        className="hidden" 
-                      />
-                    </label>
-                  </div>
-                  
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={currentProject.image || ""}
-                      onChange={(e) => setCurrentProject({ ...currentProject, image: e.target.value })}
-                      className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-brand-brown focus:ring-1 focus:ring-brand-brown transition-all text-sm"
-                      placeholder="Или вставьте прямую ссылку..."
+                <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Макет изображений</label>
+                <div className="flex gap-4 p-1 bg-gray-100 rounded-lg w-fit">
+                  <label className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-md transition-all ${currentProject.imageLayout !== 'double' ? 'bg-white shadow-sm text-brand-brown font-medium' : 'text-gray-500 hover:text-gray-700'}`}>
+                    <input 
+                      type="radio" 
+                      name="imageLayout" 
+                      value="single" 
+                      checked={currentProject.imageLayout !== 'double'}
+                      onChange={() => setCurrentProject({ ...currentProject, imageLayout: 'single' })}
+                      className="hidden"
                     />
-                    <LinkIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <span>Одна фотография</span>
+                  </label>
+                  <label className={`flex items-center gap-2 cursor-pointer px-4 py-2 rounded-md transition-all ${currentProject.imageLayout === 'double' ? 'bg-white shadow-sm text-brand-brown font-medium' : 'text-gray-500 hover:text-gray-700'}`}>
+                    <input 
+                      type="radio" 
+                      name="imageLayout" 
+                      value="double" 
+                      checked={currentProject.imageLayout === 'double'}
+                      onChange={() => setCurrentProject({ ...currentProject, imageLayout: 'double' })}
+                      className="hidden"
+                    />
+                    <span>Две фотографии</span>
+                  </label>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">
+                    {currentProject.imageLayout === 'double' ? 'Первое изображение' : 'Изображение'}
+                  </label>
+                  <div className="space-y-3">
+                    {currentProject.image && (
+                      <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+                        <SafeImage
+                          src={currentProject.image}
+                          alt="Предпросмотр 1"
+                          fill
+                          className="object-cover"
+                        />
+                        <button
+                          onClick={() => setCurrentProject({ ...currentProject, image: '' })}
+                          className="absolute top-2 right-2 p-1 bg-white/90 text-red-500 rounded-full shadow-sm hover:bg-red-50 transition-colors"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    )}
+                    
+                    <div className="flex gap-2">
+                      <label className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 border border-dashed border-gray-300 rounded-lg hover:border-brand-brown hover:bg-brand-brown/5 transition-all text-gray-500 hover:text-brand-brown">
+                        <Upload size={18} />
+                        <span className="text-sm font-medium">Загрузить файл</span>
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={(e) => handleImageUpload(e, 'image')}
+                          className="hidden" 
+                        />
+                      </label>
+                    </div>
+                    
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={currentProject.image || ""}
+                        onChange={(e) => setCurrentProject({ ...currentProject, image: e.target.value })}
+                        className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-brand-brown focus:ring-1 focus:ring-brand-brown transition-all text-sm"
+                        placeholder="Или ссылка..."
+                      />
+                      <LinkIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    </div>
                   </div>
                 </div>
+
+                {currentProject.imageLayout === 'double' && (
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide">Второе изображение</label>
+                    <div className="space-y-3">
+                      {currentProject.image2 && (
+                        <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+                          <SafeImage
+                            src={currentProject.image2}
+                            alt="Предпросмотр 2"
+                            fill
+                            className="object-cover"
+                          />
+                          <button
+                            onClick={() => setCurrentProject({ ...currentProject, image2: '' })}
+                            className="absolute top-2 right-2 p-1 bg-white/90 text-red-500 rounded-full shadow-sm hover:bg-red-50 transition-colors"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                      )}
+                      
+                      <div className="flex gap-2">
+                        <label className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-2.5 border border-dashed border-gray-300 rounded-lg hover:border-brand-brown hover:bg-brand-brown/5 transition-all text-gray-500 hover:text-brand-brown">
+                          <Upload size={18} />
+                          <span className="text-sm font-medium">Загрузить файл</span>
+                          <input 
+                            type="file" 
+                            accept="image/*" 
+                            onChange={(e) => handleImageUpload(e, 'image2')}
+                            className="hidden" 
+                          />
+                        </label>
+                      </div>
+                      
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={currentProject.image2 || ""}
+                          onChange={(e) => setCurrentProject({ ...currentProject, image2: e.target.value })}
+                          className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-brand-brown focus:ring-1 focus:ring-brand-brown transition-all text-sm"
+                          placeholder="Или ссылка..."
+                        />
+                        <LinkIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           )}
@@ -893,20 +975,43 @@ function ProjectsTab() {
               >
                 {project.type === 'portfolio' ? (
                   <>
-                    <div className="relative aspect-video bg-gray-100 overflow-hidden">
-                       {project.image ? (
-                        <SafeImage
-                          src={project.image}
-                          alt={project.title || "Проект"}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
+                    <div className="relative aspect-video bg-gray-100 overflow-hidden flex">
+                       {project.imageLayout === 'double' ? (
+                         <>
+                           <div className="relative w-1/2 h-full border-r border-white/10">
+                             <SafeImage
+                               src={project.image || "/images/470750.jpg"}
+                               alt={project.title || "Проект 1"}
+                               fill
+                               sizes="(max-width: 768px) 50vw, 16vw"
+                               className="object-cover transition-transform duration-500 group-hover:scale-105"
+                             />
+                           </div>
+                           <div className="relative w-1/2 h-full">
+                             <SafeImage
+                               src={project.image2 || project.image || "/images/470750.jpg"}
+                               alt={project.title || "Проект 2"}
+                               fill
+                               sizes="(max-width: 768px) 50vw, 16vw"
+                               className="object-cover transition-transform duration-500 group-hover:scale-105"
+                             />
+                           </div>
+                         </>
                        ) : (
-                         <div className="w-full h-full flex items-center justify-center text-gray-400">Нет фото</div>
+                         project.image ? (
+                          <SafeImage
+                            src={project.image}
+                            alt={project.title || "Проект"}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                         ) : (
+                           <div className="w-full h-full flex items-center justify-center text-gray-400">Нет фото</div>
+                         )
                        )}
-                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80" />
-                       <div className="absolute bottom-4 left-4 right-4">
+                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80 pointer-events-none" />
+                       <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
                          <h3 className="text-white font-bold text-xl drop-shadow-md truncate">{project.title}</h3>
                        </div>
                     </div>
@@ -1566,6 +1671,7 @@ interface CatalogProduct {
   colors?: CatalogColor[];
   details?: CatalogDetails;
   variants?: CatalogVariant[];
+  collectionImage?: string;
 }
 
 interface ProductDraft {
@@ -2645,7 +2751,77 @@ function CatalogTab() {
               )}
             </div>
 
-            {/* Card 3: Variants & Colors */}
+            {/* Card 3: Collection Media */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+              <div className="mb-4">
+                <h3 className="text-lg font-bold text-gray-900">Фотография для коллекций (Collection Image)</h3>
+                <p className="text-sm text-gray-500">
+                  Эта фотография будет отображаться **только** на странице коллекции. Если не выбрана, будет использоваться основная фотография.
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                {currentProduct.collectionImage ? (
+                  <div className="relative aspect-video max-w-md mx-auto rounded-xl overflow-hidden border border-gray-200 group bg-gray-50">
+                    <SafeImage src={currentProduct.collectionImage} alt="Collection Preview" fill className="object-contain" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                      <button 
+                        onClick={() => setCurrentProduct({ ...currentProduct, collectionImage: "" })} 
+                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2 text-sm font-medium"
+                      >
+                        <Trash2 size={16} />
+                        Удалить
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div 
+                    className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center text-gray-500 hover:border-brand-brown hover:bg-brand-brown/5 transition-colors cursor-pointer"
+                    onClick={() => document.getElementById('collection-file-upload')?.click()}
+                  >
+                    <div className="bg-gray-100 p-3 rounded-full mb-3 group-hover:scale-110 transition-transform">
+                      <ImageIcon size={24} className="text-gray-400 group-hover:text-brand-brown transition-colors" />
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 group-hover:text-brand-brown transition-colors">Выбрать фото для коллекции</span>
+                    <input 
+                      type="file" 
+                      id="collection-file-upload" 
+                      className="hidden" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const files = e.target.files;
+                        if (files && files[0]) {
+                          const formData = new FormData();
+                          formData.append('file', files[0]);
+                          try {
+                            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                            if (res.ok) {
+                              const data = await res.json();
+                              setCurrentProduct({ ...currentProduct, collectionImage: data.url });
+                            }
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+                
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={currentProduct.collectionImage || ""}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, collectionImage: e.target.value })}
+                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-brand-brown focus:ring-1 focus:ring-brand-brown transition-all text-sm"
+                    placeholder="Или вставьте прямую ссылку на изображение..."
+                  />
+                  <LinkIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                </div>
+              </div>
+            </div>
+
+            {/* Card 4: Variants & Colors */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
               <div className="flex justify-between items-center mb-6 pb-2 border-b border-gray-50">
                 <div>

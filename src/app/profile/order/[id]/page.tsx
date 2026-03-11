@@ -10,6 +10,11 @@ export default function OrderPage() {
   const { orders, isInitialized } = useCart();
   
   const order = orders.find((o) => o.id.toString() === params.id);
+  
+  const itemsTotal = order?.items.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0) || 0;
+  const totalQuantity = order?.items.reduce((sum, item) => sum + (item.quantity || 1), 0) || 0;
+  const deliveryFee = order?.deliveryFee || 0;
+  const discountAmount = (itemsTotal + deliveryFee) - (order?.amount || 0);
 
   if (!isInitialized) {
     return (
@@ -97,10 +102,30 @@ export default function OrderPage() {
       <div className="p-4 md:p-8 max-w-2xl mx-auto">
          {/* Amount */}
          <div className="bg-brand-beige/50 rounded-2xl p-6 mb-8 flex flex-col items-center justify-center border border-brand-brown/5">
-            <span className="text-sm font-bold text-brand-brown/40 uppercase tracking-widest mb-2">Сумма заказа</span>
-            <span className="text-5xl font-black text-brand-red tracking-tighter">
+            <span className="text-sm font-bold text-brand-brown/40 uppercase tracking-widest mb-2">Итого</span>
+            <span className="text-5xl font-black text-brand-red tracking-tighter mb-4">
               {formatPrice(order.amount)} ₽
             </span>
+            <div className="w-full space-y-2 border-t border-brand-brown/10 pt-4 px-4">
+              <div className="flex justify-between text-sm">
+                <span className="text-brand-brown/60">Количество:</span>
+                <span className="font-bold">{totalQuantity} шт.</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-brand-brown/60">Товары:</span>
+                <span className="font-bold">{formatPrice(itemsTotal)} ₽</span>
+              </div>
+              {discountAmount > 0 && (
+                <div className="flex justify-between text-sm text-brand-red">
+                  <span className="opacity-70">Скидка:</span>
+                  <span className="font-bold">-{formatPrice(discountAmount)} ₽</span>
+                </div>
+              )}
+              <div className="flex justify-between text-sm">
+                <span className="text-brand-brown/60">Доставка:</span>
+                <span className="font-bold">{order.deliveryFee ? `${formatPrice(order.deliveryFee)} ₽` : 'Бесплатно'}</span>
+              </div>
+            </div>
           </div>
 
           {/* Details Grid */}
@@ -113,8 +138,10 @@ export default function OrderPage() {
             <div className="flex flex-col gap-2 min-w-0">
               <span className="text-[10px] font-bold text-brand-brown/40 uppercase tracking-widest">Статус</span>
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
-                <span className="text-lg font-bold text-brand-brown truncate">{order.status}</span>
+                <span className={`w-2 h-2 rounded-full shrink-0 ${order.paymentStatus === 'succeeded' ? 'bg-green-500' : 'bg-brand-red'}`}></span>
+                <span className="text-lg font-bold text-brand-brown truncate">
+                  {order.paymentStatus === 'succeeded' ? 'В обработке' : 'Не оплачено'}
+                </span>
               </div>
             </div>
           </div>
@@ -128,9 +155,30 @@ export default function OrderPage() {
                   key={`${item.id}-${itemIndex}`}
                   className="min-h-[60px] bg-[#E8E8E8] text-brand-brown rounded-2xl w-full flex items-center justify-between px-6 py-4 shadow-inner gap-4"
                 >
-                  <span className="font-medium text-base leading-tight uppercase tracking-wide flex-1 min-w-0 break-words hyphens-auto" lang="ru">{item.name}</span>
+                  <div className="flex flex-col gap-1 flex-1 min-w-0">
+                    <span className="font-medium text-base leading-tight uppercase tracking-wide break-words hyphens-auto" lang="ru">{item.name}</span>
+                    <div className="flex flex-wrap gap-2 items-center">
+                      {item.quantity && item.quantity > 1 && (
+                        <span className="text-xs text-brand-brown/50 font-medium">{item.quantity} шт.</span>
+                      )}
+                      {item.size && (
+                        <span className="text-[10px] bg-brand-brown/5 px-1.5 py-0.5 rounded uppercase font-bold text-brand-brown/40">Размер: {item.size}</span>
+                      )}
+                      {item.color && (
+                        <span className="text-[10px] bg-brand-brown/5 px-1.5 py-0.5 rounded uppercase font-bold text-brand-brown/40">Цвет: {item.color}</span>
+                      )}
+                      {item.embroidery && (
+                        <span className="text-[10px] bg-brand-red/10 px-1.5 py-0.5 rounded uppercase font-bold text-brand-red flex items-center gap-1">
+                           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                          </svg>
+                          С вышивкой (+900 ₽)
+                        </span>
+                      )}
+                    </div>
+                  </div>
                   <span className="font-bold whitespace-nowrap opacity-90 text-lg shrink-0">
-                    {item.price === 0 ? "Бесплатно" : `${formatPrice(item.price)} ₽`}
+                    {item.price === 0 ? "Бесплатно" : `${formatPrice(item.price * (item.quantity || 1))} ₽`}
                   </span>
                 </div>
               ))}

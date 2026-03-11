@@ -1,6 +1,6 @@
 [
   {
-    "id": "kitel-simple",
+    "id": "kitel-1771958311512-0",
     "name": "Китель SIMPLE (с англ. классический)",
     "price": 4700,
     "description": "Универсальное изделие, которое станет незаменимым предметом Ваших рабочих будней",
@@ -19,49 +19,52 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "54% хлопок, 44% полиэстер, 2% лайкра",
       "characteristics": "ткань кителя подобрана для максимального комфорта, мягкости, и воздухопроницаемости. Он идеально ложится по фигуре, не сковывая движений, что позволяет Вам чувствовать себя уверенно и непринужденно в любой ситуации.",
       "article": "00620000"
     },
     "images": [
-      "/images/catalog/kitelya/simple/1.jpg",
+      "/images/catalog/kitelya/simple/4.jpg",
       "/images/catalog/kitelya/simple/2.jpg",
       "/images/catalog/kitelya/simple/3.jpg",
-      "/images/catalog/kitelya/simple/4.jpg",
+      "/images/catalog/kitelya/simple/1.jpg",
       "/images/catalog/kitelya/simple/5.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-simple-S",
+        "id": "kitel-1771958311512-0-S",
         "size": "S",
         "price": 4700,
         "sku": "00620000"
       },
       {
-        "id": "kitel-simple-M",
+        "id": "kitel-1771958311512-0-M",
         "size": "M",
         "price": 4700,
         "sku": "00620000"
       },
       {
-        "id": "kitel-simple-L",
+        "id": "kitel-1771958311512-0-L",
         "size": "L",
         "price": 4700,
         "sku": "00620000"
       },
       {
-        "id": "kitel-simple-XL",
+        "id": "kitel-1771958311512-0-XL",
         "size": "XL",
         "price": 4700,
         "sku": "00620000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/simple/4.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-popover",
+    "id": "kitel-1771958311512-1",
     "name": "Китель POPOVER",
     "price": 6300,
     "description": "Китель, со свободным кроем, созданный из ткани, которая сочетает в себе мягкость хлопка и прочность полиэстера. Подходит для любого сезона.",
@@ -80,7 +83,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "54% хлопок, 44% полиэстер, 2% лайкра",
       "characteristics": "при данном сочетании в составе - ткань не закатывается, практически не мнется и имеет небольшую растяжимость для комфорта, при этом большой процент хлопка позволяет ткани дышать",
@@ -91,39 +94,42 @@
       "/images/catalog/kitelya/popover/2.jpg",
       "/images/catalog/kitelya/popover/3.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-popover-S",
+        "id": "kitel-1771958311512-1-S",
         "size": "S",
         "price": 6300,
         "sku": "00610000"
       },
       {
-        "id": "kitel-popover-M",
+        "id": "kitel-1771958311512-1-M",
         "size": "M",
         "price": 6300,
         "sku": "00610000"
       },
       {
-        "id": "kitel-popover-L",
+        "id": "kitel-1771958311512-1-L",
         "size": "L",
         "price": 6300,
         "sku": "00610000"
       },
       {
-        "id": "kitel-popover-XL",
+        "id": "kitel-1771958311512-1-XL",
         "size": "XL",
         "price": 6300,
         "sku": "00610000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/popover/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-grand",
-    "name": "Китель GRAND (с англ. великий)",
+    "id": "kitel-1771958311512-2",
+    "name": "Китель GRAND",
     "price": 15800,
-    "description": "Поварской китель, воплощающий в себе мудрость опыта и универсальность таланта. Это символ профессионализма, искусства и страсти к гастрономии.",
+    "description": "Китель с названием \"Grand\" - это поварской китель, воплощающий в себе мудрость опыта и универсальность таланта. Грандиозный по своему масштабу, Grand - это более чем просто форма, это символ профессионализма, искусства и страсти к гастрономии.",
     "category": "Кители",
     "filterIds": [
       "filter-кители",
@@ -139,7 +145,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "71% хлопок, 25% полиэстер, 4% эластан",
       "characteristics": "Скрытая застежка на кнопках, воротник-стойка, рукав с манжетой. Не сковывает движения. Сшит для вас из формодержащей ткани с добавлением эластана, что позволит сохранить опрятный вид даже после долгого рабочего дня. Хлопок в составе создаст комфорт в носке",
@@ -157,39 +163,42 @@
       "/images/catalog/kitelya/grand/8.jpg",
       "/images/catalog/kitelya/grand/9.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-grand-S",
+        "id": "kitel-1771958311512-2-S",
         "size": "S",
         "price": 15800,
         "sku": "00430000"
       },
       {
-        "id": "kitel-grand-M",
+        "id": "kitel-1771958311512-2-M",
         "size": "M",
         "price": 15800,
         "sku": "00430000"
       },
       {
-        "id": "kitel-grand-L",
+        "id": "kitel-1771958311512-2-L",
         "size": "L",
         "price": 15800,
         "sku": "00430000"
       },
       {
-        "id": "kitel-grand-XL",
+        "id": "kitel-1771958311512-2-XL",
         "size": "XL",
         "price": 15800,
         "sku": "00430000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/grand/1.JPG",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-mono",
-    "name": "Китель MONO (название берет окончание от слова «кимоно»)",
+    "id": "kitel-1771958311512-3",
+    "name": "Китель MONO",
     "price": 9700,
-    "description": "Окутывает владельца нежным комфортом, создавая атмосферу спокойствия и уверенности. В нем есть что-то тайное, притягательное",
+    "description": "Mono - это китель, который не только украшает, но объединяет. Он окутывает владельца нежным комфортом, создавая атмосферу спокойствия и уверенности. В нем есть что-то тайное, притягательное.",
     "category": "Кители",
     "filterIds": [
       "filter-кители",
@@ -205,7 +214,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "71% хлопок, 25% полиэстер, 4% эластан",
       "characteristics": "Спущенное плечо, увеличенная длина и дизайнерская отстрочка на кармане создает неповторимый китель, в котором вы не останетесь незамеченным. Не сковывает движения. Сшит для вас из формодержащей ткани с добавлением эластана, что позволит сохранить опрятный вид даже после долгого рабочего дня. Хлопок в составе создаст комфорт в носке",
@@ -226,39 +235,42 @@
       "/images/catalog/kitelya/mono/DSC00315.jpg",
       "/images/catalog/kitelya/mono/DSC00330.JPG"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-mono-S",
+        "id": "kitel-1771958311512-3-S",
         "size": "S",
         "price": 9700,
         "sku": "00450000"
       },
       {
-        "id": "kitel-mono-M",
+        "id": "kitel-1771958311512-3-M",
         "size": "M",
         "price": 9700,
         "sku": "00450000"
       },
       {
-        "id": "kitel-mono-L",
+        "id": "kitel-1771958311512-3-L",
         "size": "L",
         "price": 9700,
         "sku": "00450000"
       },
       {
-        "id": "kitel-mono-XL",
+        "id": "kitel-1771958311512-3-XL",
         "size": "XL",
         "price": 9700,
         "sku": "00450000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/mono/1.JPG",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-downy",
-    "name": "Китель DOWNY (с англ. пушистый, нежный)",
+    "id": "kitel-1771958311512-4",
+    "name": "Китель DOWNY",
     "price": 13200,
-    "description": "Подобный облаку, будто соткан из пуха самых редких птиц. Гладкая ткань струится по фигуре, словно струйка дымки.",
+    "description": "Китель, подобный облаку, будто соткан из пуха самых редких птиц. Гладкая ткань струится по фигуре, словно струйка дымки. От него исходит аромат свежести и чистоты, словно запах утреннего тумана.",
     "category": "Кители",
     "filterIds": [
       "filter-кители",
@@ -274,10 +286,10 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "71% хлопок, 25% полиэстер, 4% эластан",
-      "characteristics": "Китель большого объема, прямого силуэта. Складки, скрытая застежка на пуговицы, объемные рукава и разрезы на спине. Множество продуманных деталей и подобранная ткань создает объемный, и в то же время утонченный образ. Не сковывает движения. Хлопок в составе создаст комфорт в носке",
+      "characteristics": "Китель большого объема, прямого силуэта. Складки, скрытая застежка на пуговицы, объемные рукава и разрезы на спине. Множество продуманных деталей и подобранная ткань создает объемный, и в то же время утонченный образ.",
       "article": "00400000"
     },
     "images": [
@@ -293,37 +305,40 @@
       "/images/catalog/kitelya/downy/8.jpg",
       "/images/catalog/kitelya/downy/9.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-downy-S",
+        "id": "kitel-1771958311512-4-S",
         "size": "S",
         "price": 13200,
         "sku": "00400000"
       },
       {
-        "id": "kitel-downy-M",
+        "id": "kitel-1771958311512-4-M",
         "size": "M",
         "price": 13200,
         "sku": "00400000"
       },
       {
-        "id": "kitel-downy-L",
+        "id": "kitel-1771958311512-4-L",
         "size": "L",
         "price": 13200,
         "sku": "00400000"
       },
       {
-        "id": "kitel-downy-XL",
+        "id": "kitel-1771958311512-4-XL",
         "size": "XL",
         "price": 13200,
         "sku": "00400000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/downy/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-made",
-    "name": "Китель MADE (с англ. созданный)",
+    "id": "kitel-1771958311512-5",
+    "name": "Китель MADE",
     "price": 6500,
     "description": "Китель, созданный специально для теплого сезона, с коротким рукавом и воздухопроницаемой тканью пике.",
     "category": "Кители",
@@ -341,9 +356,9 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
-      "material": "Основная ткань – Хлопок 51%, Полиэстер 49%, Пике – Хлопок 100",
+      "material": "Основная ткань – Хлопок 51%, Полиэстер 49%",
       "characteristics": "Тонкий, но практичный и износостойкий материал плетения оксфорд из натуральных и искусственных волокон, комфортный и удобный в уходе",
       "article": "00110000"
     },
@@ -354,37 +369,40 @@
       "/images/catalog/kitelya/made/4.jpg",
       "/images/catalog/kitelya/made/5.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-made-S",
+        "id": "kitel-1771958311512-5-S",
         "size": "S",
         "price": 6500,
         "sku": "00110000"
       },
       {
-        "id": "kitel-made-M",
+        "id": "kitel-1771958311512-5-M",
         "size": "M",
         "price": 6500,
         "sku": "00110000"
       },
       {
-        "id": "kitel-made-L",
+        "id": "kitel-1771958311512-5-L",
         "size": "L",
         "price": 6500,
         "sku": "00110000"
       },
       {
-        "id": "kitel-made-XL",
+        "id": "kitel-1771958311512-5-XL",
         "size": "XL",
         "price": 6500,
         "sku": "00110000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/made/1.jpg",
+    "collectionImage": "/DSC08737.JPG",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-embody",
-    "name": "Китель EMBODY (с англ. объединять в одно целое)",
+    "id": "kitel-1771958311512-6",
+    "name": "Китель EMBODY",
     "price": 8500,
     "description": "Китель, объединяющий в себе надежность и комфорт. Он сидит по фигуре, при этом дает свободу движениям.",
     "category": "Кители",
@@ -402,7 +420,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "Хлопок 70%, Полиэстер 30%",
       "characteristics": "Гладкокрашеный материал высокой прочности, воздухопроницаемый, гигроскопичный и неприхотливый в уходе.",
@@ -413,10 +431,10 @@
       "/images/catalog/kitelya/embody/10.jpg",
       "/images/catalog/kitelya/embody/2.JPG",
       "/images/catalog/kitelya/embody/3.JPG",
-      "/images/catalog/kitelya/embody/4.jpg",
       "/images/catalog/kitelya/embody/4 - копия.jpg",
-      "/images/catalog/kitelya/embody/5.jpg",
+      "/images/catalog/kitelya/embody/4.jpg",
       "/images/catalog/kitelya/embody/5 - копия.jpg",
+      "/images/catalog/kitelya/embody/5.jpg",
       "/images/catalog/kitelya/embody/6.jpg",
       "/images/catalog/kitelya/embody/7.jpg",
       "/images/catalog/kitelya/embody/8.jpg",
@@ -425,8 +443,8 @@
       "/images/catalog/kitelya/embody/DSC00031.jpg",
       "/images/catalog/kitelya/embody/DSC00034.jpg",
       "/images/catalog/kitelya/embody/DSC00035.jpg",
-      "/images/catalog/kitelya/embody/DSC00037-no-bg-preview (carve.photos).png",
       "/images/catalog/kitelya/embody/DSC00037.jpg",
+      "/images/catalog/kitelya/embody/DSC00037-no-bg-preview (carve.photos).png",
       "/images/catalog/kitelya/embody/DSC02314.jpg",
       "/images/catalog/kitelya/embody/DSC09801.jpg",
       "/images/catalog/kitelya/embody/DSC09802.jpg",
@@ -446,39 +464,42 @@
       "/images/catalog/kitelya/embody/DSC09975.jpg",
       "/images/catalog/kitelya/embody/DSC09978.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-embody-S",
+        "id": "kitel-1771958311512-6-S",
         "size": "S",
         "price": 8500,
         "sku": "01030000"
       },
       {
-        "id": "kitel-embody-M",
+        "id": "kitel-1771958311512-6-M",
         "size": "M",
         "price": 8500,
         "sku": "01030000"
       },
       {
-        "id": "kitel-embody-L",
+        "id": "kitel-1771958311512-6-L",
         "size": "L",
         "price": 8500,
         "sku": "01030000"
       },
       {
-        "id": "kitel-embody-XL",
+        "id": "kitel-1771958311512-6-XL",
         "size": "XL",
         "price": 8500,
         "sku": "01030000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/embody/1.JPG",
+    "collectionImage": "/DSC07975.JPG",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-embody-2",
-    "name": "Китель EMBODY 2.0 (с англ. объединять в одно целое)",
+    "id": "kitel-1771958311512-7",
+    "name": "Китель EMBODY 2.0",
     "price": 8500,
-    "description": "Китель, объединяющий в себе надежность и комфорт. Он сидит по фигуре, при этом дает свободу движениям.",
+    "description": "(с англ. объединять в одно целое) Китель, объединяющий в себе надежность и комфорт. Он сидит по фигуре, при этом дает свободу движениям.",
     "category": "Кители",
     "filterIds": [
       "filter-кители",
@@ -494,7 +515,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "хлопок 54%, полиэстер 44%, лайкра 2%",
       "characteristics": "китель отличается эргономичным кроем, который учитывает особенности повседневной работы: не стесняет движений, хорошо вентилируется и сохраняет аккуратный вид даже после длительного ношения. Практичный карман, усиленные швы и прочная фурнитура делают эту модель надёжным рабочим элементом одежды.",
@@ -509,37 +530,40 @@
       "/images/catalog/kitelya/embody-2/6.jpg",
       "/images/catalog/kitelya/embody-2/7.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-embody-2-S",
+        "id": "kitel-1771958311512-7-S",
         "size": "S",
         "price": 8500,
         "sku": ""
       },
       {
-        "id": "kitel-embody-2-M",
+        "id": "kitel-1771958311512-7-M",
         "size": "M",
         "price": 8500,
         "sku": ""
       },
       {
-        "id": "kitel-embody-2-L",
+        "id": "kitel-1771958311512-7-L",
         "size": "L",
         "price": 8500,
         "sku": ""
       },
       {
-        "id": "kitel-embody-2-XL",
+        "id": "kitel-1771958311512-7-XL",
         "size": "XL",
         "price": 8500,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/embody-2/1.JPG",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-seed",
-    "name": "Китель SEED (с англ. семя)",
+    "id": "kitel-1771958311512-8",
+    "name": "Китель SEED",
     "price": 12000,
     "description": "Удобный и лаконичный китель, с которого началась первая авторская коллекция Stay.See. Он подчеркивает творческий характер, свободно сидит и обеспечивает легкость движения.",
     "category": "Кители",
@@ -557,7 +581,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "Хлопок 51%, Полиэстер 49%",
       "characteristics": "Тонкий, но практичный и износостойкий материал плетения оксфорд из натуральных и искусственных волокон, комфортный и удобный в уходе.",
@@ -605,36 +629,39 @@
       "/images/catalog/kitelya/seed/DSC09799.jpg",
       "/images/catalog/kitelya/seed/DSC09801.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-seed-S",
+        "id": "kitel-1771958311512-8-S",
         "size": "S",
         "price": 12000,
         "sku": "00310000"
       },
       {
-        "id": "kitel-seed-M",
+        "id": "kitel-1771958311512-8-M",
         "size": "M",
         "price": 12000,
         "sku": "00310000"
       },
       {
-        "id": "kitel-seed-L",
+        "id": "kitel-1771958311512-8-L",
         "size": "L",
         "price": 12000,
         "sku": "00310000"
       },
       {
-        "id": "kitel-seed-XL",
+        "id": "kitel-1771958311512-8-XL",
         "size": "XL",
         "price": 12000,
         "sku": "00310000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/seed/1.jpg",
+    "collectionImage": "/DSC07700.JPG",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-heatwear",
+    "id": "kitel-1771958311512-9",
     "name": "Китель HEATWEAR (с англ. термоодежда)",
     "price": 6500,
     "description": "Профессиональный поварской китель, созданный для тех, кто работает в условиях высокой температуры и интенсивной нагрузки. Современный крой, технологичные материалы и продуманная функциональность обеспечивают максимальный комфорт в течение всей смены",
@@ -653,7 +680,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "полиэстер 64%, тенсель 34%, лайкра 2%",
       "characteristics": "держит линию тела, подчеркивая уверенность и мастерство, а эластичная ткань тянется - не сковывает движения, а помогает двигаться легко и свободно в жару и ритме",
@@ -667,36 +694,39 @@
       "/images/catalog/kitelya/heatwear/5.jpg",
       "/images/catalog/kitelya/heatwear/6.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-heatwear-S",
+        "id": "kitel-1771958311512-9-S",
         "size": "S",
         "price": 6500,
         "sku": ""
       },
       {
-        "id": "kitel-heatwear-M",
+        "id": "kitel-1771958311512-9-M",
         "size": "M",
         "price": 6500,
         "sku": ""
       },
       {
-        "id": "kitel-heatwear-L",
+        "id": "kitel-1771958311512-9-L",
         "size": "L",
         "price": 6500,
         "sku": ""
       },
       {
-        "id": "kitel-heatwear-XL",
+        "id": "kitel-1771958311512-9-XL",
         "size": "XL",
         "price": 6500,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/heatwear/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-mono-2",
+    "id": "kitel-1771958311512-10",
     "name": "Китель MONO 2.0 (название берет от окончания слова «кимоно»)",
     "price": 8200,
     "description": "Развитие Mono, вдохновленное кимоно. Облегчающие элементы делают его еще свободнее и мягче. Он окутывает комфортом, создавая ощущение спокойствия, уверенности и тихой притягательности",
@@ -715,7 +745,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "хлопок 35%, полиэстер 65%",
       "characteristics": "универсальный крой обеспечивает комфортную посадку и свободу движений в течение всей смены. Смесовая ткань из хлопка и полиэстера сочетает натуральную воздухопроницаемость и повышенную износостойкость.",
@@ -732,36 +762,39 @@
       "/images/catalog/kitelya/mono-2/8.jpg",
       "/images/catalog/kitelya/mono-2/9.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-mono-2-S",
+        "id": "kitel-1771958311512-10-S",
         "size": "S",
         "price": 8200,
         "sku": ""
       },
       {
-        "id": "kitel-mono-2-M",
+        "id": "kitel-1771958311512-10-M",
         "size": "M",
         "price": 8200,
         "sku": ""
       },
       {
-        "id": "kitel-mono-2-L",
+        "id": "kitel-1771958311512-10-L",
         "size": "L",
         "price": 8200,
         "sku": ""
       },
       {
-        "id": "kitel-mono-2-XL",
+        "id": "kitel-1771958311512-10-XL",
         "size": "XL",
         "price": 8200,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/mono-2/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-dubbutton",
+    "id": "kitel-1771958311512-11",
     "name": "Китель DUBBUTTON (с англ. двойная кнопка)",
     "price": 8500,
     "description": "Классический двубортный китель, вдохновленный Францией. Максимально комфортный и не сковывающий движения в процессе работы.",
@@ -780,7 +813,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "хлопок 54%, полиэстер 44%, лайкра 2 %",
       "characteristics": "Китель выполнен из прочной и дышащей ткани, которая выдерживает интенсивную эксплуатацию и частые стирки, оставаясь мягкой и приятной на ощупь. Эргономичный крой обеспечивает свободу движений, а тщательно продуманное расположение кармана позволяет иметь под рукой необходимые мелочи",
@@ -795,36 +828,39 @@
       "/images/catalog/kitelya/dubbutton/6.jpg",
       "/images/catalog/kitelya/dubbutton/7.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-dubbutton-S",
+        "id": "kitel-1771958311512-11-S",
         "size": "S",
         "price": 8500,
         "sku": ""
       },
       {
-        "id": "kitel-dubbutton-M",
+        "id": "kitel-1771958311512-11-M",
         "size": "M",
         "price": 8500,
         "sku": ""
       },
       {
-        "id": "kitel-dubbutton-L",
+        "id": "kitel-1771958311512-11-L",
         "size": "L",
         "price": 8500,
         "sku": ""
       },
       {
-        "id": "kitel-dubbutton-XL",
+        "id": "kitel-1771958311512-11-XL",
         "size": "XL",
         "price": 8500,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/dubbutton/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-kosno",
+    "id": "kitel-1771958311512-12",
     "name": "Китель KOSNO",
     "price": 9200,
     "description": "Форма характера. Скошенный ворот как знак ремесла: функциональный, чистый, точный. Свободная посадка держит форму и не сковывает - для работы, движения, выхода.",
@@ -843,7 +879,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "хлопок 54%, полиэстер 44%, лайкра 2%",
       "characteristics": "Лёгкая, прочная ткань в сочетании с продуманным кроем помогает поддерживать комфорт даже при интенсивной нагрузке и в условиях высоких температур. Асимметричная застёжка спереди придаёт изделию выразительный и эстетичный вид, а также обеспечивает удобство при надевании и максимальную свободу движений во время работы на кухне",
@@ -857,36 +893,39 @@
       "/images/catalog/kitelya/kosno/5.jpg",
       "/images/catalog/kitelya/kosno/6.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-kosno-S",
+        "id": "kitel-1771958311512-12-S",
         "size": "S",
         "price": 9200,
         "sku": ""
       },
       {
-        "id": "kitel-kosno-M",
+        "id": "kitel-1771958311512-12-M",
         "size": "M",
         "price": 9200,
         "sku": ""
       },
       {
-        "id": "kitel-kosno-L",
+        "id": "kitel-1771958311512-12-L",
         "size": "L",
         "price": 9200,
         "sku": ""
       },
       {
-        "id": "kitel-kosno-XL",
+        "id": "kitel-1771958311512-12-XL",
         "size": "XL",
         "price": 9200,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/kosno/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-self",
+    "id": "kitel-1771958311512-13",
     "name": "Китель SELF (с англ. сам)",
     "price": 9400,
     "description": "Современный поварской китель для тех, кто создаёт свой стиль и уверенно чувствует себя на кухне. Лаконичный дизайн и продуманный крой делают модель универсальным решением как для классических ресторанов, так и для открытых гастропространств.",
@@ -905,7 +944,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "основная ткань - хлопок 54%, полиэстер 44%, лайкра 2%. Дополнительная ткань - хлопок 100%.",
       "characteristics": "Комфортная посадка обеспечивает свободу движений в течение всей смены, а износостойкая ткань сохраняет аккуратный внешний вид даже при интенсивной работе и частых стирках. Практичные детали и минималистичная эстетика подчёркивают профессионализм и индивидуальность.",
@@ -920,39 +959,42 @@
       "/images/catalog/kitelya/self/6.JPG",
       "/images/catalog/kitelya/self/7.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-self-S",
+        "id": "kitel-1771958311512-13-S",
         "size": "S",
         "price": 9400,
         "sku": ""
       },
       {
-        "id": "kitel-self-M",
+        "id": "kitel-1771958311512-13-M",
         "size": "M",
         "price": 9400,
         "sku": ""
       },
       {
-        "id": "kitel-self-L",
+        "id": "kitel-1771958311512-13-L",
         "size": "L",
         "price": 9400,
         "sku": ""
       },
       {
-        "id": "kitel-self-XL",
+        "id": "kitel-1771958311512-13-XL",
         "size": "XL",
         "price": 9400,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/self/1.JPG",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-chefwear",
+    "id": "kitel-1771958311512-14",
     "name": "Китель CHEFWEAR (с англ. поварская одежда)",
     "price": 11400,
-    "description": "Создан для Шефов. Chefwear — это баланс практичности, долговечности и профессионального образа.",
+    "description": "Создан для Шефов. Chefwear — это баланс практичности, долговечности и профессионального образа. Ткань хорошо вентилируется, сохраняет аккуратный внешний вид после многократных стирок и не сковывает движений, что особенно важно при активной готовке. Эргономичный дизайн и продуманные элементы (например, удобные карманы и надёжная застёжка) делают Chefwear отличным выбором",
     "category": "Кители",
     "filterIds": [
       "filter-кители",
@@ -968,10 +1010,10 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "основная ткань - хлопок 54%, полиэстер 44%, лайкра 2%. Дополнительная ткань - хлопок 100%",
-      "characteristics": "Ткань хорошо вентилируется, сохраняет аккуратный внешний вид после многократных стирок и не сковывает движений, что особенно важно при активной готовке. Эргономичный дизайн и продуманные элементы (например, удобные карманы и надёжная застёжка) делают Chefwear отличным выбором",
+      "characteristics": "",
       "article": ""
     },
     "images": [
@@ -982,39 +1024,42 @@
       "/images/catalog/kitelya/chefwear/5.jpg",
       "/images/catalog/kitelya/chefwear/6.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-chefwear-S",
+        "id": "kitel-1771958311512-14-S",
         "size": "S",
         "price": 11400,
         "sku": ""
       },
       {
-        "id": "kitel-chefwear-M",
+        "id": "kitel-1771958311512-14-M",
         "size": "M",
         "price": 11400,
         "sku": ""
       },
       {
-        "id": "kitel-chefwear-L",
+        "id": "kitel-1771958311512-14-L",
         "size": "L",
         "price": 11400,
         "sku": ""
       },
       {
-        "id": "kitel-chefwear-XL",
+        "id": "kitel-1771958311512-14-XL",
         "size": "XL",
         "price": 11400,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/chefwear/1.JPG",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-chefwear-2",
-    "name": "Китель CHEFWEAR 2.0 (с англ. поварская одежда)",
+    "id": "kitel-1771958311512-15",
+    "name": "Китель CHEFWEAR 2.0  (с англ. поварская одежда)",
     "price": 11400,
-    "description": "Все тот же CHEFWEAR, только оптимизирован для работы поваров на протяжении долгого времени на кухне.",
+    "description": "Все тот же CHEFWEAR, только оптимизирован для работы поваров на протяжении долгого времени на кухне. Ткань хорошо вентилируется, сохраняет аккуратный внешний вид после многократных стирок и не сковывает движений, что особенно важно при активной готовке. Эргономичный дизайн и продуманные элементы (например, удобные карманы и надёжная застёжка) делают Chefwear отличным выбором",
     "category": "Кители",
     "filterIds": [
       "filter-кители",
@@ -1030,10 +1075,10 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
-      "material": "основная ткань - хлопок 54%, полиэстер 44%, лайкра 2%. Дополнительная ткань - хлопок 100%",
-      "characteristics": "Ткань хорошо вентилируется, сохраняет аккуратный внешний вид после многократных стирок и не сковывает движений, что особенно важно при активной готовке. Эргономичный дизайн и продуманные элементы (например, удобные карманы и надёжная застёжка) делают Chefwear отличным выбором",
+      "material": ": основная ткань - хлопок 54%, полиэстер 44%, лайкра 2%. Дополнительная ткань - хлопок 100%",
+      "characteristics": "",
       "article": ""
     },
     "images": [
@@ -1049,36 +1094,39 @@
       "/images/catalog/kitelya/chefwear-2/8.jpg",
       "/images/catalog/kitelya/chefwear-2/9.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-chefwear-2-S",
+        "id": "kitel-1771958311512-15-S",
         "size": "S",
         "price": 11400,
         "sku": ""
       },
       {
-        "id": "kitel-chefwear-2-M",
+        "id": "kitel-1771958311512-15-M",
         "size": "M",
         "price": 11400,
         "sku": ""
       },
       {
-        "id": "kitel-chefwear-2-L",
+        "id": "kitel-1771958311512-15-L",
         "size": "L",
         "price": 11400,
         "sku": ""
       },
       {
-        "id": "kitel-chefwear-2-XL",
+        "id": "kitel-1771958311512-15-XL",
         "size": "XL",
         "price": 11400,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/chefwear-2/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-embrace",
+    "id": "kitel-1771958311512-16",
     "name": "Китель EMBRACE (с англ. обнимать)",
     "price": 17600,
     "description": "Создан из премиальной ткани, изготовленной из высококачественного хлопка, привезенного из Испании. Обшивные кнопки - идеальное решение для тех, кто хочет добавить элегантности, подчеркивают изысканность и статус",
@@ -1097,7 +1145,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "хлопок 71%, полиэстер 25%, эластан 4%",
       "characteristics": "Изготовлен из прочной и дышащей ткани, он обеспечивает свободу движений и поддерживает оптимальный микроклимат даже в жаркой кухне. Эргономичный крой, удобный карман и качественная фурнитура делают китель практичным и долговечным.",
@@ -1112,36 +1160,39 @@
       "/images/catalog/kitelya/embrace/6.jpg",
       "/images/catalog/kitelya/embrace/7.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-embrace-S",
+        "id": "kitel-1771958311512-16-S",
         "size": "S",
         "price": 17600,
         "sku": ""
       },
       {
-        "id": "kitel-embrace-M",
+        "id": "kitel-1771958311512-16-M",
         "size": "M",
         "price": 17600,
         "sku": ""
       },
       {
-        "id": "kitel-embrace-L",
+        "id": "kitel-1771958311512-16-L",
         "size": "L",
         "price": 17600,
         "sku": ""
       },
       {
-        "id": "kitel-embrace-XL",
+        "id": "kitel-1771958311512-16-XL",
         "size": "XL",
         "price": 17600,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/embrace/1.JPG",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "kitel-embrace-2",
+    "id": "kitel-1771958311512-17",
     "name": "Китель EMBRACE 2.0 (с англ. обнимать)",
     "price": 17600,
     "description": "Создан из премиальной ткани, изготовленной из высококачественного хлопка, привезенного из Испании. Обшивные кнопки - идеальное решение для тех, кто хочет добавить элегантности, подчеркивают изысканность и статус",
@@ -1160,7 +1211,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "хлопок 71%, полиэстер 25%, эластан 4%",
       "characteristics": "Изготовлен из прочной и дышащей ткани, он обеспечивает свободу движений и поддерживает оптимальный микроклимат даже в жаркой кухне. Эргономичный крой, удобный карман и качественная фурнитура делают китель практичным и долговечным.",
@@ -1175,39 +1226,42 @@
       "/images/catalog/kitelya/embrace-2/6.jpg",
       "/images/catalog/kitelya/embrace-2/7.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "kitel-embrace-2-S",
+        "id": "kitel-1771958311512-17-S",
         "size": "S",
         "price": 17600,
         "sku": ""
       },
       {
-        "id": "kitel-embrace-2-M",
+        "id": "kitel-1771958311512-17-M",
         "size": "M",
         "price": 17600,
         "sku": ""
       },
       {
-        "id": "kitel-embrace-2-L",
+        "id": "kitel-1771958311512-17-L",
         "size": "L",
         "price": 17600,
         "sku": ""
       },
       {
-        "id": "kitel-embrace-2-XL",
+        "id": "kitel-1771958311512-17-XL",
         "size": "XL",
         "price": 17600,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/kitelya/embrace-2/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-1"
   },
   {
-    "id": "bryuki-japan",
-    "name": "Брюки JAP (название берет начало от англ. Japan - Япония)",
+    "id": "pant-1771958922440-0",
+    "name": "Брюки JAP",
     "price": 8400,
-    "description": "Jap – это дань уважения японской культуре, где минимализм и практичность сливаются в единое целое. Лаконичный дизайн подчеркивает стиль, а широкий крой делает их идеальными для любого типа фигуры",
+    "description": "Ткань крапивы, известная своей прочностью и естественной элегантностью, становится основой для этих широких и свободных штанов. Она не только придает им легкий и воздушный вид, но и обеспечивает комфорт и свободу движения, необходимую для создания гастрономических открытий и шедевров.",
     "category": "Брюки",
     "filterIds": [
       "filter-брюки",
@@ -1215,7 +1269,8 @@
       "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "унисекс"
     ],
     "sizes": [
       "S",
@@ -1223,7 +1278,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "100% крапива",
       "characteristics": "Ткань крапивы, известная своей прочностью и естественной элегантностью, становится основой для этих широких и свободных штанов. она не только придает им легкий и воздушный вид, но и обеспечивает комфорт и свободу движения, необходимую для создания гастрономических открытий и шедевров",
@@ -1235,47 +1290,51 @@
       "/images/catalog/bryuki/jab/photo_3_2024-10-01_18-53-03.jpg",
       "/images/catalog/bryuki/jab/photo_4_2024-10-01_18-53-03.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-japan-S",
+        "id": "pant-1771958922440-0-S",
         "size": "S",
         "price": 8400,
         "sku": "00440000"
       },
       {
-        "id": "bryuki-japan-M",
+        "id": "pant-1771958922440-0-M",
         "size": "M",
         "price": 8400,
         "sku": "00440000"
       },
       {
-        "id": "bryuki-japan-L",
+        "id": "pant-1771958922440-0-L",
         "size": "L",
         "price": 8400,
         "sku": "00440000"
       },
       {
-        "id": "bryuki-japan-XL",
+        "id": "pant-1771958922440-0-XL",
         "size": "XL",
         "price": 8400,
         "sku": "00440000"
       }
     ],
-    "image": "/images/catalog/bryuki/jab/photo_1_2024-10-01_18-53-03.jpg"
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/jab/photo_1_2024-10-01_18-53-03.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "bryuki-man",
-    "name": "Брюки MAN",
+    "id": "pant-1771958922440-1",
+    "name": "Брюки MAN (с англ. широкий)",
     "price": 5200,
     "description": "Для комфортной работы, не сковывающий движений",
     "category": "Брюки",
     "filterIds": [
       "filter-брюки",
-      "gender-male"
+      "gender-male",
+      "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "мужские"
     ],
     "sizes": [
       "S",
@@ -1283,7 +1342,7 @@
       "L",
       "XL"
     ],
-    "gender": "male",
+    "colors": [],
     "details": {
       "material": "54% хлопок, 44% полиэстер, 2% лайкра",
       "characteristics": "Брюки регулируются шнурками для лучшей посадки. Наличие карманов обеспечивает удобное хранения мелочей. Мы специально разделили модели MAN и WOMAN учитывая особенности строения фигуры гастроэнтузиастов",
@@ -1295,36 +1354,39 @@
       "/images/catalog/bryuki/man/3.jpg",
       "/images/catalog/bryuki/man/4.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-man-S",
+        "id": "pant-1771958922440-1-S",
         "size": "S",
         "price": 5200,
         "sku": ""
       },
       {
-        "id": "bryuki-man-M",
+        "id": "pant-1771958922440-1-M",
         "size": "M",
         "price": 5200,
         "sku": ""
       },
       {
-        "id": "bryuki-man-L",
+        "id": "pant-1771958922440-1-L",
         "size": "L",
         "price": 5200,
         "sku": ""
       },
       {
-        "id": "bryuki-man-XL",
+        "id": "pant-1771958922440-1-XL",
         "size": "XL",
         "price": 5200,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/man/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "bryuki-simple",
+    "id": "pant-1771958922440-2",
     "name": "Брюки SIMPLE (с англ. легкий)",
     "price": 5200,
     "description": "Для комфортной работы, не сковывающий движений",
@@ -1335,7 +1397,8 @@
       "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "унисекс"
     ],
     "sizes": [
       "S",
@@ -1343,7 +1406,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "54% хлопок, 44% полиэстер, 2% лайкра",
       "characteristics": "Брюки регулируются шнурками для лучшей посадки. Наличие карманов обеспечивает удобное хранения",
@@ -1359,36 +1422,39 @@
       "/images/catalog/bryuki/simple/7.jpg",
       "/images/catalog/bryuki/simple/8.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-simple-S",
+        "id": "pant-1771958922440-2-S",
         "size": "S",
         "price": 5200,
         "sku": "00680000"
       },
       {
-        "id": "bryuki-simple-M",
+        "id": "pant-1771958922440-2-M",
         "size": "M",
         "price": 5200,
         "sku": "00680000"
       },
       {
-        "id": "bryuki-simple-L",
+        "id": "pant-1771958922440-2-L",
         "size": "L",
         "price": 5200,
         "sku": "00680000"
       },
       {
-        "id": "bryuki-simple-XL",
+        "id": "pant-1771958922440-2-XL",
         "size": "XL",
         "price": 5200,
         "sku": "00680000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/simple/1.JPG",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "bryuki-wide-2-0",
+    "id": "pant-1771958922440-3",
     "name": "Брюки WIDE 2.0 (с англ. широкий)",
     "price": 4800,
     "description": "Укороченные широкие брюки – свобода движений и минимализм",
@@ -1399,7 +1465,8 @@
       "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "унисекс"
     ],
     "sizes": [
       "S",
@@ -1407,7 +1474,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "хлопок 35%, полиэстер 65%",
       "characteristics": "Брюки оснащены эластичным поясом, разработаны для интенсивного использования и могут выдерживать частые стирки",
@@ -1418,36 +1485,39 @@
       "/images/catalog/bryuki/wide2.0/DSC09510.jpg",
       "/images/catalog/bryuki/wide2.0/DSC09907.JPG"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-wide-2-0-S",
+        "id": "pant-1771958922440-3-S",
         "size": "S",
         "price": 4800,
         "sku": "00690000"
       },
       {
-        "id": "bryuki-wide-2-0-M",
+        "id": "pant-1771958922440-3-M",
         "size": "M",
         "price": 4800,
         "sku": "00690000"
       },
       {
-        "id": "bryuki-wide-2-0-L",
+        "id": "pant-1771958922440-3-L",
         "size": "L",
         "price": 4800,
         "sku": "00690000"
       },
       {
-        "id": "bryuki-wide-2-0-XL",
+        "id": "pant-1771958922440-3-XL",
         "size": "XL",
         "price": 4800,
         "sku": "00690000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/wide2.0/DSC09506.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "bryuki-wide",
+    "id": "pant-1771958922440-4",
     "name": "Брюки WIDE (с англ. широкий)",
     "price": 4800,
     "description": "Укороченные широкие брюки – свобода движений и минимализм",
@@ -1458,7 +1528,8 @@
       "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "унисекс"
     ],
     "sizes": [
       "S",
@@ -1466,7 +1537,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "хлопок 35%, полиэстер 65%",
       "characteristics": "Брюки оснащены эластичным поясом, разработаны для интенсивного использования и могут выдерживать частые стирки",
@@ -1477,46 +1548,51 @@
       "/images/catalog/bryuki/wide/2.jpg",
       "/images/catalog/bryuki/wide/3.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-wide-S",
+        "id": "pant-1771958922440-4-S",
         "size": "S",
         "price": 4800,
         "sku": "00690000"
       },
       {
-        "id": "bryuki-wide-M",
+        "id": "pant-1771958922440-4-M",
         "size": "M",
         "price": 4800,
         "sku": "00690000"
       },
       {
-        "id": "bryuki-wide-L",
+        "id": "pant-1771958922440-4-L",
         "size": "L",
         "price": 4800,
         "sku": "00690000"
       },
       {
-        "id": "bryuki-wide-XL",
+        "id": "pant-1771958922440-4-XL",
         "size": "XL",
         "price": 4800,
         "sku": "00690000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/wide/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "bryuki-woman",
-    "name": "Брюки WOMAN",
+    "id": "pant-1771958922440-5",
+    "name": "Брюки WOMAN (с англ. широкий)",
     "price": 5200,
     "description": "Для комфортной работы, не сковывающий движений",
     "category": "Брюки",
     "filterIds": [
       "filter-брюки",
+      "gender-male",
       "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "женские"
     ],
     "sizes": [
       "S",
@@ -1524,7 +1600,7 @@
       "L",
       "XL"
     ],
-    "gender": "female",
+    "colors": [],
     "details": {
       "material": "54% хлопок, 44% полиэстер, 2% лайкра",
       "characteristics": "Брюки регулируются шнурками для лучшей посадки. Наличие карманов обеспечивает удобное хранения мелочей. Мы специально разделили модели MAN и WOMAN учитывая особенности строения фигуры гастроэнтузиастов",
@@ -1536,36 +1612,39 @@
       "/images/catalog/bryuki/woman/3.jpg",
       "/images/catalog/bryuki/woman/4.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-woman-S",
+        "id": "pant-1771958922440-5-S",
         "size": "S",
         "price": 5200,
         "sku": ""
       },
       {
-        "id": "bryuki-woman-M",
+        "id": "pant-1771958922440-5-M",
         "size": "M",
         "price": 5200,
         "sku": ""
       },
       {
-        "id": "bryuki-woman-L",
+        "id": "pant-1771958922440-5-L",
         "size": "L",
         "price": 5200,
         "sku": ""
       },
       {
-        "id": "bryuki-woman-XL",
+        "id": "pant-1771958922440-5-XL",
         "size": "XL",
         "price": 5200,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/woman/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "bryuki-baza",
+    "id": "pant-1771958922441-6",
     "name": "Брюки База",
     "price": 4800,
     "description": "Это универсальная и удобная модель для профессиональной кухни. Они выполнены из качественного, дышащего и износостойкого материала, который обеспечивает комфорт даже при долгой работе",
@@ -1576,7 +1655,8 @@
       "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "унисекс"
     ],
     "sizes": [
       "S",
@@ -1584,7 +1664,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "54% хлопок, 44% полиэстер, 2% лайкра",
       "characteristics": "Прямой крой, эластичный пояс и удобные карманы обеспечивают комфорт и практичность на любой кухне. Классический крой подходит для любого типа фигуры и не сковывает движения",
@@ -1597,36 +1677,39 @@
       "/images/catalog/bryuki/baza/4.jpg",
       "/images/catalog/bryuki/baza/5.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-baza-S",
+        "id": "pant-1771958922441-6-S",
         "size": "S",
         "price": 4800,
         "sku": ""
       },
       {
-        "id": "bryuki-baza-M",
+        "id": "pant-1771958922441-6-M",
         "size": "M",
         "price": 4800,
         "sku": ""
       },
       {
-        "id": "bryuki-baza-L",
+        "id": "pant-1771958922441-6-L",
         "size": "L",
         "price": 4800,
         "sku": ""
       },
       {
-        "id": "bryuki-baza-XL",
+        "id": "pant-1771958922441-6-XL",
         "size": "XL",
         "price": 4800,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/baza/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "bryuki-classic",
+    "id": "pant-1771958922441-7",
     "name": "Брюки Классик",
     "price": 7500,
     "description": "Проверенная временем модель, которая сочетает функциональность, удобство и аккуратный внешний вид для любой кухни.",
@@ -1637,7 +1720,8 @@
       "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "унисекс"
     ],
     "sizes": [
       "S",
@@ -1645,7 +1729,7 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "54% хлопок, 44% полиэстер, 2% лайкра",
       "characteristics": "Прямой крой, эластичный пояс и удобные карманы обеспечивают комфорт и практичность на любой кухне. Классика стиля и надёжность в каждой детали",
@@ -1659,36 +1743,39 @@
       "/images/catalog/bryuki/classic/5.jpg",
       "/images/catalog/bryuki/classic/6.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-classic-S",
+        "id": "pant-1771958922441-7-S",
         "size": "S",
         "price": 7500,
         "sku": ""
       },
       {
-        "id": "bryuki-classic-M",
+        "id": "pant-1771958922441-7-M",
         "size": "M",
         "price": 7500,
         "sku": ""
       },
       {
-        "id": "bryuki-classic-L",
+        "id": "pant-1771958922441-7-L",
         "size": "L",
         "price": 7500,
         "sku": ""
       },
       {
-        "id": "bryuki-classic-XL",
+        "id": "pant-1771958922441-7-XL",
         "size": "XL",
         "price": 7500,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/classic/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "bryuki-palazzo-duet",
+    "id": "pant-1771958922441-8",
     "name": "Брюки Палаццо-Дуэт",
     "price": 7200,
     "description": "Палаццо-Дуэт — это гармония функциональности и элегантного дизайна для тех, кто ценит удобство и стиль на рабочем месте. Сочетание комфорта, свободы движений и современного стиля на профессиональной кухне",
@@ -1699,7 +1786,8 @@
       "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "унисекс"
     ],
     "sizes": [
       "S",
@@ -1707,9 +1795,9 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
-      "material": "74% вискоза 23% полиэстер 3% эластан",
+      "material": "74% вискоза 23% полиэстер 3% эластан",
       "characteristics": "Широкий крой в стиле палаццо обеспечивает максимальное удобство даже при долгих сменах, а мягкая, дышащая ткань поддерживает оптимальный микроклимат даже в жаркой рабочей среде",
       "article": ""
     },
@@ -1719,36 +1807,39 @@
       "/images/catalog/bryuki/palazzo-duet/3.JPG",
       "/images/catalog/bryuki/palazzo-duet/4.JPG"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-palazzo-duet-S",
+        "id": "pant-1771958922441-8-S",
         "size": "S",
         "price": 7200,
         "sku": ""
       },
       {
-        "id": "bryuki-palazzo-duet-M",
+        "id": "pant-1771958922441-8-M",
         "size": "M",
         "price": 7200,
         "sku": ""
       },
       {
-        "id": "bryuki-palazzo-duet-L",
+        "id": "pant-1771958922441-8-L",
         "size": "L",
         "price": 7200,
         "sku": ""
       },
       {
-        "id": "bryuki-palazzo-duet-XL",
+        "id": "pant-1771958922441-8-XL",
         "size": "XL",
         "price": 7200,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/palazzo-duet/1.JPG",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "bryuki-shelkoviy-put",
+    "id": "pant-1771958922441-9",
     "name": "Брюки Шелковый путь",
     "price": 6500,
     "description": "Шелковый Путь — это гармония традиционного кроя, комфорта и надежности, созданная для поваров, которые ценят стиль и удобство в работе. Классика комфорта и практичности для профессиональной кухни",
@@ -1759,7 +1850,8 @@
       "gender-female"
     ],
     "tags": [
-      "Брюки"
+      "брюки",
+      "унисекс"
     ],
     "sizes": [
       "S",
@@ -1767,9 +1859,9 @@
       "L",
       "XL"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
-      "material": "74% вискоза 23% полиэстер 3% эластан",
+      "material": "74% вискоза 23% полиэстер 3% эластан",
       "characteristics": "Сочетание элегантной простоты и максимального комфорта на кухне. Прямой крой обеспечивает свободу движений и аккуратный внешний вид",
       "article": ""
     },
@@ -1780,39 +1872,42 @@
       "/images/catalog/bryuki/shelkoviy-put/4.JPG",
       "/images/catalog/bryuki/shelkoviy-put/5.JPG"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "bryuki-shelkoviy-put-S",
+        "id": "pant-1771958922441-9-S",
         "size": "S",
         "price": 6500,
         "sku": ""
       },
       {
-        "id": "bryuki-shelkoviy-put-M",
+        "id": "pant-1771958922441-9-M",
         "size": "M",
         "price": 6500,
         "sku": ""
       },
       {
-        "id": "bryuki-shelkoviy-put-L",
+        "id": "pant-1771958922441-9-L",
         "size": "L",
         "price": 6500,
         "sku": ""
       },
       {
-        "id": "bryuki-shelkoviy-put-XL",
+        "id": "pant-1771958922441-9-XL",
         "size": "XL",
         "price": 6500,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/bryuki/shelkoviy-put/1.JPG",
+    "collectionImage": "",
+    "categoryId": "patt-2"
   },
   {
-    "id": "apron-inspire",
-    "name": "Фартук INSPIRE (с англ. вдохновлять)",
+    "id": "apron-1771959703626-0",
+    "name": "Фартук INSPIRE",
     "price": 3300,
-    "description": "Фартук, вдохновленный японской простотой и аутентичностью. Отлично подойдет для авторских ужинов",
+    "description": "Фартук, вдохновленный японской простотой и аутентичностью. Отлично подойдет для авторских ужинов.",
     "category": "Фартуки",
     "filterIds": [
       "filter-фартуки",
@@ -1820,10 +1915,16 @@
       "gender-female"
     ],
     "tags": [
-      "фартуки"
+      "фартук",
+      "низ"
     ],
-    "sizes": [],
-    "gender": "unisex",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [],
     "details": {
       "material": "Хлопок 97%, Полиэстер 3%",
       "characteristics": "Ткань плетения поплин из натурального хлопка. Изделие износостойкое, прочное и держит форму",
@@ -1834,22 +1935,47 @@
       "/images/catalog/aprons/inspire/2.jpg",
       "/images/catalog/aprons/inspire/3.jpg",
       "/images/catalog/aprons/inspire/4.jpg",
-      "/images/catalog/aprons/inspire/5.jpg"
+      "/images/catalog/aprons/inspire/5.jpg",
+      "/images/catalog/aprons/inspire/6.jpg",
+      "/images/catalog/aprons/inspire/7.jpg",
+      "/images/catalog/aprons/inspire/8.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "apron-inspire",
+        "id": "apron-1771959703626-0-S",
+        "size": "S",
+        "price": 3300,
+        "sku": "02050000"
+      },
+      {
+        "id": "apron-1771959703626-0-M",
+        "size": "M",
+        "price": 3300,
+        "sku": "02050000"
+      },
+      {
+        "id": "apron-1771959703626-0-L",
+        "size": "L",
+        "price": 3300,
+        "sku": "02050000"
+      },
+      {
+        "id": "apron-1771959703626-0-XL",
+        "size": "XL",
         "price": 3300,
         "sku": "02050000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/aprons/inspire/1.jpg",
+    "collectionImage": "/DSC08702.jpg",
+    "categoryId": "patt-3"
   },
   {
     "id": "apron-nonna",
     "name": "Фартук Nonna",
-    "price": 2800,
-    "description": "Этот фартук сочетает в себе надежную защиту и модный городской стиль. Изготовленный из плотного материала, он защищает одежду от брызг, пятен и жира, оставаясь при этом долговечным и износостойким",
+    "price": 3100,
+    "description": "Этот фартук сочетает в себе надежную защиту и модный городской стиль. Изготовленный из плотных материалов, он защищает одежду от брызг, пятен и жира, оставаясь при этом долговечным и износостойким",
     "category": "Фартуки",
     "filterIds": [
       "filter-фартуки",
@@ -1857,66 +1983,126 @@
       "gender-female"
     ],
     "tags": [
-      "фартуки"
+      "фартук",
+      "низ"
     ],
-    "sizes": [],
-    "gender": "unisex",
-    "details": {
-      "material": "Хлопок 35%, Полиэстер 65%",
-      "characteristics": "Универсальный дизайн с регулируемыми завязками на талии и шее обеспечивает комфортную посадку, а практичные карманы спереди позволят держать под рукой кухонные принадлежности, рецепты или смартфон",
-      "article": "00410005"
-    },
-    "images": [
-      "/images/catalog/aprons/nonna-white/1.jpg",
-      "/images/catalog/aprons/nonna-white/2.jpg",
-      "/images/catalog/aprons/nonna-white/3.jpg",
-      "/images/catalog/aprons/nonna-white/4.jpg",
-      "/images/catalog/aprons/nonna-white/5.jpg"
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
     ],
     "colors": [
       {
-        "name": "white",
-        "label": "Белый",
-        "value": "#FFFFFF",
-        "images": [
-          "/images/catalog/aprons/nonna-white/1.jpg",
-          "/images/catalog/aprons/nonna-white/2.jpg",
-          "/images/catalog/aprons/nonna-white/3.jpg",
-          "/images/catalog/aprons/nonna-white/4.jpg",
-          "/images/catalog/aprons/nonna-white/5.jpg"
-        ]
-      },
-      {
         "name": "denim",
         "label": "Джинсовый",
-        "value": "#4B6584",
+        "value": "#1560bd",
         "images": [
           "/images/catalog/aprons/nonna-denim/1.jpg",
           "/images/catalog/aprons/nonna-denim/2.jpg",
           "/images/catalog/aprons/nonna-denim/3.jpg"
         ]
+      },
+      {
+        "name": "white",
+        "label": "Белый",
+        "value": "#ffffff",
+        "images": [
+          "/images/catalog/aprons/nonna-white/1.jpg",
+          "/images/catalog/aprons/nonna-white/2.jpg",
+          "/images/catalog/aprons/nonna-white/3.jpg",
+          "/images/catalog/aprons/nonna-white/4.jpg",
+          "/images/catalog/aprons/nonna-white/5.jpg",
+          "/images/catalog/aprons/nonna-white/6.jpg",
+          "/images/catalog/aprons/nonna-white/7.jpg"
+        ]
       }
+    ],
+    "details": {
+      "material": "Джинса / Хлопок",
+      "characteristics": "Универсальный дизайн с регулируемыми завязками на талии и шее обеспечивает комфортную посадку, а практичные карманы спереди позволят держать под рукой кухонные принадлежности, рецепты или смартфон",
+      "article": "00410004"
+    },
+    "images": [
+      "/images/catalog/aprons/nonna-denim/1.jpg",
+      "/images/catalog/aprons/nonna-denim/2.jpg",
+      "/images/catalog/aprons/nonna-denim/3.jpg",
+      "/images/catalog/aprons/nonna-white/1.jpg",
+      "/images/catalog/aprons/nonna-white/2.jpg",
+      "/images/catalog/aprons/nonna-white/3.jpg",
+      "/images/catalog/aprons/nonna-white/4.jpg",
+      "/images/catalog/aprons/nonna-white/5.jpg",
+      "/images/catalog/aprons/nonna-white/6.jpg",
+      "/images/catalog/aprons/nonna-white/7.jpg"
     ],
     "variants": [
       {
-        "id": "apron-nonna-white",
+        "id": "apron-nonna-S-denim",
+        "size": "S",
+        "colorName": "denim",
+        "price": 3100,
+        "sku": "00410004"
+      },
+      {
+        "id": "apron-nonna-M-denim",
+        "size": "M",
+        "colorName": "denim",
+        "price": 3100,
+        "sku": "00410004"
+      },
+      {
+        "id": "apron-nonna-L-denim",
+        "size": "L",
+        "colorName": "denim",
+        "price": 3100,
+        "sku": "00410004"
+      },
+      {
+        "id": "apron-nonna-XL-denim",
+        "size": "XL",
+        "colorName": "denim",
+        "price": 3100,
+        "sku": "00410004"
+      },
+      {
+        "id": "apron-nonna-S-white",
+        "size": "S",
         "colorName": "white",
-        "price": 2800,
+        "price": 3100,
         "sku": "00410005"
       },
       {
-        "id": "apron-nonna-denim",
-        "colorName": "denim",
-        "price": 2800,
-        "sku": "00410005-denim"
+        "id": "apron-nonna-M-white",
+        "size": "M",
+        "colorName": "white",
+        "price": 3100,
+        "sku": "00410005"
+      },
+      {
+        "id": "apron-nonna-L-white",
+        "size": "L",
+        "colorName": "white",
+        "price": 3100,
+        "sku": "00410005"
+      },
+      {
+        "id": "apron-nonna-XL-white",
+        "size": "XL",
+        "colorName": "white",
+        "price": 3100,
+        "sku": "00410005"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/aprons/nonna-denim/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-3"
   },
   {
-    "id": "apron-simple",
-    "name": "Фартук SIMPLE (с англ. классческий)",
+    "id": "apron-1771959703626-3",
+    "name": "Фартук SIMPLE",
     "price": 2000,
-    "description": "Фартук, с привычным кроем и приятной тканью. Хорошо выдерживает ежедневную носку",
+    "description": "Фартук, с привычным кроем и приятной тканью. Хорошо выдерживает каждодневную носку.",
     "category": "Фартуки",
     "filterIds": [
       "filter-фартуки",
@@ -1924,51 +2110,29 @@
       "gender-female"
     ],
     "tags": [
-      "фартуки"
+      "фартук",
+      "низ"
     ],
-    "sizes": [],
-    "gender": "unisex",
-    "details": {
-      "material": "Хлопок 35%, Полиэстер 65%",
-      "characteristics": "Практичный и износостойкий материал плетения оксфорд из искусственных и натуральных волокон. Комфортный в носке и держит форму",
-      "article": "00410000"
-    },
-    "images": [
-      "/images/catalog/aprons/simple/colors/white/DSC00005.jpg",
-      "/images/catalog/aprons/simple/colors/white/DSC00007.jpg",
-      "/images/catalog/aprons/simple/colors/white/DSC00016.jpg"
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
     ],
     "colors": [
       {
-        "name": "white",
-        "label": "Белый",
-        "value": "#FFFFFF",
+        "name": "black",
+        "label": "Черный",
+        "value": "#000000",
         "images": [
-          "/images/catalog/aprons/simple/colors/white/DSC00005.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC00007.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC00016.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC00018.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC00153.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC00154.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC00160.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC02818.JPG",
-          "/images/catalog/aprons/simple/colors/white/DSC02822.JPG",
-          "/images/catalog/aprons/simple/colors/white/DSC02828.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC02830.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC02836.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC03543.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC04600.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC04604.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC04606.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC04609.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC09537.JPG",
-          "/images/catalog/aprons/simple/colors/white/DSC09538.JPG",
-          "/images/catalog/aprons/simple/colors/white/DSC09540.JPG",
-          "/images/catalog/aprons/simple/colors/white/DSC09542.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC09543.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC09546.jpg",
-          "/images/catalog/aprons/simple/colors/white/DSC09548.jpg"
-        ]
+          "/images/catalog/aprons/simple/colors/black/DSC00118.jpg",
+          "/images/catalog/aprons/simple/colors/black/DSC00121.jpg",
+          "/images/catalog/aprons/simple/colors/black/DSC00122.jpg",
+          "/images/catalog/aprons/simple/colors/black/DSC00128.jpg",
+          "/images/catalog/aprons/simple/colors/black/DSC00130.jpg",
+          "/images/catalog/aprons/simple/colors/black/DSC00131.jpg"
+        ],
+        "sizes": []
       },
       {
         "name": "burgundy",
@@ -1980,29 +2144,9 @@
           "/images/catalog/aprons/simple/colors/burgundy/DSC09622.jpg",
           "/images/catalog/aprons/simple/colors/burgundy/DSC09623.JPG",
           "/images/catalog/aprons/simple/colors/burgundy/DSC09625.jpg",
-          "/images/catalog/aprons/simple/colors/burgundy/DSC09626.jpg",
-          "/images/catalog/aprons/simple/colors/burgundy/DSC09629.jpg",
-          "/images/catalog/aprons/simple/colors/burgundy/DSC09631.jpg",
-          "/images/catalog/aprons/simple/colors/burgundy/DSC09775.JPG",
-          "/images/catalog/aprons/simple/colors/burgundy/DSC09779.JPG",
-          "/images/catalog/aprons/simple/colors/burgundy/DSC09781.jpg",
-          "/images/catalog/aprons/simple/colors/burgundy/DSC09783.JPG"
-        ]
-      },
-      {
-        "name": "green",
-        "label": "Зеленый",
-        "value": "#2D5A27",
-        "images": [
-          "/images/catalog/aprons/simple/colors/green/DSC09575.JPG",
-          "/images/catalog/aprons/simple/colors/green/DSC09577.JPG",
-          "/images/catalog/aprons/simple/colors/green/DSC09578.jpg",
-          "/images/catalog/aprons/simple/colors/green/DSC09580.jpg",
-          "/images/catalog/aprons/simple/colors/green/DSC09583.jpg",
-          "/images/catalog/aprons/simple/colors/green/DSC09585.jpg",
-          "/images/catalog/aprons/simple/colors/green/DSC09586.jpg",
-          "/images/catalog/aprons/simple/colors/green/DSC09587.jpg"
-        ]
+          "/images/catalog/aprons/simple/colors/burgundy/DSC09626.jpg"
+        ],
+        "sizes": []
       },
       {
         "name": "gray",
@@ -2014,82 +2158,92 @@
           "/images/catalog/aprons/simple/colors/gray/DSC03290.jpg",
           "/images/catalog/aprons/simple/colors/gray/DSC03291.jpg",
           "/images/catalog/aprons/simple/colors/gray/DSC03292.JPG",
-          "/images/catalog/aprons/simple/colors/gray/DSC03293.jpg",
-          "/images/catalog/aprons/simple/colors/gray/DSC03295.JPG"
-        ]
+          "/images/catalog/aprons/simple/colors/gray/DSC03293.jpg"
+        ],
+        "sizes": []
+      },
+      {
+        "name": "green",
+        "label": "Зеленый",
+        "value": "#008000",
+        "images": [
+          "/images/catalog/aprons/simple/colors/green/DSC09575.JPG",
+          "/images/catalog/aprons/simple/colors/green/DSC09577.JPG",
+          "/images/catalog/aprons/simple/colors/green/DSC09578.jpg",
+          "/images/catalog/aprons/simple/colors/green/DSC09580.jpg",
+          "/images/catalog/aprons/simple/colors/green/DSC09583.jpg",
+          "/images/catalog/aprons/simple/colors/green/DSC09585.jpg"
+        ],
+        "sizes": []
       },
       {
         "name": "khaki",
         "label": "Хаки",
-        "value": "#8B864E",
+        "value": "#bdb76b",
         "images": [
           "/images/catalog/aprons/simple/colors/khaki/DSC00644.jpg",
           "/images/catalog/aprons/simple/colors/khaki/DSC00646.jpg",
           "/images/catalog/aprons/simple/colors/khaki/DSC00649.jpg",
           "/images/catalog/aprons/simple/colors/khaki/DSC00652.jpg"
-        ]
+        ],
+        "sizes": []
       },
       {
-        "name": "black",
-        "label": "Черный",
-        "value": "#000000",
+        "name": "white",
+        "label": "Белый",
+        "value": "#ffffff",
         "images": [
-          "/images/catalog/aprons/simple/colors/black/DSC00118.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC00121.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC00122.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC00128.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC00130.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC00131.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC09980.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC09986.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC09987.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC09991.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC09993.jpg",
-          "/images/catalog/aprons/simple/colors/black/DSC09994.jpg"
-        ]
+          "/images/catalog/aprons/simple/colors/white/DSC00005.jpg",
+          "/images/catalog/aprons/simple/colors/white/DSC00007.jpg",
+          "/images/catalog/aprons/simple/colors/white/DSC00016.jpg",
+          "/images/catalog/aprons/simple/colors/white/DSC00018.jpg",
+          "/images/catalog/aprons/simple/colors/white/DSC00153.jpg",
+          "/images/catalog/aprons/simple/colors/white/DSC00154.jpg"
+        ],
+        "sizes": []
       }
+    ],
+    "details": {
+      "material": "Хлопок 35%, Полиэстер 65%",
+      "characteristics": "Практичный и износостойкий материал плетения оксфорд из искусственных и натуральных волокон",
+      "article": "00410000"
+    },
+    "images": [
+      "/images/catalog/aprons/simple/colors/black/DSC00118.jpg"
     ],
     "variants": [
       {
-        "id": "apron-simple-white",
-        "colorName": "white",
+        "id": "apron-1771959703626-3-S",
+        "size": "S",
         "price": 2000,
-        "sku": "00410000-1"
+        "sku": "00410000"
       },
       {
-        "id": "apron-simple-burgundy",
-        "colorName": "burgundy",
+        "id": "apron-1771959703626-3-M",
+        "size": "M",
         "price": 2000,
-        "sku": "00410000-2"
+        "sku": "00410000"
       },
       {
-        "id": "apron-simple-green",
-        "colorName": "green",
+        "id": "apron-1771959703626-3-L",
+        "size": "L",
         "price": 2000,
-        "sku": "00410000-3"
+        "sku": "00410000"
       },
       {
-        "id": "apron-simple-gray",
-        "colorName": "gray",
+        "id": "apron-1771959703626-3-XL",
+        "size": "XL",
         "price": 2000,
-        "sku": "00410000-4"
-      },
-      {
-        "id": "apron-simple-khaki",
-        "colorName": "khaki",
-        "price": 2000,
-        "sku": "00410000-5"
-      },
-      {
-        "id": "apron-simple-black",
-        "colorName": "black",
-        "price": 2000,
-        "sku": "00410000-6"
+        "sku": "00410000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/aprons/simple/colors/black/DSC00118.jpg",
+    "collectionImage": "/DSC08650.JPG",
+    "categoryId": "patt-3"
   },
   {
-    "id": "apron-industrial",
+    "id": "apron-1771959703626-4",
     "name": "Фартук Индустриал",
     "price": 2800,
     "description": "Индустриал — подчеркивает урбанистический, слегка брутальный вид",
@@ -2100,10 +2254,16 @@
       "gender-female"
     ],
     "tags": [
-      "фартуки"
+      "фартук",
+      "низ"
     ],
-    "sizes": [],
-    "gender": "unisex",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [],
     "details": {
       "material": "Хлопок 35%, Полиэстер 65%",
       "characteristics": "Изготовлен из прочного и износостойкого материала, фартук надежно защищает одежду от брызг, пятен и жира. Регулируемые завязки на талии обеспечивают комфортную посадку для любого размера",
@@ -2111,25 +2271,55 @@
     },
     "images": [
       "/images/catalog/aprons/industrial/1.jpg",
+      "/images/catalog/aprons/industrial/10.jpg",
+      "/images/catalog/aprons/industrial/11.jpg",
+      "/images/catalog/aprons/industrial/12.jpg",
+      "/images/catalog/aprons/industrial/13.jpg",
       "/images/catalog/aprons/industrial/2.jpg",
       "/images/catalog/aprons/industrial/3.jpg",
       "/images/catalog/aprons/industrial/4.jpg",
-      "/images/catalog/aprons/industrial/5.jpg"
+      "/images/catalog/aprons/industrial/5.jpg",
+      "/images/catalog/aprons/industrial/6.jpg",
+      "/images/catalog/aprons/industrial/7.jpg",
+      "/images/catalog/aprons/industrial/8.jpg",
+      "/images/catalog/aprons/industrial/9.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "apron-industrial",
+        "id": "apron-1771959703626-4-S",
+        "size": "S",
+        "price": 2800,
+        "sku": "00410002"
+      },
+      {
+        "id": "apron-1771959703626-4-M",
+        "size": "M",
+        "price": 2800,
+        "sku": "00410002"
+      },
+      {
+        "id": "apron-1771959703626-4-L",
+        "size": "L",
+        "price": 2800,
+        "sku": "00410002"
+      },
+      {
+        "id": "apron-1771959703626-4-XL",
+        "size": "XL",
         "price": 2800,
         "sku": "00410002"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/aprons/industrial/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-3"
   },
   {
-    "id": "apron-waterproof",
+    "id": "apron-1771959703626-5",
     "name": "Фартук непромокаемый",
     "price": 2200,
-    "description": "Фартук изготовлен из специальной ткани, которая отталкивает воду и другие жидкости, предотвращая их проникновение внутрь. Это обеспечивает надёжную защиту одежды от загрязнений",
+    "description": "Фартук изготовлен из специальной ткани, которая отталкивает воду и другие жидкости, предотвращая их проникновение внутрь. Это обеспечивает надёжную защиту одежды от загрязнений.",
     "category": "Фартуки",
     "filterIds": [
       "filter-фартуки",
@@ -2137,44 +2327,79 @@
       "gender-female"
     ],
     "tags": [
-      "фартуки"
+      "фартук",
+      "низ"
     ],
-    "sizes": [],
-    "gender": "unisex",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [],
     "details": {
       "material": "хлопок 35%, полиэстер 65%",
       "characteristics": "Подходит для любой сферы деятельности. Сделан из водонепроницаемой ткани, имеет вместительный карман и выдерживает ежедневную носку",
       "article": ""
     },
     "images": [
+      "/images/catalog/aprons/waterproof/2024-12-10-19.26.43.jpg",
       "/images/catalog/aprons/waterproof/2024-12-10-19.26.12.jpg",
-      "/images/catalog/aprons/waterproof/2024-12-10-19.26.39.jpg",
-      "/images/catalog/aprons/waterproof/2024-12-10-19.26.43.jpg"
+      "/images/catalog/aprons/waterproof/2024-12-10-19.26.39.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "apron-waterproof",
+        "id": "apron-1771959703626-5-S",
+        "size": "S",
+        "price": 2200,
+        "sku": ""
+      },
+      {
+        "id": "apron-1771959703626-5-M",
+        "size": "M",
+        "price": 2200,
+        "sku": ""
+      },
+      {
+        "id": "apron-1771959703626-5-L",
+        "size": "L",
+        "price": 2200,
+        "sku": ""
+      },
+      {
+        "id": "apron-1771959703626-5-XL",
+        "size": "XL",
         "price": 2200,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/aprons/waterproof/2024-12-10-19.26.43.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-3"
   },
   {
-    "id": "apron-plisse",
+    "id": "apron-1771959703627-6",
     "name": "Фартук Плиссе",
     "price": 5700,
     "description": "Элегантный фартук в виде плиссированной юбки. Он надежно защищает одежду от брызг и пятен, при этом добавляя образу легкости и изысканности",
     "category": "Фартуки",
     "filterIds": [
       "filter-фартуки",
+      "gender-male",
       "gender-female"
     ],
     "tags": [
-      "фартуки"
+      "фартук",
+      "низ"
     ],
-    "sizes": [],
-    "gender": "female",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [],
     "details": {
       "material": "Хлопок 35%, Полиэстер 65%",
       "characteristics": "Регулируемая талия обеспечивает удобную посадку, а аккуратные складки плиссе создают эффектный визуальный акцент. Этот фартук идеально подходит для кулинаров, которые ценят не только функциональность, но и стиль",
@@ -2185,19 +2410,43 @@
       "/images/catalog/aprons/plisse/2.jpg",
       "/images/catalog/aprons/plisse/3.jpg",
       "/images/catalog/aprons/plisse/4.jpg",
-      "/images/catalog/aprons/plisse/5.jpg"
+      "/images/catalog/aprons/plisse/5.jpg",
+      "/images/catalog/aprons/plisse/6.jpg",
+      "/images/catalog/aprons/plisse/7.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "apron-plisse",
+        "id": "apron-1771959703627-6-S",
+        "size": "S",
+        "price": 5700,
+        "sku": "00410003"
+      },
+      {
+        "id": "apron-1771959703627-6-M",
+        "size": "M",
+        "price": 5700,
+        "sku": "00410003"
+      },
+      {
+        "id": "apron-1771959703627-6-L",
+        "size": "L",
+        "price": 5700,
+        "sku": "00410003"
+      },
+      {
+        "id": "apron-1771959703627-6-XL",
+        "size": "XL",
         "price": 5700,
         "sku": "00410003"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/aprons/plisse/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-3"
   },
   {
-    "id": "apron-waist",
+    "id": "apron-1771959703627-7",
     "name": "Фартук поясной",
     "price": 2000,
     "description": "Фартук с лаконичным кроем и износостойкой тканью",
@@ -2208,13 +2457,19 @@
       "gender-female"
     ],
     "tags": [
-      "фартуки"
+      "фартук",
+      "низ"
     ],
-    "sizes": [],
-    "gender": "unisex",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [],
     "details": {
       "material": "Хлопок 35%, Полиэстер 65%",
-      "characteristics": "Практичный и износостойкий материал плетения оксфорд из искусственных и натуральных волокон. Комфортный в носке и держит форму",
+      "characteristics": "Практичный и износостойкий материал плетения оксфорд из искусственных и натуральных волокон",
       "article": "00410001"
     },
     "images": [
@@ -2222,38 +2477,62 @@
       "/images/catalog/aprons/waist/2.jpg",
       "/images/catalog/aprons/waist/3.jpg",
       "/images/catalog/aprons/waist/4.jpg",
-      "/images/catalog/aprons/waist/5.jpg"
+      "/images/catalog/aprons/waist/5.jpg",
+      "/images/catalog/aprons/waist/6.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "apron-waist",
+        "id": "apron-1771959703627-7-S",
+        "size": "S",
+        "price": 2000,
+        "sku": "00410001"
+      },
+      {
+        "id": "apron-1771959703627-7-M",
+        "size": "M",
+        "price": 2000,
+        "sku": "00410001"
+      },
+      {
+        "id": "apron-1771959703627-7-L",
+        "size": "L",
+        "price": 2000,
+        "sku": "00410001"
+      },
+      {
+        "id": "apron-1771959703627-7-XL",
+        "size": "XL",
         "price": 2000,
         "sku": "00410001"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/aprons/waist/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-3"
   },
   {
-    "id": "headwear-chef-hat",
+    "id": "headwear-1771960070527-0",
     "name": "Колпак поварской",
     "price": 2200,
     "description": "Идеальное решение для тех, кто ценит безупречный внешний вид и профессиональный стиль. Он подчёркивает статус, добавляет образу аккуратности и завершённости, формируя уверенный и авторитетный образ шефа.",
-    "category": "Голоаные уборы",
+    "category": "Головные уборы",
     "filterIds": [
-      "filter-headwear",
+      "filter-головные-уборы",
       "gender-male",
       "gender-female"
     ],
     "tags": [
-      "Голоаные уборы"
+      "головные уборы",
+      "аксессуары"
     ],
     "sizes": [
       "One Size"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "35% хлопок, 65% полиэстер",
-      "characteristics": "Лёгкий и практичный, колпак разработан для интенсивной работы на кухне. Он помогает поддерживать гигиену, аккуратно фиксируя волосы и защищая рабочее пространство. Классическая высокая форма придаёт образу выразительность и подчёркивает традиции кулинарного мастерства. Материал устойчив к частым стиркам, сохраняет форму и презентабельный внешний вид даже при ежедневном использовании.",
+      "characteristics": "Лёгкий и практичный, колпак разработан для интенсивной работы на кухне. Он помогает поддерживать гигиену, аккуратно фиксируя волосы и защищая рабочее пространство. Классическая высокая форма придаёт образу выразительность и подчёркивает традиции кулинарного мастерства. Материал устойчив к частым стиркам, сохраняет форму и презентабельный внешний вид даже при ежедневном использовании",
       "article": ""
     },
     "images": [
@@ -2263,75 +2542,86 @@
       "/images/catalog/headwear/chef-hat/4.jpg",
       "/images/catalog/headwear/chef-hat/5.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "headwear-chef-hat-OS",
+        "id": "headwear-1771960070527-0-One Size",
         "size": "One Size",
         "price": 2200,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/headwear/chef-hat/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-4"
   },
   {
-    "id": "headwear-simple",
-    "name": "Колпак Simple",
+    "id": "headwear-1771960070527-1",
+    "name": "Simple",
     "price": 1500,
     "description": "Лаконичное решение для тех, кто выбирает минимализм и практичность. Сдержанный дизайн легко сочетается с любым кителем и делает образ аккуратным и профессиональным без лишних деталей.",
-    "category": "Голоаные уборы",
+    "category": "Головные уборы",
     "filterIds": [
-      "filter-headwear",
+      "filter-головные-уборы",
       "gender-male",
       "gender-female"
     ],
     "tags": [
-      "Голоаные уборы"
+      "головные уборы",
+      "аксессуары"
     ],
     "sizes": [
       "One Size"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "35% хлопок, 65% полиэстер",
-      "characteristics": "Компактная форма обеспечивает комфорт в течение всего рабочего дня и подходит для интенсивной работы на кухне. Модель помогает поддерживать гигиену, аккуратно фиксируя волосы и сохраняя опрятный внешний вид. Универсальный дизайн делает колпак подходящим как для шеф-поваров, так и для кондитеров, пекарей и персонала открытой кухни. Практичный и простой в уходе, он сохраняет аккуратность даже при ежедневном использовании.",
+      "characteristics": "Компактная форма обеспечивает комфорт в течение всего рабочего дня и подходит для интенсивной работы на кухне. Модель помогает поддерживать гигиену, аккуратно фиксируя волосы и сохраняя опрятный внешний вид. Универсальный дизайн делает колпак подходящим как для шеф-поваров, так и для кондитеров, пекарей и персонала открытой кухни. Практичный и простой в уходе, он сохраняет аккуратность даже при ежедневном использовании",
       "article": ""
     },
     "images": [
       "/images/catalog/headwear/simple/1.jpg",
       "/images/catalog/headwear/simple/2.jpg",
-      "/images/catalog/headwear/simple/3.jpg"
+      "/images/catalog/headwear/simple/3.jpg",
+      "/images/catalog/headwear/simple/4.jpg",
+      "/images/catalog/headwear/simple/5.jpg",
+      "/images/catalog/headwear/simple/6.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "headwear-simple-OS",
+        "id": "headwear-1771960070527-1-One Size",
         "size": "One Size",
         "price": 1500,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/headwear/simple/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-4"
   },
   {
-    "id": "headwear-sea-knot",
-    "name": "Колпак Морской узел",
+    "id": "headwear-1771960070527-2",
+    "name": "Морской узел",
     "price": 2300,
     "description": "Стильное решение для тех, кто ценит выразительные детали и индивидуальность. Модель с завязками отсылает к морской эстетике и добавляет образу динамичность, сохраняя профессиональный характер.",
-    "category": "Голоаные уборы",
+    "category": "Головные уборы",
     "filterIds": [
-      "filter-headwear",
+      "filter-головные-уборы",
       "gender-male",
       "gender-female"
     ],
     "tags": [
-      "Голоаные уборы"
+      "головные уборы",
+      "аксессуары"
     ],
     "sizes": [
       "One Size"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "100% хлопчатобумажная",
-      "characteristics": "Удлинённые завязки позволяют аккуратно зафиксировать колпак узлом, создавая характерный акцент и подчёркивая концепцию модели. Практичная форма помогает поддерживать гигиену и обеспечивает комфорт во время активной работы. Универсальный дизайн гармонично сочетается как с классическим кителем, так и с фартуком, делая образ завершённым и запоминающимся. Износостойкий материал сохраняет цвет и аккуратный внешний вид даже при частых стирках.",
+      "characteristics": "Удлинённые завязки позволяют аккуратно зафиксировать колпак узлом, создавая характерный акцент и подчёркивая концепцию модели. Практичная форма помогает поддерживать гигиену и обеспечивает комфорт во время активной работы. Универсальный дизайн гармонично сочетается как с классическим кителем, так и с фартуком, делая образ завершённым и запоминающимся. Износостойкий материал сохраняет цвет и аккуратный внешний вид даже при частых стирках",
       "article": ""
     },
     "images": [
@@ -2341,37 +2631,41 @@
       "/images/catalog/headwear/sea-knot/4.jpg",
       "/images/catalog/headwear/sea-knot/5.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "headwear-sea-knot-OS",
+        "id": "headwear-1771960070527-2-One Size",
         "size": "One Size",
         "price": 2300,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/headwear/sea-knot/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-4"
   },
   {
-    "id": "headwear-bandana",
+    "id": "headwear-1771960070527-3",
     "name": "Шапка-бандана",
     "price": 1800,
     "description": "Практичное и стильное решение для динамичной работы на кухне. Лаконичный дизайн и универсальная форма делают модель удобной для поваров, кондитеров, пекарей и персонала открытой кухни.",
-    "category": "Голоаные уборы",
+    "category": "Головные уборы",
     "filterIds": [
-      "filter-headwear",
+      "filter-головные-уборы",
       "gender-male",
       "gender-female"
     ],
     "tags": [
-      "Голоаные уборы"
+      "головные уборы",
+      "аксессуары"
     ],
     "sizes": [
       "One Size"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "35% хлопок, 65% полиэстер",
-      "characteristics": "Модель с удлинёнными завязками позволяет надёжно зафиксировать бандану и легко регулировать объём. Закрытая форма аккуратно собирает волосы, помогая поддерживать гигиену и опрятный внешний вид в течение всего рабочего дня. Практичная конструкция обеспечивает комфорт при активной работе, а материал устойчив к частым стиркам и сохраняет аккуратность даже при интенсивном использовании.",
+      "characteristics": "Модель с удлинёнными завязками позволяет надёжно зафиксировать бандану и легко регулировать объём. Закрытая форма аккуратно собирает волосы, помогая поддерживать гигиену и опрятный внешний вид в течение всего рабочего дня. Практичная конструкция обеспечивает комфорт при активной работе, а материал устойчив к частым стиркам и сохраняет аккуратность даже при интенсивном использовании",
       "article": ""
     },
     "images": [
@@ -2383,37 +2677,41 @@
       "/images/catalog/headwear/bandana/6.jpg",
       "/images/catalog/headwear/bandana/7.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "headwear-bandana-OS",
+        "id": "headwear-1771960070527-3-One Size",
         "size": "One Size",
         "price": 1800,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/headwear/bandana/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-4"
   },
   {
-    "id": "headwear-docker",
+    "id": "headwear-1771960070527-4",
     "name": "Докер",
     "price": 1700,
     "description": "Современное решение для тех, кто ценит минимализм и актуальный городской стиль. Лаконичная форма без лишних деталей делает модель универсальной для поваров, бариста и персонала открытой кухни, добавляя образу характер и уверенность.",
-    "category": "Голоаные уборы",
+    "category": "Головные уборы",
     "filterIds": [
-      "filter-headwear",
+      "filter-головные-уборы",
       "gender-male",
       "gender-female"
     ],
     "tags": [
-      "Голоаные уборы"
+      "головные уборы",
+      "аксессуары"
     ],
     "sizes": [
       "One Size"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "35% хлопок 65% полиэстер",
-      "characteristics": "Компактная конструкция обеспечивает комфорт в течение рабочего дня и аккуратно фиксирует волосы, помогая поддерживать гигиену. Плотный отворот формирует выразительный силуэт и сохраняет форму изделия. Универсальный дизайн легко сочетается с кителем и фартуком, подчёркивая современный профессиональный стиль. Материал устойчив к частым стиркам и сохраняет аккуратный внешний вид даже при интенсивной эксплуатации.",
+      "characteristics": "Компактная конструкция обеспечивает комфорт в течение рабочего дня и аккуратно фиксирует волосы, помогая поддерживать гигиену. Плотный отворот формирует выразительный силуэт и сохраняет форму изделия. Универсальный дизайн легко сочетается с кителем и фартуком, подчёркивая современный профессиональный стиль. Материал устойчив к частым стиркам и сохраняет аккуратный внешний вид даже при интенсивной эксплуатации",
       "article": ""
     },
     "images": [
@@ -2423,37 +2721,41 @@
       "/images/catalog/headwear/docker/4.jpg",
       "/images/catalog/headwear/docker/5.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "headwear-docker-OS",
+        "id": "headwear-1771960070527-4-One Size",
         "size": "One Size",
         "price": 1700,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/headwear/docker/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-4"
   },
   {
-    "id": "headwear-storm-hat",
+    "id": "headwear-1771960070527-5",
     "name": "Колпак Штормовой",
     "price": 2200,
     "description": "Выразительная модель для тех, кто выбирает смелый акцент в профессиональном образе. Необычная форма с мягким объёмом придаёт стилю динамику и делает внешний вид запоминающимся, сохраняя при этом строгость и аккуратность.",
-    "category": "Голоаные уборы",
+    "category": "Головные уборы",
     "filterIds": [
-      "filter-headwear",
+      "filter-головные-уборы",
       "gender-male",
       "gender-female"
     ],
     "tags": [
-      "Голоаные уборы"
+      "головные уборы",
+      "аксессуары"
     ],
     "sizes": [
       "One Size"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "35%хлопок, 65% полиэстер",
-      "characteristics": "Объёмная конструкция создаёт характерный силуэт и добавляет образу индивидуальность. Колпак помогает аккуратно собрать волосы и поддерживать гигиену во время работы. Универсальный дизайн гармонично сочетается как с классическим кителем, так и с современными моделями формы. Практичный в уходе материал устойчив к частым стиркам и сохраняет форму даже при интенсивном использовании.",
+      "characteristics": "Объёмная конструкция создаёт характерный силуэт и добавляет образу индивидуальность. Колпак помогает аккуратно собрать волосы и поддерживать гигиену во время работы. Универсальный дизайн гармонично сочетается как с классическим кителем, так и с современными моделями формы. Практичный в уходе материал устойчив к частым стиркам и сохраняет форму даже при интенсивном использовании",
       "article": ""
     },
     "images": [
@@ -2461,32 +2763,80 @@
       "/images/catalog/headwear/storm-hat/2.jpg",
       "/images/catalog/headwear/storm-hat/3.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "headwear-storm-hat-OS",
+        "id": "headwear-1771960070527-5-One Size",
         "size": "One Size",
         "price": 2200,
         "sku": ""
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/headwear/storm-hat/1.jpg",
+    "collectionImage": "",
+    "categoryId": "patt-4"
   },
   {
-    "id": "merch-skrutka-mini",
-    "name": "Скрутка - мини",
-    "price": 2500,
-    "description": "Идеальный размер",
+    "id": "merch-1",
+    "name": "Шоппер SCOOP",
+    "price": 1200,
+    "description": "Больше, чем просто шоппер. Scoop – это пространство для новых открытий. Идеальный размер для гастрономических путешествий",
     "category": "Мерч",
+    "categoryId": "patt-5",
     "filterIds": [
-      "filter-merch"
+      "filter-мерч"
     ],
     "tags": [
-      "Мерч"
+      "мерч",
+      "шоппер"
     ],
     "sizes": [
       "One Size"
     ],
+    "colors": [],
+    "details": {
+      "material": "100% хлопок",
+      "characteristics": "Отлично служит для хранения и транспортировки личных инструментов, выездов на мероприятия и просто для хранения всего необходимого. Внутри – японская хайку, которая поможет вырваться Вам из рутины и наполнить каждый день вдохновением",
+      "article": "00650000"
+    },
+    "images": [
+      "/images/catalog/merch/shopper/1.jpg",
+      "/images/catalog/merch/shopper/2.jpg",
+      "/images/catalog/merch/shopper/3.jpg",
+      "/images/catalog/merch/shopper/4.jpg",
+      "/images/catalog/merch/shopper/5.jpg",
+      "/images/catalog/merch/shopper/6.jpg"
+    ],
+    "variants": [
+      {
+        "id": "merch-1-OneSize",
+        "size": "One Size",
+        "price": 1200,
+        "sku": "00650000"
+      }
+    ],
     "gender": "unisex",
+    "image": "/images/catalog/merch/shopper/1.jpg",
+    "collectionImage": ""
+  },
+  {
+    "id": "merch-2",
+    "name": "Скрутка - мини",
+    "price": 2500,
+    "description": "Идеальный размер",
+    "category": "Мерч",
+    "categoryId": "patt-5",
+    "filterIds": [
+      "filter-мерч"
+    ],
+    "tags": [
+      "мерч",
+      "скрутка"
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "colors": [],
     "details": {
       "material": "100% хлопок",
       "characteristics": "Отлично служит для хранения и транспортировки личных инструментов, выездов на мероприятия",
@@ -2501,85 +2851,56 @@
       "/images/catalog/merch/skrutka/6.jpg",
       "/images/catalog/merch/skrutka/7.jpg"
     ],
-    "colors": [],
     "variants": [
       {
-        "id": "merch-skrutka-mini-OS",
+        "id": "merch-2-OneSize",
         "size": "One Size",
         "price": 2500,
         "sku": "00650001"
       }
-    ]
-  },
-  {
-    "id": "merch-shopper-scoop",
-    "name": "Шоппер SCOOP (с англ. ковш)",
-    "price": 1200,
-    "description": "Больше, чем просто шоппер. Scoop – это пространство для новых открытий. Идеальный размер для гастрономических путешествий",
-    "category": "Мерч",
-    "filterIds": [
-      "filter-merch"
-    ],
-    "tags": [
-      "Мерч"
-    ],
-    "sizes": [
-      "One Size"
     ],
     "gender": "unisex",
-    "details": {
-      "material": "100% хлопок",
-      "characteristics": "Отлично служит для хранения и транспортировки личных инструментов, выездов на мероприятия и просто для хранения всего необходимого. Внутри – японская хайку, которая поможет вырваться Вам из рутины и наполнить каждый день вдохновением",
-      "article": "00650000"
-    },
-    "images": [
-      "/images/catalog/merch/shopper/1.jpg",
-      "/images/catalog/merch/shopper/2.jpg",
-      "/images/catalog/merch/shopper/3.jpg",
-      "/images/catalog/merch/shopper/4.jpg",
-      "/images/catalog/merch/shopper/5.jpg",
-      "/images/catalog/merch/shopper/6.jpg"
-    ],
-    "colors": [],
-    "variants": [
-      {
-        "id": "merch-shopper-scoop-OS",
-        "size": "One Size",
-        "price": 1200,
-        "sku": "00650000"
-      }
-    ]
+    "image": "/images/catalog/merch/skrutka/1.jpg",
+    "collectionImage": ""
   },
   {
-    "id": "merch-shopper-semis",
+    "id": "merch-3",
     "name": "Шоппер SEMIS",
     "price": 820,
     "description": "Эта сумка станет незаменимым аксессуаром в вашем гардеробе благодаря своей практичности и стильному дизайну",
     "category": "Мерч",
+    "categoryId": "patt-5",
     "filterIds": [
-      "filter-merch"
+      "filter-мерч"
     ],
     "tags": [
-      "Мерч"
+      "мерч",
+      "шоппер"
     ],
     "sizes": [
       "One Size"
     ],
-    "gender": "unisex",
+    "colors": [],
     "details": {
       "material": "100% хлопок",
       "characteristics": "Сумки из 100% хлопка обладают рядом преимуществ: экологичность, долговечность, легкость, комфорт и устойчивы к износу",
       "article": "00670000"
     },
-    "images": [],
-    "colors": [],
+    "images": [
+      "/images/catalog/merch/shopper-semis/6.jpg",
+      "/images/uploads/upload-1773255235893-61986571.jpg",
+      "/images/uploads/upload-1773255238113-369884274.jpg"
+    ],
     "variants": [
       {
-        "id": "merch-shopper-semis-OS",
+        "id": "merch-3-OneSize",
         "size": "One Size",
         "price": 820,
         "sku": "00670000"
       }
-    ]
+    ],
+    "gender": "unisex",
+    "image": "/images/catalog/merch/shopper-semis/6.jpg",
+    "collectionImage": ""
   }
 ]

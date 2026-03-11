@@ -70,14 +70,18 @@ const partners = [
 const allLogos = [
   ...clients.map(c => ({ type: 'client', name: c.name, src: c.logo })),
   ...partners.map(p => ({ type: 'partner', name: 'Партнер', src: `/images/partners/${p}` }))
-];
+].slice(12);
 
 export default function ClientsSection() {
   const [visibleCount, setVisibleCount] = useState(12);
   const [increment, setIncrement] = useState(12);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const updateConfig = () => {
+      // Если пользователь уже нажал "Показать еще", не сбрасываем количество
+      if (isExpanded) return;
+
       const isDesktop = window.innerWidth >= 1024;
       if (isDesktop) {
         setVisibleCount(24);
@@ -91,9 +95,10 @@ export default function ClientsSection() {
     updateConfig();
     window.addEventListener('resize', updateConfig);
     return () => window.removeEventListener('resize', updateConfig);
-  }, []);
+  }, [isExpanded]);
 
   const handleShowMore = () => {
+    setIsExpanded(true);
     setVisibleCount(prev => Math.min(prev + increment, allLogos.length));
   };
 
@@ -109,7 +114,6 @@ export default function ClientsSection() {
               key={`${logo.src}-${index}`} 
               delay={(index % 6) * 0.05} 
               className="w-full flex justify-center group"
-              priority={true}
             >
               <div 
                 className="w-full h-12 md:h-16 lg:h-20 relative block transition-all duration-700 hover:scale-110 opacity-90 hover:opacity-100"

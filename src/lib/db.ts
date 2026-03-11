@@ -71,6 +71,9 @@ export interface Order {
   status: string;
   createdAt: string;
   address: string;
+  deliveryType?: 'delivery' | 'pickup';
+  deliveryFee?: number;
+  comment?: string;
   customer?: {
     name: string;
     phone: string;
@@ -126,6 +129,7 @@ export interface Product {
   colors?: ProductColor[];
   details?: ProductDetails;
   variants?: ProductVariant[];
+  collectionImage?: string;
 }
 
 export interface Filter {
@@ -154,6 +158,8 @@ export interface Project {
   type: 'portfolio' | 'promo';
   title?: string;
   image?: string;
+  image2?: string;
+  imageLayout?: 'single' | 'double';
   text?: string;
   order: number;
 }
@@ -190,6 +196,15 @@ export const db = {
       users.push(user);
     }
     await writeJsonFile(USERS_KEY, users);
+  },
+
+  updateUser: async (user: User): Promise<void> => {
+    const users = await db.getUsers();
+    const index = users.findIndex(u => u.id === user.id);
+    if (index !== -1) {
+      users[index] = user;
+      await writeJsonFile(USERS_KEY, users);
+    }
   },
 
   createOrder: async (order: Order): Promise<void> => {

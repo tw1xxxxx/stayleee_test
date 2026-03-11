@@ -1,15 +1,128 @@
 [
   {
-    "id": "3",
+    "id": "1",
     "type": "portfolio",
-    "title": "White Rabbit",
-    "image": "/images/uploads/upload-1772818557713-314012415.jpg",
+    "title": "Margarita",
+    "image": "/images/projects/Margarita/IMG_2236.JPG",
+    "image2": "/images/projects/Margarita/photo_2026-02-07_12-10-46.jpg",
+    "imageLayout": "double",
     "order": 1
   },
   {
+    "id": "2",
+    "type": "portfolio",
+    "title": "Moss",
+    "image": "/images/projects/Moss/photo_2025-11-03_18-55-08.jpg",
+    "image2": "/images/projects/Moss/photo_2025-11-03_18-55-42.jpg",
+    "imageLayout": "double",
+    "order": 2
+  },
+  {
+    "id": "3",
+    "type": "portfolio",
+    "title": "Osso",
+    "image": "/images/projects/Osso/IMG_4793.PNG",
+    "image2": "/images/projects/Osso/IMG_4794.PNG",
+    "imageLayout": "double",
+    "order": 3
+  },
+  {
     "id": "4",
-    "type": "promo",
-    "text": "efefweferf",
-    "order": 1
+    "type": "portfolio",
+    "title": "Полет со вкусом",
+    "image": "/images/projects/Полет со вкусом/photo_2026-03-10_13-25-49.jpg",
+    "image2": "/images/projects/Полет со вкусом/photo_2026-03-10_13-26-00.jpg",
+    "imageLayout": "double",
+    "order": 4
+  },
+  {
+    "id": "6",
+    "type": "portfolio",
+    "title": "San Si",
+    "image": "/images/projects/San Si/IMG_2292.JPG",
+    "image2": "/images/projects/San Si/IMG_2295.JPG",
+    "imageLayout": "double",
+    "order": 6
+  },
+  {
+    "id": "7",
+    "type": "portfolio",
+    "title": "Коробок",
+    "image": "/images/projects/Коробок/203A7441_resized.jpg",
+    "image2": "/images/projects/Коробок/203A7473_resized.jpg",
+    "imageLayout": "double",
+    "order": 7
+  },
+  {
+    "id": "8",
+    "type": "portfolio",
+    "title": "Londri",
+    "image": "/images/projects/Londri/Лондри.jpg",
+    "image2": "",
+    "imageLayout": "single",
+    "order": 8
+  },
+  {
+    "id": "9",
+    "type": "portfolio",
+    "title": "Novikov School",
+    "image": "/images/projects/Novikov School/ML6_2587.jpg",
+    "image2": "/images/projects/Novikov School/ML6_3561.jpg",
+    "imageLayout": "double",
+    "order": 9
+  },
+  {
+    "id": "10",
+    "type": "portfolio",
+    "title": "White Rabbit",
+    "image": "/images/projects/White Rabbit/photo_2026-03-10_17-09-05.jpg",
+    "image2": "/images/projects/White Rabbit/photo_2026-03-10_17-09-07.jpg",
+    "imageLayout": "double",
+    "order": 10
+  },
+  {
+    "id": "11",
+    "type": "portfolio",
+    "title": "Sobremesa",
+    "image": "/images/projects/Sobremesa/photo_2026-03-10_16-59-32.jpg",
+    "image2": "/images/projects/Sobremesa/photo_2026-03-10_17-00-00.jpg",
+    "imageLayout": "double",
+    "order": 11
+  },
+  {
+    "id": "12",
+    "type": "portfolio",
+    "title": "Liberty Cafe",
+    "image": "/images/projects/Liberty Cafe/photo_5283029728401419882_y.jpg",
+    "image2": "/images/projects/Liberty Cafe/photo_5283029728401419885_y.jpg",
+    "imageLayout": "double",
+    "order": 12
+  },
+  {
+    "id": "13",
+    "type": "portfolio",
+    "title": "Kaifuso",
+    "image": "/images/projects/Kaifuso/photo_2026-02-05_12-19-37.jpg",
+    "image2": "",
+    "imageLayout": "single",
+    "order": 13
+  },
+  {
+    "id": "14",
+    "type": "portfolio",
+    "title": "Телеканал Пятница",
+    "image": "/images/projects/Телеканал Пятница/IMG_7269.JPG",
+    "image2": "/images/projects/Телеканал Пятница/photo_2026-03-10_13-28-52.jpg",
+    "imageLayout": "double",
+    "order": 14
+  },
+  {
+    "id": "15",
+    "type": "portfolio",
+    "title": "Chefs Table",
+    "image": "/images/projects/Chefs Table/DSC09203.JPG",
+    "image2": "/images/projects/Chefs Table/photo_2025-08-18_14-45-54.jpg",
+    "imageLayout": "double",
+    "order": 15
   }
 ]

@@ -17,7 +17,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { type, title, image, text, order } = body;
+    const { type, title, image, image2, imageLayout, text, order } = body;
 
     if (!type) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
@@ -40,6 +40,8 @@ export async function POST(request: Request) {
       type,
       title,
       image,
+      image2,
+      imageLayout,
       text,
       order: order !== undefined ? order : maxOrder + 1
     };
@@ -62,7 +64,7 @@ export async function PUT(request: Request) {
       return NextResponse.json(body);
     }
 
-    const { id, type, title, image, text, order } = body;
+    const { id, type, title, image, image2, imageLayout, text, order } = body;
 
     if (!id) {
       return NextResponse.json({ message: 'Missing project ID' }, { status: 400 });
@@ -80,6 +82,8 @@ export async function PUT(request: Request) {
       type: type || existing.type,
       title: title !== undefined ? title : existing.title,
       image: image !== undefined ? image : existing.image,
+      image2: image2 !== undefined ? image2 : existing.image2,
+      imageLayout: imageLayout !== undefined ? imageLayout : existing.imageLayout,
       text: text !== undefined ? text : existing.text,
       order: order !== undefined ? order : existing.order
     };

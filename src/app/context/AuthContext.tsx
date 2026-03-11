@@ -18,6 +18,7 @@ interface AuthContextType {
   register: (email: string, name: string) => Promise<boolean>;
   verifyCode: (email: string, code: string, isRegistration?: boolean, name?: string) => Promise<boolean>;
   logout: () => void;
+  updateProfile: (name: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -114,8 +115,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push("/");
   };
 
+  const updateProfile = async (name: string) => {
+    if (!user) return false;
+    try {
+      const response = await fetch("/api/auth/update-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id, name }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Update profile error:", error);
+      return false;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, register, verifyCode, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, register, verifyCode, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );

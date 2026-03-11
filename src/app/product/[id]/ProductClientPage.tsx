@@ -13,8 +13,8 @@ import { useCart } from "../../context/CartContext";
 import { formatPrice } from "@/lib/utils";
 
 const DEFAULT_PRODUCT = {
-  id: 1,
-  title: "БРЮКИ (ЖЕНСКИЕ)",
+  id: "pants-female",
+  title: "Брюки (женские)",
   price: "5 200 ₽",
   description: "Для комфортной работы, не сковывающий движений",
   images: [
@@ -117,14 +117,18 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
     ? currentProduct.colors
     : (currentProduct && currentProduct.colors ? [] : (DEFAULT_PRODUCT.colors as unknown as ApiProductColor[]));
 
+  const isApron = (currentProduct?.category || "").toLowerCase() === "фартуки";
+
   const selectedSize = selectedSizeOverride && productSizes.includes(selectedSizeOverride)
     ? selectedSizeOverride
-    : productSizes[0] || "S";
-  const selectedColor = selectedColorOverride && productColors.some(color => color.name === selectedColorOverride)
-    ? selectedColorOverride
-    : productColors[0]?.name || "black";
-
-  const selectedColorObj = productColors.find(c => c.name === selectedColor);
+    : (isApron ? "" : (productSizes[0] || "S"));
+  const selectedColorObj = selectedColorOverride
+    ? productColors.find(color => 
+        (color.name && color.name.toLowerCase() === selectedColorOverride.toLowerCase()) || 
+        (color.label && color.label.toLowerCase() === selectedColorOverride.toLowerCase())
+      )
+    : productColors[0];
+  const selectedColor = selectedColorObj?.name || "";
 
   const selectedVariant = currentProduct?.variants?.find(v => 
     v.size === selectedSize && v.colorName === selectedColor
@@ -139,7 +143,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
     : productSizes;
 
   const PRODUCT = {
-    id: Number(currentProduct?.id) || DEFAULT_PRODUCT.id,
+    id: currentProduct?.id || String(DEFAULT_PRODUCT.id),
     title: currentProduct?.name || DEFAULT_PRODUCT.title,
     price: `${formatPrice(selectedVariant?.price ?? productPriceValue)} ₽`,
     description: currentProduct?.description || DEFAULT_PRODUCT.description,
@@ -153,9 +157,9 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
     }
   };
 
-  const currentColorName = selectedColorObj ? selectedColorObj.label : selectedColor;
+  const currentColorName = selectedColorObj ? (selectedColorObj.label || selectedColorObj.name) : selectedColor;
   const isKitel = PRODUCT.title.toLowerCase().includes("китель");
-  const isApron = (currentProduct?.category || "").toLowerCase() === "фартуки";
+  // isApron defined above
 
   const quantity = getItemQuantity(PRODUCT.id, selectedSize, currentColorName, isKitel ? addEmbroidery : false);
   const cartId = `${PRODUCT.id}-${selectedSize}-${currentColorName}${isKitel && addEmbroidery ? '-embroidery' : ''}`;
@@ -171,11 +175,18 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
 
   // Sync URL with selected color
   useEffect(() => {
-    if (typeof window !== 'undefined' && selectedColor) {
+    if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
-      if (url.searchParams.get("color") !== selectedColor) {
-        url.searchParams.set("color", selectedColor);
-        window.history.replaceState({}, "", url.toString());
+      if (selectedColor) {
+        if (url.searchParams.get("color") !== selectedColor) {
+          url.searchParams.set("color", selectedColor);
+          window.history.replaceState({}, "", url.toString());
+        }
+      } else {
+        if (url.searchParams.has("color")) {
+          url.searchParams.delete("color");
+          window.history.replaceState({}, "", url.toString());
+        }
       }
     }
   }, [selectedColor]);
@@ -233,43 +244,43 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
   return (
     <div className="min-h-screen bg-brand-beige font-sans text-brand-brown pb-20 relative overflow-x-hidden">
       <div className="max-w-[1400px] mx-auto lg:px-8 lg:pt-8 relative">
-        {/* Desktop Back Button - Positioned left of images */}
-        <button 
-          onClick={() => {
-            if (window.history.length > 1) {
-              router.back();
-            } else {
-              router.push('/catalog');
-            }
-          }}
-          className="hidden lg:flex absolute left-[-80px] top-8 z-50 w-12 h-12 items-center justify-center bg-white rounded-full shadow-lg hover:bg-gray-50 transition-all hover:scale-110 cursor-pointer group"
-          aria-label="Назад"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="group-hover:-translate-x-1 transition-transform">
-            <path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        {/* Mobile Floating Back Button */}
-        <button 
-          onClick={() => {
-            if (window.history.length > 1) {
-              router.back();
-            } else {
-              router.push('/catalog');
-            }
-          }}
-          className="lg:hidden absolute top-4 left-4 z-[100] w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors cursor-pointer"
-          aria-label="Назад"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 lg:pl-32">
           {/* Left Column: Images */}
-          <div className="w-full lg:w-3/5 xl:w-[65%] lg:sticky lg:top-8 lg:h-fit">
+          <div className="w-full lg:w-[48%] xl:w-[50%] lg:sticky lg:top-8 lg:h-fit relative">
+            {/* Back Button - Minimalist & Large - Positioned relative to image column on desktop */}
+            <button 
+              onClick={() => {
+                if (window.history.length > 1) {
+                  router.back();
+                } else {
+                  router.push('/catalog');
+                }
+              }}
+              className="hidden lg:flex absolute -left-[6rem] top-5 z-50 items-center justify-center text-brand-brown/40 hover:text-brand-brown transition-all hover:scale-110 cursor-pointer group"
+              aria-label="Назад"
+            >
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="group-hover:-translate-x-1 transition-transform">
+                <path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+ 
+             {/* Mobile Back Button */}
+             <button 
+               onClick={() => {
+                 if (window.history.length > 1) {
+                   router.back();
+                 } else {
+                   router.push('/catalog');
+                 }
+               }}
+               className="lg:hidden absolute left-5 top-5 z-50 flex items-center justify-center text-brand-brown/50 hover:text-brand-brown transition-all hover:scale-110 cursor-pointer group"
+               aria-label="Назад"
+             >
+               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                 <path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+               </svg>
+             </button>
+
             {/* Image Gallery */}
             <div className="relative w-full aspect-[3/4] md:aspect-square lg:aspect-[4/5] bg-gray-100 overflow-hidden group rounded-none lg:rounded-2xl shadow-sm">
               <ProductGallery
@@ -592,7 +603,7 @@ export default function ProductClientPage({ product: currentProduct, relatedProd
             <div className="w-full h-full p-4 md:p-10 flex items-center justify-center overflow-hidden">
                <div className="relative w-full h-full max-w-7xl max-h-[90vh]">
                  <ElasticImage
-                   src="/foto/photo_2026-02-25_10-38-21.jpg"
+                   src="/IMG_2429.PNG"
                    alt="Размерная сетка"
                    objectFit="contain"
                    enableSnapBack={true}

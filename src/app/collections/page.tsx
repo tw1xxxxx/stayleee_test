@@ -88,7 +88,7 @@ export default function CollectionsPage() {
               title: s.title,
               products: s.productIds.map((pid: string) => {
                 const p = productsData.find((prod) => String(prod.id) === String(pid));
-                const image = p?.images?.[0] || p?.image || "/images/placeholder.jpg";
+                const image = p?.collectionImage || p?.images?.[0] || p?.image || "/images/placeholder.jpg";
                 return p ? {
                   id: p.id,
                   title: p.name,
@@ -128,34 +128,78 @@ export default function CollectionsPage() {
   }, [isMenuOpen]);
 
   return (
-    <div className="min-h-screen bg-brand-beige font-sans pb-20 relative text-brand-brown">
+    <div className="min-h-screen font-sans pb-20 relative text-brand-brown">
       {/* Global Fixed Background for Desktop */}
-      <div className="fixed inset-0 z-0 hidden md:block bg-brand-beige">
+      <div className="fixed inset-0 z-0 hidden md:block bg-brand-beige overflow-hidden">
         <AnimatePresence mode="popLayout">
-          {activeCollection?.image && (
+          {activeCollection && (
             <motion.div
-              key={activeCollectionId}
+              key={activeCollection.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
-              className="absolute inset-0 flex justify-end"
+              className="absolute inset-0 w-full h-full"
             >
-              <div className="relative h-full w-full">
-                <SafeImage
-                  src={activeCollection.image}
-                  alt=""
-                  fill
-                  className="object-contain object-right"
-                  sizes="100vw"
-                  quality={100}
-                  priority
-                />
-                {/* Gradient transition from beige to image */}
-                <div className="absolute inset-0 bg-gradient-to-r from-brand-beige via-brand-beige/20 to-transparent pointer-events-none" />
-              </div>
-              {/* Dark Overlay for readability */}
-               <div className="absolute inset-0 bg-black/45" />
+              {activeCollection.id === 'ridge' ? (
+                <div className="flex w-full h-full">
+                  {/* Left Side: Custom Image (Stretched to push right side) */}
+                  <div className="relative flex-grow h-full">
+                    <img 
+                      src="/IMG_9923.jpg" 
+                      alt="" 
+                      className="w-full h-full object-cover" 
+                    />
+                    <div className="absolute inset-0 bg-black/65" />
+                  </div>
+                  {/* Right Side: Collection Image (Fixed ratio to stay on edge) */}
+                  <div className="relative w-[45%] h-full">
+                    <img 
+                      src={activeCollection.image} 
+                      alt="" 
+                      className="w-full h-full object-cover" 
+                    />
+                    <div className="absolute inset-0 bg-black/45" />
+                  </div>
+                </div>
+              ) : activeCollection.id === 'semis' ? (
+                <div className="flex w-full h-full">
+                  {/* Left Side: Custom Image DSC07776.jpg */}
+                  <div className="relative flex-grow h-full">
+                    <img 
+                      src="/DSC07776.jpg" 
+                      alt="" 
+                      className="w-full h-full object-cover" 
+                    />
+                    <div className="absolute inset-0 bg-black/45" />
+                  </div>
+                  {/* Right Side: Collection Image */}
+                  <div className="relative w-[45%] h-full">
+                    <img 
+                      src={activeCollection.image} 
+                      alt="" 
+                      className="w-full h-full object-cover" 
+                    />
+                    <div className="absolute inset-0 bg-black/45" />
+                  </div>
+                </div>
+              ) : (
+                <div className="relative w-full h-full">
+                  {activeCollection.image && (
+                    <>
+                      <img 
+                        src={activeCollection.image} 
+                        alt="" 
+                        className="w-full h-full object-contain object-right" 
+                      />
+                      {/* Gradient transition from beige to image */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-brand-beige via-brand-beige/20 to-transparent pointer-events-none" />
+                      {/* Dark Overlay for readability */}
+                      <div className="absolute inset-0 bg-black/45" />
+                    </>
+                  )}
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -325,12 +369,12 @@ const CollectionSection = ({
                       </div>
 
                       {/* Content - Right on Desktop */}
-                      <div className="flex flex-col justify-center gap-4 md:gap-8 flex-grow">
-                        <h3 className="text-2xl md:text-5xl lg:text-6xl font-light text-brand-brown md:text-white uppercase tracking-widest leading-tight group-hover:text-brand-red transition-colors font-serif md:drop-shadow-md">
+                      <div className="flex flex-col justify-center gap-4 md:gap-6 flex-grow">
+                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-light text-brand-brown md:text-white uppercase tracking-widest leading-tight transition-colors font-serif md:drop-shadow-md">
                           {product.title}
                         </h3>
                         {product.description && (
-                          <p className="text-base md:text-xl lg:text-2xl text-brand-brown/70 md:text-white/80 font-light leading-relaxed max-w-2xl md:drop-shadow-sm">
+                          <p className="text-base md:text-lg lg:text-xl text-brand-brown/70 md:text-white/80 font-light leading-relaxed max-w-2xl md:drop-shadow-sm">
                             {product.description}
                           </p>
                         )}

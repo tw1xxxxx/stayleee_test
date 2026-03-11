@@ -12,15 +12,19 @@ import { Gift } from "@/lib/db";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, total, totalWithoutDiscount, discount, clearCart, addOrder } = useCart();
+  const { items, total: cartTotal, totalWithoutDiscount, discount, clearCart, addOrder } = useCart();
   const { isAuthenticated, isLoading, user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     city: "",
     address: "",
     phone: "",
-    comment: ""
+    comment: "",
+    deliveryType: "delivery" as "delivery" | "pickup"
   });
+
+  const deliveryFee = formData.deliveryType === 'pickup' ? 0 : 500;
+  const total = cartTotal + deliveryFee;
 
   // Load draft from localStorage on mount
   useEffect(() => {
@@ -223,12 +227,14 @@ export default function CheckoutPage() {
     if (!isFormValid) return;
 
     setIsSubmitting(true);
-    const orderItems: { id: string | number; name: string; price: number; quantity: number; size?: string }[] = items.map(item => ({
+    const orderItems = items.map(item => ({
       id: item.id,
       name: item.title,
-      price: item.price,
+      price: item.price + (item.embroidery ? 900 : 0),
       quantity: item.quantity,
-      size: item.size
+      size: item.size,
+      color: item.color,
+      embroidery: item.embroidery
     }));
 
     // Add earned gifts
@@ -240,14 +246,20 @@ export default function CheckoutPage() {
         id: -(index + 1), 
         name: `Подарок: ${gift.title}`,
         price: 0,
-        quantity: 1
+        quantity: 1,
+        size: undefined,
+        color: undefined,
+        embroidery: false
       });
     });
 
     try {
       // Add order to history
       const order = await addOrder({
-        address: `${formData.city}, ${formData.address}`,
+        address: formData.deliveryType === 'pickup' ? 'Самовывоз' : `${formData.city}, ${formData.address}`,
+        deliveryType: formData.deliveryType,
+        deliveryFee: deliveryFee,
+        comment: formData.comment,
         amount: total,
         items: orderItems,
         customer: {
@@ -323,8 +335,7 @@ export default function CheckoutPage() {
 
   const isFormValid = 
     formData.name.trim().length > 0 &&
-    formData.city.trim().length > 0 &&
-    formData.address.trim().length > 0 &&
+    (formData.deliveryType === 'pickup' || (formData.city.trim().length > 0 && formData.address.trim().length > 0)) &&
     formData.phone.trim().length === 18 &&
     isAgreed &&
     items.length > 0 &&
@@ -358,7 +369,7 @@ export default function CheckoutPage() {
       {/* Header */}
       <header className="sticky top-0 z-20 bg-brand-beige/80 backdrop-blur-md border-b border-brand-brown/10 px-4 py-4 flex items-center justify-between supports-[backdrop-filter]:bg-brand-beige/60">
         <button 
-          onClick={() => router.push('/cart')}
+          onClick={() => router.replace('/cart')}
           className="p-2 -ml-2 hover:bg-white/50 rounded-full transition-colors active:scale-95 duration-200"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -395,6 +406,32 @@ export default function CheckoutPage() {
           
           {/* Form Fields */}
           <div className="space-y-4">
+            {/* Delivery Type Selection */}
+            <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4">
+                <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, deliveryType: 'delivery' }))}
+                    className={`py-4 px-4 rounded-2xl text-sm font-bold uppercase tracking-wider transition-all border-2 ${
+                        formData.deliveryType === 'delivery' 
+                        ? "bg-brand-brown text-brand-beige border-brand-brown shadow-md" 
+                        : "bg-white text-brand-brown/40 border-transparent hover:border-brand-brown/10"
+                    }`}
+                >
+                    Доставка
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, deliveryType: 'pickup' }))}
+                    className={`py-4 px-4 rounded-2xl text-sm font-bold uppercase tracking-wider transition-all border-2 ${
+                        formData.deliveryType === 'pickup' 
+                        ? "bg-brand-brown text-brand-beige border-brand-brown shadow-md" 
+                        : "bg-white text-brand-brown/40 border-transparent hover:border-brand-brown/10"
+                    }`}
+                >
+                    Самовывоз
+                </button>
+            </motion.div>
+
             {/* Name */}
             <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-brand-brown/20 transition-shadow duration-300">
                 <input
@@ -408,49 +445,100 @@ export default function CheckoutPage() {
                     />
                 </motion.div>
 
-                <div className="grid grid-cols-2 gap-4">
-                    {/* City */}
-                    <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-brand-brown/20 transition-shadow duration-300">
-                        <input
-                            type="text"
-                            name="city"
-                            placeholder="Город"
-                            value={formData.city}
-                            onChange={handleInputChange}
-                            className="w-full bg-transparent text-brand-brown placeholder-brand-brown/50 px-5 py-4 outline-none font-sans font-medium text-base"
-                            required
-                        />
-                    </motion.div>
-                     {/* Phone */}
-                    <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-brand-brown/20 transition-shadow duration-300">
-                        <input
-                            type="tel"
-                            name="phone"
-                            inputMode="numeric"
-                            placeholder="+7 (___) ___-__-__"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            onKeyDown={handlePhoneKeyDown}
-                            maxLength={18}
-                            className="w-full bg-transparent text-brand-brown placeholder-brand-brown/50 px-5 py-4 outline-none font-sans font-medium text-base"
-                            required
-                        />
-                    </motion.div>
-                </div>
+                {/* City and Address - Hidden for Pickup */}
+                <AnimatePresence mode="wait">
+                    {formData.deliveryType === 'delivery' ? (
+                        <motion.div
+                            key="delivery-fields"
+                            initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                            animate={{ height: "auto", opacity: 1, marginTop: 16 }}
+                            exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="space-y-4 overflow-hidden"
+                        >
+                            <div className="grid grid-cols-1 gap-4">
+                                {/* City */}
+                                <div className="bg-white rounded-2xl shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-brand-brown/20 transition-shadow duration-300">
+                                    <input
+                                        type="text"
+                                        name="city"
+                                        placeholder="Город"
+                                        value={formData.city}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-transparent text-brand-brown placeholder-brand-brown/50 px-5 py-4 outline-none font-sans font-medium text-base"
+                                        required={formData.deliveryType === 'delivery'}
+                                    />
+                                </div>
+                            </div>
 
-                {/* Address */}
+                            {/* Address */}
+                            <div className="bg-white rounded-2xl shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-brand-brown/20 transition-shadow duration-300">
+                                <input
+                                    type="text"
+                                    name="address"
+                                    placeholder="Адрес (Улица, дом, квартира)"
+                                    value={formData.address}
+                                    onChange={handleInputChange}
+                                    className="w-full bg-transparent text-brand-brown placeholder-brand-brown/50 px-5 py-4 outline-none font-sans font-medium text-base"
+                                    required={formData.deliveryType === 'delivery'}
+                                />
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="pickup-fields"
+                            initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                            animate={{ height: "auto", opacity: 1, marginTop: 16 }}
+                            exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="bg-brand-brown/5 rounded-2xl p-5 border border-brand-brown/10"
+                        >
+                            <div className="flex items-start gap-3">
+                                <div className="p-2 bg-brand-brown/10 rounded-full text-brand-brown mt-0.5">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M12 16V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M12 8H12.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p className="text-sm font-bold uppercase tracking-wider text-brand-brown/60 mb-1">Пункт выдачи</p>
+                                    <p className="text-base font-medium">Переведеновский пер., 13с13, этаж 3 офис 19, Москва</p>
+                                    <p className="text-xs text-brand-brown/60 mt-1 italic">Бесплатно • Пн-Пт 10:00-19:00</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Phone */}
                 <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-brand-brown/20 transition-shadow duration-300">
                     <input
-                        type="text"
-                        name="address"
-                        placeholder="Адрес (Улица, дом, квартира)"
-                        value={formData.address}
+                        type="tel"
+                        name="phone"
+                        inputMode="numeric"
+                        placeholder="+7 (___) ___-__-__"
+                        value={formData.phone}
                         onChange={handleInputChange}
+                        onKeyDown={handlePhoneKeyDown}
+                        maxLength={18}
                         className="w-full bg-transparent text-brand-brown placeholder-brand-brown/50 px-5 py-4 outline-none font-sans font-medium text-base"
                         required
-                />
-            </motion.div>
-          </div>
+                    />
+                </motion.div>
+
+                {/* Comment */}
+                <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-brand-brown/20 transition-shadow duration-300">
+                    <textarea
+                        name="comment"
+                        placeholder="Комментарий к заказу (необязательно)"
+                        value={formData.comment}
+                        onChange={handleInputChange}
+                        rows={3}
+                        className="w-full bg-transparent text-brand-brown placeholder-brand-brown/50 px-5 py-4 outline-none font-sans font-medium text-base resize-none"
+                    />
+                </motion.div>
+            </div>
 
           {/* User Agreement */}
           <motion.div variants={itemVariants} className="flex items-center gap-3 pt-4">
@@ -507,9 +595,13 @@ export default function CheckoutPage() {
               {discount > 0 && (
                 <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-bold">
                   <span className="text-brand-red">Ваша скидка ({discount}%):</span>
-                  <span className="text-brand-red">-{formatPrice(totalWithoutDiscount - total)} ₽</span>
+                  <span className="text-brand-red">-{formatPrice(totalWithoutDiscount - cartTotal)} ₽</span>
                 </div>
               )}
+              <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-bold">
+                <span className="text-brand-brown/40">Доставка:</span>
+                <span className="text-brand-brown/40">{deliveryFee === 0 ? "Бесплатно" : `${formatPrice(deliveryFee)} ₽`}</span>
+              </div>
             </div>
             <button 
                 onClick={handleSubmit}

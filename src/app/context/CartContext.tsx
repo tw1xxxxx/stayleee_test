@@ -25,8 +25,14 @@ export interface Order {
     name: string;
     price: number;
     quantity?: number;
+    size?: string;
+    color?: string;
+    embroidery?: boolean;
   }[];
   date: string;
+  deliveryType?: 'delivery' | 'pickup';
+  deliveryFee?: number;
+  comment?: string;
   customer?: {
     name: string;
     phone: string;
@@ -45,7 +51,7 @@ interface CartContextType {
   selectedItems: string[];
   total: number;
   totalWithoutDiscount: number;
-  getItemQuantity: (id: number, size: string, color: string, embroidery?: boolean) => number;
+  getItemQuantity: (id: number | string, size: string, color: string, embroidery?: boolean) => number;
   clearCart: () => void;
   orders: Order[];
   isInitialized: boolean;
@@ -123,6 +129,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
               amount: o.total,
               items: o.items,
               date: o.createdAt,
+              deliveryType: o.deliveryType,
+              deliveryFee: o.deliveryFee,
+              comment: o.comment,
               paymentId: o.paymentId,
               paymentStatus: o.paymentStatus
             }));
@@ -161,77 +170,91 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount and sync IDs
   useEffect(() => {
-    const savedItems = localStorage.getItem("cartItems");
-    const savedSelected = localStorage.getItem("cartSelected");
-    const savedOrders = localStorage.getItem("orders");
-    
-    if (savedItems) {
+    const initializeCart = async () => {
+      const savedItems = localStorage.getItem("cartItems");
+      const savedSelected = localStorage.getItem("cartSelected");
+      const savedOrders = localStorage.getItem("orders");
+      
+      let allProducts: any[] = [];
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const parsedItems: any[] = JSON.parse(savedItems);
-        // Migration: Ensure all items have a cartId
-        const migratedItems: CartItem[] = parsedItems.map(item => {
-          if (!item.cartId) {
+        const response = await fetch('/api/products');
+        if (response.ok) {
+          allProducts = await response.json();
+        }
+      } catch (e) {
+        console.error("Failed to fetch products for migration", e);
+      }
+
+      if (savedItems) {
+        try {
+          const parsedItems: any[] = JSON.parse(savedItems);
+          
+          // Universal Migration: Map titles to correct slugs from the database
+          const migratedItems: CartItem[] = parsedItems.map(item => {
+            let currentId = item.id;
+            
+            // If ID is numeric or potentially outdated, try to find the correct slug
+            if (typeof currentId === 'number' || !isNaN(Number(currentId)) || currentId === '1') {
+              const matchedProduct = allProducts.find(p => 
+                p.name === item.title || 
+                p.name.includes(item.title) || 
+                item.title.includes(p.name) ||
+                (item.image && p.image && item.image.includes(p.id))
+              );
+              
+              if (matchedProduct) {
+                currentId = matchedProduct.id;
+              }
+            }
+
+            const cartId = item.cartId || `${currentId}-${item.size}-${item.color}${item.embroidery ? '-embroidery' : ''}`;
+            
             return {
               ...item,
-              cartId: `${item.id}-${item.size}-${item.color}`
+              id: currentId,
+              cartId
             };
+          });
+
+          setItems(migratedItems);
+
+          if (parsedItems.some(item => !item.cartId || item.id !== migratedItems.find(mi => mi.cartId === (item.cartId || `${item.id}-${item.size}-${item.color}`))?.id)) {
+             setSelectedItems(migratedItems.map(i => i.cartId));
           }
-          return item;
-        });
-        // eslint-disable-next-line
-        setItems(migratedItems);
-
-        // If we migrated items, we should probably reset selection to match new cartIds
-        // or try to migrate selection if possible (but simpler to just re-select all or let user select)
-        // For better UX, let's select all if we had to migrate
-        if (parsedItems.some(item => !item.cartId)) {
-           // Migration happened, let's select all to be safe
-           setSelectedItems(migratedItems.map(i => i.cartId));
-           setIsInitialized(true);
-           return; 
+        } catch (e) {
+          console.error("Failed to parse cart items", e);
+          setItems([]);
         }
-
-      } catch (e) {
-        console.error("Failed to parse cart items", e);
-        // If parsing fails, start fresh
-        setItems([]);
       }
-    }
-    
-    if (savedSelected) {
-      try {
-        const parsedSelected = JSON.parse(savedSelected);
-        if (Array.isArray(parsedSelected) && parsedSelected.length > 0) {
-           if (typeof parsedSelected[0] === 'string') {
-             setSelectedItems(parsedSelected);
-           }
-        } else if (Array.isArray(parsedSelected) && parsedSelected.length === 0) {
-             setSelectedItems([]);
+      
+      if (savedSelected) {
+        try {
+          const parsedSelected = JSON.parse(savedSelected);
+          if (Array.isArray(parsedSelected)) {
+            setSelectedItems(parsedSelected);
+          }
+        } catch (error) {
+          console.error("Failed to parse selected items", error);
         }
-      } catch (error) {
-        console.error("Failed to parse selected items", error);
       }
-    }
 
-    if (savedOrders) {
-      try {
-        const parsedOrders = JSON.parse(savedOrders);
-        if (Array.isArray(parsedOrders)) {
-          setOrders(parsedOrders.filter((o: unknown) => {
-            if (typeof o !== 'object' || o === null) return false;
-            const order = o as { id: string };
-            return /^\d+$/.test(order.id);
-          }) as Order[]);
+      if (savedOrders) {
+        try {
+          const parsedOrders = JSON.parse(savedOrders);
+          if (Array.isArray(parsedOrders)) {
+            setOrders(parsedOrders.filter((o: any) => o && o.id) as Order[]);
+          }
+        } catch (error) {
+          console.error("Failed to parse orders", error);
         }
-      } catch (error) {
-        console.error("Failed to parse orders", error);
       }
-    }
-    
-    setIsInitialized(true);
+      
+      setIsInitialized(true);
+    };
+
+    initializeCart();
   }, []);
 
   // Save orders to localStorage
@@ -299,7 +322,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  const getItemQuantity = (id: number, size: string, color: string, embroidery?: boolean) => {
+  const getItemQuantity = (id: number | string, size: string, color: string, embroidery?: boolean) => {
     const cartId = `${id}-${size}-${color}${embroidery ? '-embroidery' : ''}`;
     return items.find(item => item.cartId === cartId)?.quantity || 0;
   };
@@ -348,6 +371,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
           items: order.items,
           total: order.amount,
           address: order.address,
+          deliveryType: order.deliveryType,
+          deliveryFee: order.deliveryFee,
+          comment: order.comment,
           status: "В обработке",
           createdAt: newOrder.date,
           customer: order.customer

@@ -163,11 +163,11 @@ export async function POST(request: Request) {
     global.otpStore.set(normalizedEmail, { code, expires, name });
 
     // Send email
-    const subject = "Ваш код подтверждения StaySee";
+    const subject = "Ваш код подтверждения STAY.SEE.";
     const html = `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #4A3E3E; background-color: #FDFCF8; border-radius: 12px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="font-size: 24px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin: 0;">StaySee</h1>
+          <h1 style="font-size: 24px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin: 0;">STAY.SEE.</h1>
         </div>
         
         <div style="background-color: #FFFFFF; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(74, 62, 62, 0.05); text-align: center;">

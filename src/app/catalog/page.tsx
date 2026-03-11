@@ -259,6 +259,10 @@ function CatalogContent() {
     updateFilters(newFilters);
   };
 
+  const stripTranslation = (name: string) => {
+    return name.replace(/\s*\(.*?\)\s*/g, ' ').trim();
+  };
+
   return (
     <div className="min-h-screen bg-brand-beige font-sans pb-20 relative text-brand-brown">
       {/* Viscous Top Bar */}
@@ -482,11 +486,9 @@ function CatalogContent() {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       {product.gender === 'male' && <span className="text-[10px] bg-brand-brown/5 text-brand-brown/60 px-1.5 py-0.5 rounded uppercase font-bold">Мужской</span>}
-                      {product.gender === 'female' && <span className="text-[10px] bg-brand-brown/5 text-brand-brown/60 px-1.5 py-0.5 rounded uppercase font-bold">Женский</span>}
-                      {product.gender === 'unisex' && <span className="text-[10px] bg-brand-brown/5 text-brand-brown/60 px-1.5 py-0.5 rounded uppercase font-bold">Unisex</span>}
                     </div>
                     <h3 className="font-medium text-xs md:text-sm lg:text-base leading-tight group-hover:text-brand-brown/70 transition-colors uppercase tracking-wider">
-                      {product.name}
+                      {stripTranslation(product.name)}
                     </h3>
                   </div>
                   <p className="font-bold text-sm md:text-base lg:text-lg mt-1">{formatPrice(product.price)} ₽</p>

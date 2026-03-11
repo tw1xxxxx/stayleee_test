@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { sendOrderToTelegram } from '@/lib/telegram';
 
 export async function POST(request: Request) {
   try {
@@ -45,6 +46,13 @@ export async function POST(request: Request) {
             if (status === 'succeeded') {
                 paymentStatus = 'succeeded';
                 order.status = 'Оплачен';
+                
+                // Send notification to Telegram ONLY when payment is successful
+                try {
+                    await sendOrderToTelegram(order);
+                } catch (tgError) {
+                    console.error("Error sending order to Telegram:", tgError);
+                }
             } else if (status === 'canceled') {
                 paymentStatus = 'canceled';
                 // order.status = 'Отменен'; // Optional

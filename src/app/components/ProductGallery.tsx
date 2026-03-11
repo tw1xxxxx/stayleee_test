@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useImperativeHandle, forwardRef, useCallback } from 'react';
+import React, { useRef, useEffect, useImperativeHandle, forwardRef, useCallback, useState } from 'react';
 
 export interface ProductGalleryHandle {
   scrollTo: (index: number) => void;
@@ -21,6 +21,7 @@ interface ProductGalleryProps {
 const ProductGallery = forwardRef<ProductGalleryHandle, ProductGalleryProps>(({ children, className, onChange, initialIndex = 0, activeIndex }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
+  const [internalIndex, setInternalIndex] = useState(initialIndex);
   
   // Ref для хранения состояния анимации и жестов
   const state = useRef({
@@ -52,6 +53,7 @@ const ProductGallery = forwardRef<ProductGalleryHandle, ProductGalleryProps>(({ 
     index = Math.max(0, Math.min(index, state.current.count - 1));
     
     state.current.currentIndex = index;
+    setInternalIndex(index);
     state.current.width = container.offsetWidth;
     
     const targetTranslate = -index * state.current.width;
@@ -110,9 +112,9 @@ const ProductGallery = forwardRef<ProductGalleryHandle, ProductGalleryProps>(({ 
     };
 
     const handleStart = (e: TouchEvent | MouseEvent) => {
-      // Игнорируем клики правой кнопкой
-      if (e instanceof MouseEvent && e.button !== 0) return;
-      
+      // На десктопе отключаем свайп (оставляем только для тач-устройств)
+      if (e instanceof MouseEvent) return;
+
       // Игнорируем мультитач (зум) - если больше 1 пальца, не начинаем/прерываем свайп
       if ((e as TouchEvent).touches && (e as TouchEvent).touches.length > 1) {
         state.current.isDragging = false;
@@ -277,7 +279,7 @@ const ProductGallery = forwardRef<ProductGalleryHandle, ProductGalleryProps>(({ 
   return (
     <div 
       ref={containerRef} 
-      className={`gallery relative w-full overflow-hidden touch-pan-y ${className || ''}`}
+      className={`gallery relative w-full overflow-hidden touch-pan-y group/gallery ${className || ''}`}
       style={{ touchAction: 'pan-y' }}
     >
       <div 
@@ -289,6 +291,51 @@ const ProductGallery = forwardRef<ProductGalleryHandle, ProductGalleryProps>(({ 
             {child}
           </div>
         ))}
+      </div>
+
+      {/* Desktop Navigation Click Areas & Buttons */}
+      <div className="hidden lg:block absolute inset-0 z-20 group/gallery">
+        <div className="relative w-full h-full flex justify-between">
+          {/* Left Click Area (35%) */}
+          <div 
+            className="w-[35%] h-full cursor-pointer flex items-center justify-center"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              snapToIndex(state.current.currentIndex - 1, true);
+            }}
+          >
+            <button
+              className="pointer-events-none flex items-center justify-center text-white/40 hover:text-white transition-all hover:scale-125 active:scale-95 opacity-0 group-hover/gallery:opacity-100 disabled:opacity-0"
+              aria-label="Previous image"
+              disabled={internalIndex === 0}
+            >
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          {/* Right Click Area (35%) */}
+          <div 
+            className="w-[35%] h-full cursor-pointer flex items-center justify-center"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              snapToIndex(state.current.currentIndex + 1, true);
+            }}
+          >
+            <button
+              className="pointer-events-none flex items-center justify-center text-white/40 hover:text-white transition-all hover:scale-125 active:scale-95 opacity-0 group-hover/gallery:opacity-100 disabled:opacity-0"
+              aria-label="Next image"
+              disabled={internalIndex === state.current.count - 1}
+            >
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

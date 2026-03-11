@@ -29,6 +29,38 @@ export async function POST(request: Request) {
     // Create payment in YooKassa
     console.log(`Creating payment for order ${orderId}, amount: ${amount}`);
     
+    // Add delivery fee as an item if total amount > sum of items
+    const itemsTotal = finalItems?.reduce((sum: number, item: { price: number; quantity: number }) => 
+      sum + (item.price * item.quantity), 0) || 0;
+    
+    const deliveryFee = amount - itemsTotal;
+    
+    const receiptItems = finalItems?.map((item: { name: string; price: number; quantity: number }) => ({
+      description: item.name,
+      amount: {
+        value: item.price.toFixed(2),
+        currency: 'RUB',
+      },
+      quantity: item.quantity.toString(),
+      vat_code: 1,
+      payment_mode: 'full_payment',
+      payment_subject: 'commodity',
+    })) || [];
+
+    if (deliveryFee > 0.01) {
+      receiptItems.push({
+        description: 'Доставка',
+        amount: {
+          value: deliveryFee.toFixed(2),
+          currency: 'RUB',
+        },
+        quantity: '1',
+        vat_code: 1,
+        payment_mode: 'full_payment',
+        payment_subject: 'service',
+      });
+    }
+
     // Format phone for YooKassa (must be digits only, starting with +)
     const rawPhone = finalCustomer?.phone || '';
     const digits = rawPhone.replace(/\D/g, '');
@@ -64,17 +96,7 @@ export async function POST(request: Request) {
             email: finalCustomer.email,
             phone: formattedPhone,
           },
-          items: finalItems.map((item: { name: string; price: number; quantity: number }) => ({
-            description: item.name,
-            amount: {
-              value: item.price.toFixed(2),
-              currency: 'RUB',
-            },
-            quantity: item.quantity.toString(),
-            vat_code: 1,
-            payment_mode: 'full_payment',
-            payment_subject: 'commodity',
-          })),
+          items: receiptItems,
         },
       } : {}),
     });

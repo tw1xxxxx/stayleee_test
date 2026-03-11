@@ -96,12 +96,13 @@ export default function Header({ variant = "default" }: HeaderProps) {
              </div>
           ) : (
             /* Logo (Left) */
-            <Link href="/" prefetch={false} className="relative w-60 h-12 transition-all duration-500 pointer-events-auto">
+            <Link href="/" prefetch={false} className="relative transition-all duration-500 pointer-events-auto">
               <Image
                 src="/images/logo/StaySee_Logo_whitesand_v1-0.svg"
                 alt="Логотип StaySee"
-                fill
-                className="object-contain object-left"
+                width={500}
+                height={200}
+                className="w-full h-auto object-contain"
                 priority
               />
             </Link>
@@ -109,12 +110,13 @@ export default function Header({ variant = "default" }: HeaderProps) {
 
           {variant === "back" || variant === "burger-left" ? (
              /* Logo (Right) */
-             <Link href="/" prefetch={false} className="relative w-60 h-12 transition-all duration-500 pointer-events-auto">
+             <Link href="/" prefetch={false} className="relative transition-all duration-500 pointer-events-auto">
                <Image
                  src="/images/logo/StaySee_Logo_whitesand_v1-0.svg"
                  alt="Логотип StaySee"
-                 fill
-                 className="object-contain object-right"
+                 width={500}
+                 height={200}
+                 className="w-full h-auto object-contain"
                  priority
                />
              </Link>

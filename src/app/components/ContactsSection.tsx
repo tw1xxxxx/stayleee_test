@@ -77,7 +77,7 @@ export default function ContactsSection({ showMap = true }: ContactsSectionProps
         }
 
         const myMap = new ymaps.Map(mapRef.current, {
-          center: [55.7806, 37.6889],
+          center: [55.780628, 37.689770],
           zoom: 17,
           controls: [],
           behaviors: ["drag", "dblClickZoom", "multiTouch"]
@@ -98,8 +98,10 @@ export default function ContactsSection({ showMap = true }: ContactsSectionProps
         myMap.controls.remove('routeButtonControl');
 
         const myPlacemark = new ymaps.Placemark(
-          [55.7806, 37.6889], 
-          {}, 
+          [55.780628, 37.689770], 
+          {
+            balloonContent: "Переведеновский переулок, 13с13, этаж 3 офис 19"
+          }, 
           {
             iconLayout: 'default#image',
             iconImageHref: '/images/map-pin.svg',
@@ -165,7 +167,7 @@ export default function ContactsSection({ showMap = true }: ContactsSectionProps
   return (
     <section className="w-full bg-brand-beige py-8 md:py-20">
       <div className="container mx-auto px-4 md:px-6">
-        <div className={`flex flex-col md:flex-row items-center justify-center gap-6 md:gap-20 ${!showMap ? 'md:flex-col' : ''}`}>
+        <div className={`flex flex-col md:flex-row items-start justify-center gap-6 md:gap-20 ${!showMap ? 'md:flex-col' : ''}`}>
           {/* Left Side: Map */}
           {showMap && (
             <FadeIn direction="right" delay={0.2} priority={true} className="relative w-full md:w-[500px] h-[250px] md:h-[500px] flex-shrink-0">
@@ -217,7 +219,7 @@ export default function ContactsSection({ showMap = true }: ContactsSectionProps
               <div className="space-y-6 text-center md:text-left">
                 <h3 className="text-sm uppercase tracking-[0.3em] opacity-50 mb-4">Контакты</h3>
                 <p className="text-xl md:text-2xl font-light">
-                  Переведеновский пер., 13, стр. 13, Москва
+                  Переведеновский пер., 13с13, этаж 3 офис 19, Москва
                 </p>
                 <div className="space-y-2">
                   <a href="mailto:shop.stay.see@yandex.ru" className="block text-xl md:text-2xl font-light hover:opacity-60 transition-opacity">

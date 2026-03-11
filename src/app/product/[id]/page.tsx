@@ -8,7 +8,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   // Fetch products on the server side
   const products = await db.getProducts();
   
-  const product = products.find((p) => p.id === id);
+  const product = products.find((p) => String(p.id) === String(id));
 
   if (!product) {
     notFound();

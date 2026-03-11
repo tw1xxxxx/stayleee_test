@@ -1,1 +1,83 @@
-[]
+[
+  {
+    "id": "787263",
+    "userId": "2",
+    "items": [
+      {
+        "id": 1,
+        "name": "Китель EMBODY (с англ. объединять в одно целое)",
+        "price": 8500,
+        "quantity": 3,
+        "size": "M"
+      },
+      {
+        "id": -1,
+        "name": "Подарок: Стикерпак STAY.SEE",
+        "price": 0,
+        "quantity": 1
+      },
+      {
+        "id": -2,
+        "name": "Подарок: Отбеливающий карандаш",
+        "price": 0,
+        "quantity": 1
+      },
+      {
+        "id": -3,
+        "name": "Подарок: Кофр для одежды",
+        "price": 0,
+        "quantity": 1
+      }
+    ],
+    "total": 28700,
+    "address": "екпрке, 3434",
+    "deliveryType": "delivery",
+    "deliveryFee": 500,
+    "comment": "435",
+    "status": "В обработке",
+    "createdAt": "2026-03-11T06:21:44.716Z",
+    "customer": {
+      "name": "ппе",
+      "phone": "+7 (223) 232-13-23",
+      "email": "mixartemmai06@gmail.com"
+    },
+    "paymentId": "31431dbb-000f-5001-8000-126dd93224c7",
+    "paymentStatus": "canceled"
+  },
+  {
+    "id": "924797",
+    "userId": "3",
+    "items": [
+      {
+        "id": "kitel-popover",
+        "name": "Китель POPOVER",
+        "price": 6300,
+        "quantity": 2,
+        "size": "S",
+        "color": "",
+        "embroidery": false
+      },
+      {
+        "id": -1,
+        "name": "Подарок: Стикерпак STAY.SEE",
+        "price": 0,
+        "quantity": 1,
+        "embroidery": false
+      }
+    ],
+    "total": 13100,
+    "address": "tyth, 4545",
+    "deliveryType": "delivery",
+    "deliveryFee": 500,
+    "comment": "sd",
+    "status": "В обработке",
+    "createdAt": "2026-03-11T12:16:35.998Z",
+    "customer": {
+      "name": "ghg",
+      "phone": "+7 (434) 343-45-34",
+      "email": "artemmai06@gmail.com"
+    },
+    "paymentId": "314370ea-000f-5000-b000-18ab9953d0e2",
+    "paymentStatus": "pending"
+  }
+]

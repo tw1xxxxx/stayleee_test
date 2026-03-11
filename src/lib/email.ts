@@ -30,7 +30,7 @@ export async function sendEmail(to: string, subject: string, html: string) {
   if (resend) {
     try {
       const { data, error } = await resend.emails.send({
-        from: 'StaySee <auth@staysee.shop>', // Updated to .shop domain
+        from: 'STAY.SEE. <auth@staysee.shop>', // Updated to .shop domain
         to: [to],
         subject,
         html,
@@ -60,7 +60,7 @@ export async function sendEmail(to: string, subject: string, html: string) {
 
   try {
     const info = await transporter.sendMail({
-      from: `"StaySee" <${process.env.EMAIL_USER}>`,
+      from: `"STAY.SEE." <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,

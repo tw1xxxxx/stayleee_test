@@ -253,13 +253,13 @@ export default function AuthForm({ mode }: AuthFormProps) {
                 {mode === "register" ? "Зарегистрироваться" : "Войти"}
               </h1>
 
-              {/* Logo */}
-              <div className="mb-10 relative w-40 h-12">
+              <div className="mb-10 relative w-40">
                  <Image
-                    src="/images/logo/StaySee_Logo_whitesand_v1-0.svg"
+                    src="/images/logo/StaySee_Logo_chocolate_v1-0.png"
                     alt="Логотип StaySee"
-                    fill
-                    className="object-contain filter brightness-0" 
+                    width={500}
+                    height={200}
+                    className="w-full h-auto object-contain" 
                     priority
                   />
               </div>

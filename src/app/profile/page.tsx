@@ -11,13 +11,32 @@ import { formatPrice } from "@/lib/utils";
 function ProfileContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, logout, isAuthenticated, isLoading } = useAuth();
+  const { user, logout, isAuthenticated, isLoading, updateProfile } = useAuth();
   const { orders, totalBuyout, discount, clearCart, deleteOrder } = useCart();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [showPaymentError, setShowPaymentError] = useState(false);
   const [localOrders, setLocalOrders] = useState<Order[]>([]);
   const [cameFromPayment, setCameFromPayment] = useState(false);
   const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [newName, setNewName] = useState(user?.name || "");
+
+  // Update newName when user data is available
+  useEffect(() => {
+    if (user?.name) {
+      setNewName(user.name);
+    }
+  }, [user]);
+
+  const handleUpdateName = async () => {
+    if (newName.trim() === "") return;
+    const success = await updateProfile(newName.trim());
+    if (success) {
+      setIsEditingName(false);
+    } else {
+      alert("Не удалось обновить имя");
+    }
+  };
 
   // Sync orders from context to local state for rendering
   useEffect(() => {
@@ -321,29 +340,71 @@ function ProfileContent() {
         <div className="bg-[#E8E8E8] rounded-[2rem] p-6 shadow-inner border border-white/20 relative overflow-hidden">
           <div className="flex items-center gap-5">
             {/* Avatar */}
-            <div className="relative w-24 h-24 flex items-center justify-center shrink-0">
-               <Image 
-                 src="/images/snapedit_1771006657482.png"
-                 alt="Фон профиля"
-                 fill
-                 className="object-contain drop-shadow-md"
-                 priority
-               />
-               <div className="relative w-11 h-11 z-10 mb-8 mr-0.5">
+            <div className="relative w-20 h-20 flex items-center justify-center shrink-0">
+               <div className="w-full h-full relative">
                   <Image 
                     src="/images/profile-icon.png"
                     alt="Повар"
                     fill
-                    className="object-contain filter brightness-0 invert drop-shadow-sm opacity-90"
+                    className="object-contain"
                   />
                </div>
             </div>
             
             {/* User Info */}
             <div className="flex flex-col min-w-0 flex-1 gap-1">
-              <span className="text-2xl font-black text-brand-brown tracking-tight truncate">
-                {user?.name || "Пользователь"}
-              </span>
+              <div className="flex items-center gap-2 group/name">
+                {isEditingName ? (
+                  <div className="flex items-center gap-2 w-full">
+                    <input
+                      type="text"
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      className="bg-white/50 border border-brand-brown/10 rounded-lg px-2 py-1 text-lg font-bold text-brand-brown w-full focus:outline-none focus:ring-2 focus:ring-brand-brown/20"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleUpdateName();
+                        if (e.key === 'Escape') setIsEditingName(false);
+                      }}
+                    />
+                    <button 
+                      onClick={handleUpdateName}
+                      className="p-1 text-green-600 hover:bg-green-50 rounded-full"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    <button 
+                      onClick={() => setIsEditingName(false)}
+                      className="p-1 text-red-600 hover:bg-red-50 rounded-full"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <span className="text-2xl font-black text-brand-brown tracking-tight truncate">
+                      {user?.name || "Пользователь"}
+                    </span>
+                    <button 
+                      onClick={() => {
+                        setIsEditingName(true);
+                        setNewName(user?.name || "");
+                      }}
+                      className="p-1 text-brand-brown/40 hover:text-brand-brown transition-colors"
+                      title="Изменить имя"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  </>
+                )}
+              </div>
               <span className="text-sm font-medium text-brand-brown/60 tracking-wide font-sans truncate mt-1">
                 {user?.email}
               </span>
